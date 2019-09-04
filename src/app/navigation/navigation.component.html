@@ -1,5 +1,8 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
+  <mat-sidenav #drawer
+  class="sidenav"
+  [ngClass]="{hidden: !(isHandset$ | async) === true}"
+  fixedInViewport
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
@@ -20,8 +23,17 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>online-shop</span>
+      <span><a routerLink = "/">online-shop</a></span>
+      <span class ="spacer"></span>
+      <input type="search" matInput>
+      <span class="spacer"></span>
+      <a mat-button routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>
+      <a mat-button href="#">Login</a>
+
     </mat-toolbar>
-    <!-- Add Content Here -->
+        <!-- Add Content Here -->
+    <ng-content>
+    </ng-content>
+
   </mat-sidenav-content>
 </mat-sidenav-container>

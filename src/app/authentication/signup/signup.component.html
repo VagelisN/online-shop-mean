@@ -1,0 +1,102 @@
+<mat-card>
+    <form (submit)="onSignup(signupForm)" #signupForm="ngForm" *ngIf="!isLoading">
+        <mat-form-field>
+            <input
+            name="email"
+            ngModel
+            type="email"
+            matInput type="email"
+            placeholder="E-mail"
+            #emailInput="ngModel"
+            required
+            email>
+            <mat-error *ngIf="emailInput.invalid"> Please enter a valid email adress. </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input
+            name="username"
+            ngModel
+            type="text"
+            matInput
+            placeholder="Username"
+            #usernameInput="ngModel"
+            required >
+            <mat-error *ngIf="usernameInput.invalid"> Please enter a Username. </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input
+            name="password"
+            ngModel
+            type="password"
+            matInput
+            placeholder="Password"
+            #passwordInput="ngModel"
+            required>
+            <mat-error *ngIf="passwordInput.invalid">Please entera valid password.</mat-error>
+          </mat-form-field>
+        <mat-form-field>
+            <input
+            name="firstname"
+            ngModel
+            type="text"
+            matInput
+            placeholder="First Name"
+            #firstnameInput="ngModel"
+            required >
+            <mat-error *ngIf="firstnameInput.invalid"> Please enter a First Name. </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input
+            name="lastname"
+            ngModel
+            type="text"
+            matInput
+            placeholder="Last Name"
+            #lastnameInput="ngModel"
+            required >
+            <mat-error *ngIf="lastnameInput.invalid"> Please enter a Last Name. </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input
+            name="phone"
+            ngModel
+            type="text"
+            matInput
+            placeholder="Phone Number"
+            #phoneInput="ngModel"
+            required >
+            <mat-error *ngIf="phoneInput.invalid"> Please enter a  Valid Phone Number. </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input
+            name="location"
+            ngModel
+            type="text"
+            matInput
+            placeholder="Location"
+            #locationInput="ngModel"
+            >
+            <mat-error *ngIf="locationInput.invalid"> Please enter a  Valid Location. </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input
+            name="afm"
+            ngModel
+            type="text"
+            matInput
+            placeholder="afm"
+            #afmInput="ngModel"
+            >
+            <mat-error *ngIf="afmInput.invalid"> Please enter a  Valid Location. </mat-error>
+        </mat-form-field>
+        <div style="text-align: center">
+        <button
+        mat-raised-button
+        color = 'accent'
+        type="submit"
+        >
+        Signup
+        </button>
+        </div>
+    </form>
+</mat-card>
