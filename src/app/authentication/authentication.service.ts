@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserModel } from './user.model';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   // sends an http put request to the backend to create new user
   sendNewUser(email: string, username: string, password: string) {
@@ -13,7 +14,7 @@ export class AuthenticationService {
     this.http
       .post('http://localhost:3000/users/signup', newUser)
       .subscribe( () => {
-        console.log('User Created');
+        this.router.navigate(['/']);
       });
   }
 
