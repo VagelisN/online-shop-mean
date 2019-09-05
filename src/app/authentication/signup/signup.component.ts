@@ -9,9 +9,9 @@ import { AuthenticationService } from '../authentication.service';
 })
 export class SignupComponent {
 
-  constructor(private authenticationService: AuthenticationService)
+  constructor(private authenticationService: AuthenticationService) {}
 
   onSignup(form: NgForm) {
-    this.authService.createUser(form.value.email, form.value.password);
+    this.authenticationService.sendNewUser(form.value.email, form.value.password, form.value.email);
   }
 }

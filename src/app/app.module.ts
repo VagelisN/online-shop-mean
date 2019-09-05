@@ -19,12 +19,15 @@ import {
 } from '@angular/material';
 
 import { SignupComponent } from './authentication/signup/signup.component';
+import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './authentication/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
-    SignupComponent
+    SignupComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +40,8 @@ import { SignupComponent } from './authentication/signup/signup.component';
     MatToolbarModule,
     MatInputModule,
     MatCardModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

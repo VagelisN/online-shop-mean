@@ -3,13 +3,13 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 // Backend routes
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/users');
 
 const app = express();
 
 mongoose
   .connect(
-    "mongodb+srv://VitaNi:" + process.env.MONGO_ATLAS_PW + "@cluster0-3lmzb.mongodb.net/online-shop?w=majority",
+    "mongodb+srv://VitaNi:VtjxLdYLy39okzgc@cluster0-3lmzb.mongodb.net/online-shop?w=majority",
     {useNewUrlParser: true})
   .then(() =>{
     console.log('Connected to database');
@@ -36,6 +36,6 @@ app.use((req,res,next) => {
   next();
 });
 
-app.use('/api/user', userRoutes);
+app.use('/users', userRoutes);
 
 module.exports = app;
