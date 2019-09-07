@@ -28,3 +28,7 @@ a {
   text-decoration:  none;
   color: white;
 }
+
+input {
+  text-align: center;
+}

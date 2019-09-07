@@ -11,6 +11,6 @@ export class LoginComponent {
   constructor(public authenticationService: AuthenticationService) {}
 
   onLogin(form: NgForm) {
-    this.authenticationService.loginUser(form.value.email, form.value.password);
+    this.authenticationService.loginUser(form.value.username, form.value.password);
   }
 }

@@ -1,12 +1,13 @@
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
-const UserModel = require('../models/users');
+const Users = require('../models/users');
 
 exports.newUser =  (req, res, next) => {
+  console.log(req.body.password);
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
-      const user = new UserModel({
+      const user = new Users({
         username: req.body.username,
         email: req.body.email,
         password: hash
@@ -28,43 +29,44 @@ exports.newUser =  (req, res, next) => {
 }
 
  exports.loginUser = (req, res, next) => {
-//   let fetchedUser;
+  let fetchedUser;
 
-//   // first check if the email exists
-//   User.findOne({ email: req.body.email })
-//     .then(user => {
-//       if( !user ) {
-//         return res.status(401).json({
-//           message: "Auth Failed"
-//         })
-//       }
-//       fetchedUser = user;
-//       // returns a promise
-//       return bcrypt.compare(req.body.password, user.password)
-//     })
-//     .then(result => {
-//       if ( !result ) {
-//         return res.status(401).json({
-//           message: "Invalid Authentication Creds"
-//         })
-//       }
-//       const token = jwt.sign(
-//         { email: fetchedUser.email, userId: fetchedUser._id },
-//         process.env.JWT_KEY,
-//         { expiresIn: '1h' }
-//       );
-//       console.log(token);
-//       // no need to return cause nothing else will be executed
-//       res.status(200).json({
-//         token: token,
-//         expiresIn: 3600,
-//         // decoding the token at the frontend is slow so pass it here
-//         userId: fetchedUser._id
-//       });
-//     })
-//     .catch(err => {
-//       res.status(500).json({
-//         error: err
-//       });
-//     });
+  // first check if the email exists
+  Users.findOne({ username: req.body.username })
+    .then(user => {
+      if( !user ) {
+        return res.status(401).json({
+          message: "Auth Failed"
+        })
+      }
+      fetchedUser = user;
+      // returns a promise
+      console.log(req.body.password);
+      return bcrypt.compare(req.body.password, user.password)
+    })
+    .then(result => {
+      console.log(result);
+      if ( !result ) {
+        console.log('xaaaaaaaaaaaaaaa');
+        return res.status(401).json({
+          message: "Invalid Authentication Creds"
+        })
+      }
+      const token = jwt.sign(
+        { username: fetchedUser.username, userId: fetchedUser._id },
+        "this_password_should_be_secret",
+      );
+      console.log(token);
+      // no need to return cause nothing else will be executed
+      res.status(200).json({
+        token: token,
+        // decoding the token at the frontend is slow so pass it here
+        userId: fetchedUser._id
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
 }

@@ -25,10 +25,11 @@
       </button>
       <span><a routerLink = "/">online-shop</a></span>
       <span class ="spacer"></span>
-      <input type="search" matInput>
+      <input type="search" placeholder="Search" matInput>
       <span class="spacer"></span>
-      <a mat-button routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>
-      <a mat-button routerLink = "/login" routerLinkActive= "mat-accent ">Login</a>
+      <a mat-button *ngIf="!userAuthenticated" routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>
+      <a mat-button *ngIf="!userAuthenticated" routerLink = "/login" routerLinkActive= "mat-accent ">Login</a>
+      <button mat-button *ngIf="userAuthenticated" (click)="onLogout()">Logout</button>
 
     </mat-toolbar>
         <!-- Add Content Here -->

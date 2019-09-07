@@ -12,6 +12,6 @@ export class SignupComponent {
   constructor(private authenticationService: AuthenticationService) {}
 
   onSignup(form: NgForm) {
-    this.authenticationService.sendNewUser(form.value.email, form.value.password, form.value.email);
+    this.authenticationService.sendNewUser(form.value.email, form.value.username, form.value.password);
   }
 }
