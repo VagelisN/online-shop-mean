@@ -17,12 +17,11 @@ mongoose
     console.log('Connection to database failed');
   });
 
-fs.readFile( './items-temp.xml', function(err, data) {
+fs.readFile( './items-0.xml', function(err, data) {
     var json = parser.toJson(data);
     let mew = JSON.parse(json);
 
     var i ;
-    console.log( mew.Items.Item.length);
     for (i=0; i < mew.Items.Item.length; i++)
     {
       let j;
@@ -31,9 +30,9 @@ fs.readFile( './items-temp.xml', function(err, data) {
       {
         console.log(mew.Items.Item[i].Category[j]);
         let currCategory = mew.Items.Item[i].Category[j];
-       wait1 = Category.findOne({ name: currCategory});
-
-       wait1.then(category => {
+        Category.findOne({ name: currCategory})
+          .then(category => {
+            console.log(category);
             // if category was not found insert it with parent id the id of the previously found cat
             let newCategory;
             if (!category) {
@@ -42,18 +41,17 @@ fs.readFile( './items-temp.xml', function(err, data) {
               } else {
                  newCategory = new Category({name: currCategory, parentId: parentId});
               }
-
-              wait2 = newCategory.save();
-              wait2.then(result => {
-                console.log(result);
-              })
-              .catch(err => {
-                console.log(err);
-              });
+              newCategory.save()
+                .then(result => {
+                  console.log(result);
+                })
+                .catch(err => {
+                  console.log(err);
+                });
             } else { //category already in just save the id to be used as a parent
               parentId = category.parentId;
             }
-          })
+          });
       }
     }
  });

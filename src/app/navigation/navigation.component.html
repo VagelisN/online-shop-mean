@@ -29,7 +29,10 @@
       <span class="spacer"></span>
       <a mat-button *ngIf="!userAuthenticated" routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>
       <a mat-button *ngIf="!userAuthenticated" routerLink = "/login" routerLinkActive= "mat-accent ">Login</a>
+      <div><button mat-icon-button ><mat-icon  *ngIf="userAuthenticated"  >message</mat-icon></button></div>
       <button mat-button *ngIf="userAuthenticated" (click)="onLogout()">Logout</button>
+
+
 
     </mat-toolbar>
         <!-- Add Content Here -->

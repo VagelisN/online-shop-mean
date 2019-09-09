@@ -40,6 +40,7 @@ import { LoginComponent } from './authentication/login/login.component';
     MatToolbarModule,
     MatInputModule,
     MatCardModule,
+    MatIconModule,
     FormsModule,
     HttpClientModule
   ],
