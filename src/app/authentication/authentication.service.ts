@@ -20,7 +20,7 @@ export class AuthenticationService {
     const newUser: UserModel = { username, email, password };
     console.log(newUser);
     this.http
-      .post('http://localhost:3000/users/signup', newUser)
+      .post('https://localhost:3000/users/signup', newUser)
       .subscribe( () => {
         this.router.navigate(['/']);
       });

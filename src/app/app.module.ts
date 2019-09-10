@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,19 +15,31 @@ import {
   MatToolbarModule,
   MatCardModule,
   MatInputModule,
+  MatExpansionModule,
+  MatProgressSpinner,
+  MatDatepicker,
+  MatProgressSpinnerModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
 
 } from '@angular/material';
+
+import { AgmCoreModule } from '@agm/core';
 
 import { SignupComponent } from './authentication/signup/signup.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './authentication/login/login.component';
+import { AuctionCreateComponent } from './auctions/auction-create/auction-create.component';
+import { AuctionListComponent } from './auctions/auction-list/auction-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
     SignupComponent,
-    LoginComponent
+    LoginComponent,
+    AuctionCreateComponent,
+    AuctionListComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +54,16 @@ import { LoginComponent } from './authentication/login/login.component';
     MatCardModule,
     MatIconModule,
     FormsModule,
-    HttpClientModule
+    ReactiveFormsModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    HttpClientModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCyEMjnrac_8UM5_xd0aRy9n74wKxYHB3s',
+      libraries: ['places']
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path');
 
 // Backend routes
 const userRoutes = require('./routes/users');
+const auctionRoutes = require('./routes/auctions');
 
 const app = express();
 
@@ -19,9 +21,9 @@ mongoose
   });
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false})); //not needed
+app.use(bodyParser.urlencoded({extended: false})); // not needed
 
-// app.use("/images",express.static(path.join("backend/images"))); //any request targeting /slash images is allowed to continue
+app.use("/images",express.static(path.join("backend/images"))); // any request targeting /slash images is allowed to continue
 
 app.use((req,res,next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -37,5 +39,6 @@ app.use((req,res,next) => {
 });
 
 app.use('/users', userRoutes);
+app.use('/auctions', auctionRoutes);
 
 module.exports = app;

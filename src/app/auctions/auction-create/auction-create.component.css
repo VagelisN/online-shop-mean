@@ -1,0 +1,41 @@
+mat-card-header {
+  width: 100%;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+mat-form-field,
+textarea {
+  width: 100%;
+}
+
+mat-spinner {
+  margin: auto;
+}
+
+input[type="file"] {
+  visibility: hidden;
+}
+
+.image-preview {
+  height: 5rem;
+  margin: 1rem 0;
+}
+
+.image-preview img {
+  height: 100%;
+}
+
+.submit_but {
+  margin: 1rem auto;
+  text-align: center;
+}
+
+agm-map {
+  margin: auto;
+  height: 300px;
+}
+
+.map {
+  margin: auto;
+}
