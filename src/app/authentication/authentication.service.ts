@@ -45,4 +45,12 @@ export class AuthenticationService {
     this.userAuthenticatedSub.next(false);
     this.router.navigate(['/']);
   }
+
+  setUserData() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return;
+    }
+    this.userAuthenticated = true;
+  }
 }

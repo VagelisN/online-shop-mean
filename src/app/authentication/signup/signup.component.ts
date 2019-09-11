@@ -8,10 +8,11 @@ import { AuthenticationService } from '../authentication.service';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
-
+  buttonText = 'Signup';
   constructor(private authenticationService: AuthenticationService) {}
 
   onSignup(form: NgForm) {
+    this.buttonText = 'Signing up...';
     this.authenticationService.sendNewUser(form.value.email, form.value.username, form.value.password);
   }
 }

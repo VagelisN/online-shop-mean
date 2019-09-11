@@ -26,11 +26,14 @@
     </mat-form-field>
     <div style = "text-align: center">
     <button
+    style="width: 120px;"
+    *ngIf="!loading"
     mat-raised-button
     color = 'accent'
     type="submit">
-    Login
+    {{buttonText}}
     </button>
+
     </div>
   </form>
 </mat-card>
