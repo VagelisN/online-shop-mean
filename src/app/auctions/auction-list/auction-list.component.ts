@@ -19,6 +19,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     this.auctionsService.getAuctions();
     this.auctionsSub = this.auctionsService.getAuctionUpdateListener()
       .subscribe((auctions: Auctions[]) => {
+
         this.isLoading = false;
         this.auctions = auctions;
       });

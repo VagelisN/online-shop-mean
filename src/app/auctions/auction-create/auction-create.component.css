@@ -39,3 +39,7 @@ agm-map {
 .map {
   margin: auto;
 }
+
+.imagePicker {
+  margin-top: 1rem;
+}

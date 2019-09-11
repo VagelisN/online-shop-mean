@@ -1,7 +1,7 @@
 const app = require("./backend/app");
 const debug = require("debug")("node-angular");
 
-const https = require("https");
+const http = require("http");
 const fs = require("fs");
 
 const options = {
@@ -53,7 +53,7 @@ const onListening = () => {
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
-const server = https.createServer(options, app);
+const server = http.createServer(options, app);
 server.on("error", onError);
 server.on("listening", onListening);
 server.listen(port);

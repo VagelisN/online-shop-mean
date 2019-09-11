@@ -13,9 +13,9 @@ export class AuctionsService {
   constructor(private http: HttpClient, private router: Router) {}
 
   getAuctions() {
-    console.log('In getAuctions() !');
+    // console.log('In getAuctions() !');
     this.http.get<{message: string, auctions: any}>(
-      'https://localhost:3000/auctions'
+      'http://localhost:3000/auctions'
     )
     .pipe(map((auctionData) => {
       return auctionData.auctions.map(auction => {
@@ -61,7 +61,7 @@ export class AuctionsService {
       endDate: string,
       image: string,
       address: string
-    }>('https://localhost:3000/auctions/' + id);
+    }>('http://localhost:3000/auctions/' + id);
   }
 
   addAuction(tname: string, tdescription: string, tcountry: string,
@@ -83,7 +83,7 @@ export class AuctionsService {
     console.log(auctionData.get('endDate'));
     console.log('------------------------');
 
-    this.http.post<{ message: string, auctionId: string, imagePath: string}>('https://localhost:3000/auctions/create', auctionData )
+    this.http.post<{ message: string, auctionId: string, imagePath: string}>('http://localhost:3000/auctions/create', auctionData )
      .subscribe( (responseData) => {
         console.log(responseData.message);
         console.log(responseData.auctionId);
@@ -128,7 +128,7 @@ export class AuctionsService {
       address: taddress,
       startDate: ''
     };
-    this.http.put('https://localhost:3000/auctions/' + tid, auction)
+    this.http.put('http://localhost:3000/auctions/' + tid, auction)
     .subscribe(response => {
       const updatedAuctions = [...this.auctions];
       const oldAuctionIndex = updatedAuctions.findIndex(p => p.id === auction.id);
@@ -140,7 +140,7 @@ export class AuctionsService {
   }
 
   deleteAuction(auctionId: string) {
-    this.http.delete('https://localhost:3000/auctions/' + auctionId)
+    this.http.delete('http://localhost:3000/auctions/' + auctionId)
     .subscribe(() => {
       const updatedAuctions = this.auctions.filter(auction => auction.id !== auctionId);
       this.auctions = updatedAuctions;
@@ -149,7 +149,7 @@ export class AuctionsService {
   }
 
   startAuction(auctionId: string) {
-    this.http.patch<{message: string}>('https://localhost:3000/auctions/start/' + auctionId, '')
+    this.http.patch<{message: string}>('http://localhost:3000/auctions/start/' + auctionId, '')
     .subscribe((res) => {
       console.log(res.message);
       this.router.navigate(['/auction']);

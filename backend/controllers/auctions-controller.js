@@ -31,6 +31,7 @@ exports.createAuction =  (req, res, next) => {
 };
 
 exports.getAuctions = (req, res, next) => {
+  console.log("Reached the backend");
   Auction.find().then( documents => {
     res.status(200).json({
       message: 'Auctions fetched succesfully from database.',
@@ -66,22 +67,13 @@ exports.startAuction = (req, res, next) => {
   console.log("in router.patch!");
   Auction.findById(req.params.id).then(auction => {
     if (auction.startDate === null) {
-      // Found the auction and confirmed that it hasn't started
-      /*
-      var today = new Date();
-      var dd = today.getDate();
-      var mm = today.getMonth()+1;
-      var yyyy = today.getFullYear();
-      if (dd < 10) {
-        dd = '0' + dd;
-      }
-      if (mm < 10) {
-        mm = '0' + mm;
-      }
-      today = mm+'-'+dd+'-'+yyyy;
-      console.log(today);
-      */
+
+      // Check whether the endDate has passed
+      const tempEndDate = auction.endDate.split('-');
+      const endDate = new Date(tempEndDate[2], tempEndDate[0] - 1, tempEndDate[1]);
       var today = Date();
+      console.log("endDate: ", endDate);
+      console.log("startDate: ", today);
       var query = { _id: req.params.id };
       var newValue = { $set: { startDate: today } };
       Auction.updateOne(query, newValue, () => {

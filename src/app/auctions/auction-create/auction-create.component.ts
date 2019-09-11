@@ -89,7 +89,6 @@ export class AuctionCreateComponent implements OnInit {
         // console.log(this.auctionId);
         this.auctionsService.getAuction(this.auctionId).subscribe(auctionData => {
           // console.log('Already subbed.');
-          this.isLoading = false;
           this.auction = {
             id: auctionData.id,
             name: auctionData.name,
@@ -105,6 +104,7 @@ export class AuctionCreateComponent implements OnInit {
             highestBid: auctionData.highestBid,
             address: auctionData.address
           };
+          this.isLoading = false;
           this.form.setValue({
             name: this.auction.name,
             description: this.auction.description,
@@ -181,8 +181,8 @@ export class AuctionCreateComponent implements OnInit {
     }
     this.isLoading = true;
     if (this.mode === 'create') {
-      console.log('In onSaveAuction/create method.');
-      console.log(this.form.value.endDate);
+      // console.log('In onSaveAuction/create method.');
+      // console.log(this.form.value.endDate);
       this.auctionsService.addAuction(this.form.value.name,
                                 this.form.value.description,
                                 this.form.value.country,
