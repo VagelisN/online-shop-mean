@@ -9,6 +9,8 @@ export class AuthenticationService {
 
   private userAuthenticated = false;
   private userAuthenticatedSub = new Subject<boolean>();
+  private userId: string;
+  private token: string;
   constructor(private http: HttpClient, private router: Router) {}
 
   getUserAuthenticated() { return this.userAuthenticated; }
@@ -20,15 +22,19 @@ export class AuthenticationService {
     const newUser: UserModel = { username, email, password };
     console.log(newUser);
     this.http
-      .post('https://localhost:3000/users/signup', newUser)
+      .post('http://localhost:3000/users/signup', newUser)
       .subscribe( () => {
         this.router.navigate(['/']);
       });
   }
 
+  getLoggedUserId() {
+    return this.userId;
+  }
+
   loginUser(username: string, password: string) {
     this.http
-      .post<{token: string, userId: string}>('https://localhost:3000/users/login', {username, password})
+      .post<{token: string, userId: string}>('http://localhost:3000/users/login', {username, password})
       .subscribe( (response) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('userId', response.userId);
@@ -41,6 +47,8 @@ export class AuthenticationService {
   logoutUser() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
+    this.token = null;
+    this.userId = null;
     this.userAuthenticated = false;
     this.userAuthenticatedSub.next(false);
     this.router.navigate(['/']);
@@ -51,6 +59,8 @@ export class AuthenticationService {
     if (!token) {
       return;
     }
+    this.token = token;
+    this.userId = localStorage.getItem('userId');
     this.userAuthenticated = true;
   }
 }

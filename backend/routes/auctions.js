@@ -4,6 +4,8 @@ const controller = require('../controllers/auctions-controller');
 
 const router = express.Router();
 
+const verifyToken = require('./../verify-token');
+
 const multer = require('multer');
 const MIME_TYPE_MAP = {
   'image/png': 'png',
@@ -27,16 +29,15 @@ const storage = multer.diskStorage({
   }
 });
 
-router.post('/create', multer({storage: storage}).single('image'), controller.createAuction);
+router.post('/create', verifyToken, multer({storage: storage}).single('image'), controller.createAuction);
 
 router.get('', controller.getAuctions);
 
 router.get("/:id", controller.getSingleAuction);
 
-router.delete("/:id", controller.deleteAuction);
+router.delete("/:id", verifyToken, controller.deleteAuction);
 
-router.patch("/start/:id", controller.startAuction);
-
+router.patch("/start/:id", verifyToken, controller.startAuction);
 
 
 module.exports = router;
