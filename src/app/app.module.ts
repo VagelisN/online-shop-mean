@@ -7,6 +7,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
 
+import { JwtAuthInterceptor } from './interceptors/jwt-authentication.interceptor';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
+
 import {
   MatButtonModule,
   MatIconModule,
@@ -27,7 +30,7 @@ import {
 import { AgmCoreModule } from '@agm/core';
 
 import { SignupComponent } from './authentication/signup/signup.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginComponent } from './authentication/login/login.component';
 import { AuctionCreateComponent } from './auctions/auction-create/auction-create.component';
 import { AuctionListComponent } from './auctions/auction-list/auction-list.component';
@@ -65,7 +68,9 @@ import { AuctionListComponent } from './auctions/auction-list/auction-list.compo
       libraries: ['places']
     })
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtAuthInterceptor, multi: true},
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

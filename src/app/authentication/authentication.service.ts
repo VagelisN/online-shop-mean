@@ -29,7 +29,9 @@ export class AuthenticationService {
   loginUser(username: string, password: string) {
     this.http
       .post<{token: string, userId: string}>('https://localhost:3000/users/login', {username, password})
-      .subscribe( () => {
+      .subscribe( (response) => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('userId', response.userId);
         this.userAuthenticated = true;
         this.userAuthenticatedSub.next(true);
         this.router.navigate(['/']);
@@ -37,9 +39,10 @@ export class AuthenticationService {
   }
 
   logoutUser() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     this.userAuthenticated = false;
     this.userAuthenticatedSub.next(false);
     this.router.navigate(['/']);
   }
-
 }
