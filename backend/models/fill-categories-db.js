@@ -21,10 +21,10 @@ function connectToDb () {
 
 }
 
-function findinDb(currCategory) {
+function findinDb(currCategory, parentId) {
 
   return new Promise(resolve => {
-    Category.findOne({ name: currCategory})
+    Category.findOne({ name: currCategory, parentId: parentId})
           .then( category => {
             resolve(category);
           });
@@ -55,24 +55,32 @@ function run(name) {
       for (i=0; i < jsonItems.Items.Item.length; i++) {
         let j;
         parentId = undefined;
-
         for (j = 0; j < jsonItems.Items.Item[i].Category.length; j++ ) {
+
           let currCategory = jsonItems.Items.Item[i].Category[j];
-          //console.log(currCategory);
-          category = await findinDb(currCategory);
-              // if category was not found insert it with parent id the id of the previously found cat
-              let newCategory;
-              if (!category) {
-                if(parentId === undefined) {
-                  newCategory = new Category({name: currCategory});
-                } else {
-                   newCategory = new Category({name: currCategory, parentId: parentId});
-                }
-                let result = await saveInDb(newCategory);
-                parentId = result._id;
-              } else { //category already in just save the id to be used as a parent
-                parentId = category._id;
-              }
+          category = await findinDb(currCategory,parentId);
+          // if category was not found insert it with parent id the id of the previously found cat
+          let newCategory;
+          if (!category) {
+            if(parentId === undefined) {
+              newCategory = new Category({name: currCategory});
+            } else {
+                newCategory = new Category({name: currCategory, parentId: parentId});
+            }
+            let result = await saveInDb(newCategory);
+            parentId = result._id;
+          }
+
+          else { //category already in
+            // it exists but from a different path
+            if ((String(category.parentId)  != String(parentId) ) && (parentId != undefined) ) {
+
+              newCategory = new Category({name: currCategory, parentId: parentId});
+              let result = await saveInDb(newCategory);
+              parentId = result._id;
+            }
+            else {parentId = category._id;}
+          }
         }
       }
       console.log("FINISHED");
@@ -85,7 +93,7 @@ function run(name) {
 async function fillCategories() {
   await connectToDb();
   var k;
-  for(k = 1; k < 40; k++)
+  for(k = 0; k < 40; k++)
   {
     name = './items-' + k + '.xml';
     console.log(name);

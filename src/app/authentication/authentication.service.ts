@@ -9,6 +9,8 @@ export class AuthenticationService {
 
   private userAuthenticated = false;
   private userAuthenticatedSub = new Subject<boolean>();
+  private errorTextSub = new Subject<string>();
+
   private userId: string;
   private token: string;
   constructor(private http: HttpClient, private router: Router) {}
@@ -16,6 +18,8 @@ export class AuthenticationService {
   getUserAuthenticated() { return this.userAuthenticated; }
 
   getAuthenticationSub() { return this.userAuthenticatedSub; }
+
+  getErrorTextSub() { return this.errorTextSub; }
 
   // sends an http put request to the backend to create new user
   sendNewUser(email: string, username: string, password: string) {
@@ -62,5 +66,13 @@ export class AuthenticationService {
     this.token = token;
     this.userId = localStorage.getItem('userId');
     this.userAuthenticated = true;
+  }
+
+  handleError(error) {
+    console.log(error);
+    if (error === 'Invalid Username or Password') {
+      this.errorTextSub.next(error);
+      this.router.navigate(['/login']);
+    }
   }
 }

@@ -19,7 +19,6 @@ exports.newUser =  (req, res, next) => {
       user.save()
         .then(result => {
           res.status(201).json({
-            message: 'User Created!',
             result: result
           });
         })
@@ -27,7 +26,6 @@ exports.newUser =  (req, res, next) => {
           res.status(500).json({
             message: 'Invalid Creds'
           });
-          console.log(err);
         });
     });
 }
@@ -51,9 +49,8 @@ exports.newUser =  (req, res, next) => {
     .then(result => {
       console.log(result);
       if ( !result ) {
-        console.log('xaaaaaaaaaaaaaaa');
         return res.status(401).json({
-          message: "Invalid Authentication Creds"
+          message: "Invalid Username or Password"
         })
       }
       const token = jwt.sign(

@@ -1,3 +1,4 @@
+<mat-card class="error" *ngIf="errorText">{{errorText}}</mat-card>
 <mat-card>
   <form (submit)="onLogin(loginForm)" #loginForm="ngForm">
     <mat-form-field>

@@ -5,7 +5,7 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const categorySchema = mongoose.Schema({
   // unique doesnt validate without unique-validator
-  name: { type: String, required: true ,unique: true},
+  name: { type: String, required: true},
   parentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null}
 });
 

@@ -20,25 +20,36 @@ function connectToDb () {
   });
 }
 
-var path= [];
-function findPath(categoryId) {
-  Category.findOne({ _id: categoryId}, function (err, item){
-    if (err) {
-      console.log(err);
-      return
-    }
-    path.unshift(item._id);
-    if(item.parentId != null) {
-      findPath(item.parentId);
-    }
-    else {
-      console.log(path);
-    }
-  });
 
+function findPath(categoryId,path) {
+  return new Promise(resolve =>{
+    Category.findOne({ _id: categoryId}, function (err, item){
+      if (err) {
+        console.log(err);
+        resolve();
+        return
+      }
+      path.unshift(item._id, item.name);
+      if(item.parentId != null) {
+        findPath(item.parentId, path);
+        resolve();
+      }
+      else {
+        resolve();
+      }
+    });
+  })
 }
 
 connectToDb();
 setTimeout(()=> {console.log("finished")},2000);
-findPath("5d7529a11b8d142f5b13dc14");
+let path = [];
+findPath("5d7529a11b8d142f5b13dc14", path);
+setTimeout(()=> {
+console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+console.log(path);
+},2000);
+
+
+
 
