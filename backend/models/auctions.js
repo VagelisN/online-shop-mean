@@ -1,22 +1,10 @@
 const mongoose = require('mongoose');
 
-const Bidder = {
-  userId : String,
-  rating: Number,
-  location: String,
-  country: String
-};
-
-const Bid = {
+const bidSchema = mongoose.Schema({
   amount: Number,
   time: String, //This will change to a date data type
-  bidder: Bidder
-};
-
-const Seller = {
-  userId: String,
-  sellerRating: Number
-};
+  bidder: {type: mongoose.Types.ObjectId, ref: 'users'}
+});
 
 
 const auctionSchema = mongoose.Schema({
@@ -25,16 +13,17 @@ const auctionSchema = mongoose.Schema({
   category: {type: String, required: true},
   country: {type: String, required: true},
   buyPrice: {type: String},
-  firstBid: {type: Bid},
+  firstBid: {bidSchema},
   highestBid: {type: String },
   numberOfBids: {type: Number},
-  bids: [{ bid: Bid }],
+  bids: [bidSchema],
   latitude: {type: String, required: true},
   longitude: {type: String, required: true},
   image: {type: String},
   startDate: {type: Date},
   endDate: {type: String},
-  seller: {type: Seller},
+  sellerId: {type: String},
+  sellerRating: {type: String},
   address: {type: String}
 });
 

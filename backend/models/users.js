@@ -12,7 +12,11 @@ const userSchema = mongoose.Schema({
   phone: {type: String},
   location: {type: [Number] },
   afm: {type: Number},
-  password: {type: String, required: true}
+  password: {type: String, required: true},
+  sellerRating: {type: String},
+  sellerRatingVotes: {type: Number},
+  buyerRating: {type: Number},
+  buyerRatingVotes: {type: Number}
 });
 
 userSchema.plugin(uniqueValidator);

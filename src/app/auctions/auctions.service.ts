@@ -19,6 +19,7 @@ export class AuctionsService {
     )
     .pipe(map((auctionData) => {
       return auctionData.auctions.map(auction => {
+        console.log('In getAuctions, rating: ', auction.sellerRating);
         return {
           name: auction.name,
           description: auction.description,
@@ -32,7 +33,8 @@ export class AuctionsService {
           endDate: auction.endDate,
           latitude: parseFloat(auction.latitude),
           longitude: parseFloat(auction.longitude),
-          address: auction.address
+          address: auction.address,
+          sellerRating: auction.sellerRating
         };
       });
     }))
@@ -60,13 +62,15 @@ export class AuctionsService {
       startDate: string,
       endDate: string,
       image: string,
-      address: string
+      address: string,
+      sellerId: string,
+      sellerRating: string
     }>('http://localhost:3000/auctions/' + id);
   }
 
   addAuction(tname: string, tdescription: string, tcountry: string,
              tcategory: string, tbuyPrice: string, tlat: string,
-             tlong: string, image: File, tends: string, taddress: string) {
+             tlong: string, image: File, tends: string, taddress: string, tsellerId: string) {
     const auctionData = new FormData();
     auctionData.append('name', tname);
     auctionData.append('description', tdescription);
@@ -78,16 +82,21 @@ export class AuctionsService {
     auctionData.append('image', image, tname);
     auctionData.append('endDate', tends);
     auctionData.append('address', taddress);
+    auctionData.append('sellerId', tsellerId);
 
-    console.log(auctionData.get('name'));
-    console.log(auctionData.get('endDate'));
+    console.log('------------------------');
+    console.log('SellerId in auctionsService: ', auctionData.get('sellerId'));
     console.log('------------------------');
 
-    this.http.post<{ message: string, auctionId: string, imagePath: string}>('http://localhost:3000/auctions/create', auctionData )
+    this.http.post<{ message: string,
+                     auctionId: string,
+                     imagePath: string,
+                     sellerRating: string}>
+                     ('http://localhost:3000/auctions/create', auctionData )
      .subscribe( (responseData) => {
         console.log(responseData.message);
         console.log(responseData.auctionId);
-        console.log(responseData.imagePath);
+        // console.log(responseData.imagePath);
         const auction: Auctions = {
           id: responseData.auctionId,
           name: tname,
@@ -101,7 +110,9 @@ export class AuctionsService {
           highestBid: '0',
           endDate: tends,
           address: taddress,
-          startDate: ''
+          startDate: '',
+          sellerId: tsellerId,
+          sellerRating: responseData.sellerRating
         };
         // Once we receive confirmation from server, then update locally
         this.auctions.push(auction);
@@ -112,7 +123,7 @@ export class AuctionsService {
 
   updateAuction(tid: string, tname: string, tdescription: string,
                 tcountry: string, tcategory: string, tbuyPrice: string,
-                tlat: string, tlong: string, timage: string, tends: string, taddress: string) {
+                tlat: string, tlong: string, timage: string, tends: string, taddress: string, tsellerId: string) {
     const auction: Auctions = {
       id: tid,
       name: tname,
@@ -126,7 +137,9 @@ export class AuctionsService {
       image: timage,
       highestBid: '0',
       address: taddress,
-      startDate: ''
+      startDate: '',
+      sellerId: tsellerId,
+      sellerRating: ''
     };
     this.http.put('http://localhost:3000/auctions/' + tid, auction)
     .subscribe(response => {

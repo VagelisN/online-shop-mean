@@ -12,4 +12,6 @@ export interface Auctions {
   endDate: string;
   image: string;
   address: string;
+  sellerId: string;
+  sellerRating: string;
  }

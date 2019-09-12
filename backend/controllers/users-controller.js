@@ -10,7 +10,11 @@ exports.newUser =  (req, res, next) => {
       const user = new Users({
         username: req.body.username,
         email: req.body.email,
-        password: hash
+        password: hash,
+        sellerRating: '4.5',
+        sellerRatingVotes: 1,
+        buyerRating: 0,
+        buyerRatingVotes: 0
       });
       user.save()
         .then(result => {

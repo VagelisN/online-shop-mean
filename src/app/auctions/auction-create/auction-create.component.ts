@@ -5,6 +5,7 @@ import { AuctionsService } from '../auctions.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Auctions } from '../auction.model';
 import { mimeType } from './mime-type.validator';
+import { AuthenticationService } from './../../authentication/authentication.service';
 
 @Component ({
   selector: 'app-auction-create',
@@ -35,7 +36,8 @@ export class AuctionCreateComponent implements OnInit {
   constructor(public auctionsService: AuctionsService,
               public route: ActivatedRoute,
               private mapsAPILoader: MapsAPILoader,
-              private ngZone: NgZone) {}
+              private ngZone: NgZone,
+              public authenticationService: AuthenticationService) {}
 
   ngOnInit() {
     // Set up things for map input
@@ -102,7 +104,9 @@ export class AuctionCreateComponent implements OnInit {
             longitude: this.longitude.toString(),
             image: auctionData.image,
             highestBid: auctionData.highestBid,
-            address: auctionData.address
+            address: auctionData.address,
+            sellerId: auctionData.sellerId,
+            sellerRating: auctionData.sellerRating
           };
           this.isLoading = false;
           this.form.setValue({
@@ -180,9 +184,13 @@ export class AuctionCreateComponent implements OnInit {
       return;
     }
     this.isLoading = true;
+
+    // Get the userId so we can insert it in the seller field.
+    const sellerId = this.authenticationService.getLoggedUserId();
+    console.log('SellerId: ', sellerId);
+
     if (this.mode === 'create') {
       // console.log('In onSaveAuction/create method.');
-      // console.log(this.form.value.endDate);
       this.auctionsService.addAuction(this.form.value.name,
                                 this.form.value.description,
                                 this.form.value.country,
@@ -192,7 +200,8 @@ export class AuctionCreateComponent implements OnInit {
                                 this.longitude.toString(),
                                 this.form.value.image,
                                 this.form.value.endDate,
-                                this.address);
+                                this.address,
+                                sellerId);
     } else {
       this.auctionsService.updateAuction(this.auctionId,
                                    this.form.value.name,
@@ -204,7 +213,8 @@ export class AuctionCreateComponent implements OnInit {
                                    this.longitude.toString(),
                                    this.form.value.image,
                                    this.form.value.endDate,
-                                   this.address);
+                                   this.address,
+                                   sellerId);
     }
     this.form.reset();
   }
