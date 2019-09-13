@@ -5,6 +5,11 @@ mat-card {
   margin-right: auto;
 }
 
+.error {
+  background-color: #FF6E40;
+  text-align: center;
+}
+
 mat-form-field {
   width: 60%;
   margin-left: 20%;

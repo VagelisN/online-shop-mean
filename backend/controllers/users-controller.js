@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const Users = require('../models/users');
 
 exports.newUser =  (req, res, next) => {
-  console.log(req.body.password);
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
       const user = new Users({
@@ -23,8 +22,15 @@ exports.newUser =  (req, res, next) => {
           });
         })
         .catch(err => {
+          let message = "Invalid Email or Username";
+          if (err.errors["email"] && err.errors["email"]["kind"] == 'unique'){
+            message = "A user with this email adress exists";
+          }
+          else if (err.errors["username"] && err.errors["username"]["kind"] === 'unique') {
+            message = "Username taken";
+          }
           res.status(500).json({
-            message: 'Invalid Creds'
+            message: message
           });
         });
     });
@@ -38,26 +44,23 @@ exports.newUser =  (req, res, next) => {
     .then(user => {
       if( !user ) {
         return res.status(401).json({
-          message: "Auth Failed"
+          message: "This Username does not exist"
         })
       }
       fetchedUser = user;
       // returns a promise
-      console.log(req.body.password);
       return bcrypt.compare(req.body.password, user.password)
     })
     .then(result => {
-      console.log(result);
       if ( !result ) {
         return res.status(401).json({
-          message: "Invalid Username or Password"
+          message: "Wrong Password Entered"
         })
       }
       const token = jwt.sign(
         { username: fetchedUser.username, userId: fetchedUser._id },
         "this_password_should_be_secret",
       );
-      console.log(token);
       // no need to return cause nothing else will be executed
       res.status(200).json({
         token: token,

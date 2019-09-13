@@ -69,10 +69,16 @@ export class AuthenticationService {
   }
 
   handleError(error) {
-    console.log(error);
-    if (error === 'Invalid Username or Password') {
-      this.errorTextSub.next(error);
-      this.router.navigate(['/login']);
+    this.errorTextSub.next(error);
+    if (
+      error === 'Wrong Password Entered' ||
+      error === 'This Username does not exist') {
+        this.router.navigate(['/login']);
+    } else if (
+        error === 'A user with this email adress exists' ||
+        error === 'Username taken' ||
+        error === 'Invalid Email or Username') {
+          this.router.navigate(['/signup']);
     }
   }
 }
