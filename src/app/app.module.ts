@@ -34,6 +34,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginComponent } from './authentication/login/login.component';
 import { AuctionCreateComponent } from './auctions/auction-create/auction-create.component';
 import { AuctionListComponent } from './auctions/auction-list/auction-list.component';
+import { UserListComponent } from './administrator/user-list.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { AuctionListComponent } from './auctions/auction-list/auction-list.compo
     SignupComponent,
     LoginComponent,
     AuctionCreateComponent,
-    AuctionListComponent
+    AuctionListComponent,
+    UserListComponent
   ],
   imports: [
     BrowserModule,

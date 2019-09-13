@@ -6,6 +6,7 @@ const path = require('path');
 // Backend routes
 const userRoutes = require('./routes/users');
 const auctionRoutes = require('./routes/auctions');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 
@@ -40,5 +41,6 @@ app.use((req,res,next) => {
 
 app.use('/users', userRoutes);
 app.use('/auctions', auctionRoutes);
+app.use('/admin', adminRoutes);
 
 module.exports = app;

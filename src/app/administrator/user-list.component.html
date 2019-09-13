@@ -1,0 +1,5 @@
+<mat-list *ngIf="!loading && users.length > 0">
+  <mat-list-item *ngFor="let user of users">{{user.username}}</mat-list-item>
+  <mat-divider></mat-divider>
+</mat-list>
+<p class="info-text mat-body-1" *ngIf="users.length == 0 && !loading">No users added yet!</p>
