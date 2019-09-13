@@ -31,7 +31,7 @@ export class AuctionCreateComponent implements OnInit {
   longitude = 0;
   zoom: number;
   @ViewChild('search', { static: false })
-  public searchElementRef: ElementRef;
+  public searchElementRef: ElementRef = null;
 
   constructor(public auctionsService: AuctionsService,
               public route: ActivatedRoute,
@@ -45,9 +45,8 @@ export class AuctionCreateComponent implements OnInit {
       this.setCurrentLocation();
       this.geoCoder = new google.maps.Geocoder();
 
-      const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-        types: ['address']
-      });
+      console.log('Searchelement: ', this.searchElementRef);
+      const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {types: ['address']} );
       autocomplete.addListener('place_changed', () => {
         this.ngZone.run(() => {
           // get the place result

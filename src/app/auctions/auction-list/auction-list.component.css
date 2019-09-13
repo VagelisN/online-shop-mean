@@ -55,3 +55,18 @@ agm-map {
   height: 300px;
   width: 50%;
 }
+
+.single-auction {
+  width: 80%;
+  margin: auto;
+}
+
+.single-auction h2 {
+  text-align: center;
+}
+
+.buttons {
+  width: 100%;
+  display: block;
+  text-align: right;
+}

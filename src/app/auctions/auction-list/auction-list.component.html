@@ -26,7 +26,7 @@
 
   <!-- If we need to show just one auction. -->
   <div class="single-auction" *ngIf="!getMode() && !isLoading">
-      <h3>{{ auction.name }}</h3>
+      <h2>{{ auction.name }}</h2>
       <div class="auction-image">
           <img [src]="this.auction.image" [alt]="this.auction.name">
       </div>
@@ -45,16 +45,20 @@
                 [longitude]="this.auction.longitude">
               </agm-marker>
           </agm-map>
-          <button
-            mat-button
-            color="accent"
-            (click)="onStart(this.auction.id)"
-            *ngIf="this.auction.startDate === null">Start auction</button>
-          <a
-            mat-button color="primary"
-            [routerLink]="['/auction/edit', this.auction.id]"
-            *ngIf="this.auction.startDate === null">Edit auction</a>
-          <button mat-button color="warn" (click)="onDelete(this.auction.id)">Delete auction</button>
+          <div class="buttons">
+              <button
+                mat-button
+                color="accent"
+                (click)="onStart(this.auction.id)"
+                *ngIf="this.auction.startDate === null">Start auction
+              </button>
+              <a
+                mat-button color="primary"
+                [routerLink]="['/auction/edit', this.auction.id]"
+                *ngIf="this.auction.startDate === null">Edit auction</a>
+            <button mat-button color="warn" (click)="onDelete(this.auction.id)">Delete auction</button>
+          </div>
+
       </div>
   </div>
 
