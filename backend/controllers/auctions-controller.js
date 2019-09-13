@@ -73,11 +73,8 @@ exports.getAuctions = (req, res, next) => {
   console.log("Reached the backend");
   Auction.find().then( async documents => {
     if (documents !== null) {
-
       // Update sellerRating from the users database
       await updateRatings(documents);
-      console.log(documents);
-      console.log('Outside of updateRating: ', documents[0].sellerRating);
     }
     // Send back the auctions as json.
     res.status(200).json({

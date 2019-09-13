@@ -44,13 +44,15 @@ export class AuctionsService {
     });
   }
 
+
+
   getAuctionUpdateListener() {
     return this.auctionsUpdated.asObservable();
   }
 
-  getAuction(id: string) {
+  getSingleAuction(id: string) {
     return this.http.get<{
-      id: string,
+      _id: string,
       name: string,
       description: string,
       country: string,
@@ -158,6 +160,7 @@ export class AuctionsService {
       const updatedAuctions = this.auctions.filter(auction => auction.id !== auctionId);
       this.auctions = updatedAuctions;
       this.auctionsUpdated.next([...this.auctions]);
+      this.router.navigate(['/auction']);
     });
   }
 

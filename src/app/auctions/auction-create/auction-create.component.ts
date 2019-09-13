@@ -89,19 +89,19 @@ export class AuctionCreateComponent implements OnInit {
         this.isLoading = true;
         // console.log('I\'m here nigga.');
         // console.log(this.auctionId);
-        this.auctionsService.getAuction(this.auctionId).subscribe(auctionData => {
+        this.auctionsService.getSingleAuction(this.auctionId).subscribe(auctionData => {
           // console.log('Already subbed.');
           this.auction = {
-            id: auctionData.id,
+            id: auctionData._id,
             name: auctionData.name,
             description: auctionData.description,
             country: auctionData.country,
             category: auctionData.category,
             buyPrice: auctionData.buyPrice,
-            startDate: '',
+            startDate: auctionData.startDate,
             endDate: auctionData.endDate,
-            latitude: this.latitude.toString(),
-            longitude: this.longitude.toString(),
+            latitude: auctionData.latitude,
+            longitude: auctionData.longitude,
             image: auctionData.image,
             highestBid: auctionData.highestBid,
             address: auctionData.address,

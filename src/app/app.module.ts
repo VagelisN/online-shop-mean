@@ -24,6 +24,7 @@ import {
   MatProgressSpinnerModule,
   MatDatepickerModule,
   MatNativeDateModule,
+  MatGridListModule
 
 } from '@angular/material';
 
@@ -65,6 +66,7 @@ import { UserListComponent } from './administrator/user-list.component';
     MatDatepickerModule,
     MatNativeDateModule,
     HttpClientModule,
+    MatGridListModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCyEMjnrac_8UM5_xd0aRy9n74wKxYHB3s',
       libraries: ['places']

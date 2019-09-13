@@ -1,13 +1,78 @@
+
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-<mat-accordion *ngIf="!isLoading && auctions.length > 0">
+
+  <!-- List all auctions. -->
+  <mat-grid-list cols="2" rowHeight="2:1" *ngIf="getMode() && !isLoading">
+    <mat-grid-tile *ngFor="let auction of auctions">
+      <div class="grid">
+          <h3>{{ auction.name }}</h3>
+          <div class="auction-image">
+              <img [src]="auction.image" [alt]="auction.name">
+          </div>
+          <div class="grid-info" *ngIf="checkBuyPrice(auction.buyPrice)">
+              <p>Instant buy price: </p> <h4>{{ auction.buyPrice }}</h4>
+              <p>Auction deadline: </p><h4>{{auction.endDate }}</h4>
+          </div>
+          <a
+            mat-button color="primary"
+            [routerLink]="['/auction/', auction.id]">
+            See full auction.
+          </a>
+      </div>
+
+    </mat-grid-tile>
+  </mat-grid-list>
+
+
+  <!-- If we need to show just one auction. -->
+  <div class="single-auction" *ngIf="!getMode() && !isLoading">
+      <h3>{{ auction.name }}</h3>
+      <div class="auction-image">
+          <img [src]="this.auction.image" [alt]="this.auction.name">
+      </div>
+      <div class="grid-info">
+          <p *ngIf="checkBuyPrice(this.auction.buyPrice)">
+            Instant buy price: {{ this.auction.buyPrice }}
+          </p>
+          <p>Auction deadline: {{this.auction.endDate }}</p>
+          <p>Item category: {{this.auction.category}}</p>
+          <p>Country: {{this.auction.country}}</p>
+          <p>Address: {{this.auction.address}}</p>
+          <p>Highest bid: {{this.auction.highestBid}}</p>
+          <agm-map [latitude]="toNumber(this.auction.latitude)" [longitude]="toNumber(this.auction.longitude)">
+              <agm-marker
+                [latitude]="this.auction.latitude"
+                [longitude]="this.auction.longitude">
+              </agm-marker>
+          </agm-map>
+          <button
+            mat-button
+            color="accent"
+            (click)="onStart(this.auction.id)"
+            *ngIf="this.auction.startDate === null">Start auction</button>
+          <a
+            mat-button color="primary"
+            [routerLink]="['/auction/edit', this.auction.id]"
+            *ngIf="this.auction.startDate === null">Edit auction</a>
+          <button mat-button color="warn" (click)="onDelete(this.auction.id)">Delete auction</button>
+      </div>
+  </div>
+
+<p class="info-text mat-body-1" *ngIf="getMode() && auctions.length <= 0 && !isLoading">No auctions added yet!</p>
+
+
+<!--<mat-accordion *ngIf="!isLoading && auctions.length > 0">
   <mat-expansion-panel *ngFor="let auction of auctions">
     <mat-expansion-panel-header>
-      Item:{{ auction.name }}
+      <div>
+        <h3>{{ auction.name }}</h3>
+
+        <div *ngIf="checkBuyPrice(auction.buyPrice)">
+          <p>Instant buy price: </p> <h4>{{ auction.buyPrice }}</h4>
+        </div>
+        <p>Auction deadline: </p><h4>{{auction.endDate }}</h4>
+      </div>
     </mat-expansion-panel-header>
-    <div class="auction-image">
-      <h4>Image</h4>
-      <img [src]="auction.image" [alt]="auction.name">
-    </div>
     <h4>Item description: </h4>
     <p>{{ auction.description }}</p>
     <br>
@@ -34,18 +99,18 @@
        </agm-marker>
     </agm-map>
     <mat-action-row>
-      <button
-        mat-button
-        color="accent"
-        (click)="onStart(auction.id)"
-        *ngIf="auction.startDate === null">Start auction</button>
-      <a
-        mat-button color="primary"
-        [routerLink]="['/auction/edit', auction.id]"
-        *ngIf="auction.startDate === null">Edit auction</a>
-      <button mat-button color="warn" (click)="onDelete(auction.id)">Delete auction</button>
+        <button
+          mat-button
+          color="accent"
+          (click)="onStart(auction.id)"
+          *ngIf="auction.startDate === null">Start auction</button>
+        <a
+          mat-button color="primary"
+          [routerLink]="['/auction/edit', auction.id]"
+          *ngIf="auction.startDate === null">Edit auction</a>
+        <button mat-button color="warn" (click)="onDelete(auction.id)">Delete auction</button> -->
       <!-- Need to add a new button which starts the auction-->
-    </mat-action-row>
+  <!--  </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<p class="info-text mat-body-1" *ngIf="auctions.length <= 0 && !isLoading">No auctions added yet!</p>
+ -->
