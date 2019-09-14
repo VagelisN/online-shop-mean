@@ -1,3 +1,7 @@
 <mat-card>
-  aaaaaaaaaaaaaa
+  <p *ngIf="tempUser.email">
+  {{tempUser.email}}
+  {{tempUser.username}}
+  </p>
+  <div><button mat-raised-button color="accent" (click)="onVerify(tempUser.username)" >Verify</button></div>
 </mat-card>

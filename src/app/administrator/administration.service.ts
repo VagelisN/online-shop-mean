@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { UserModel } from './../authentication/user.model';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 
 export class AdministrationService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   private verifiedUsers: UserModel[] = [];
   private pendingUsers: UserModel[] = [];
@@ -42,12 +43,16 @@ export class AdministrationService {
 
   getUserInfo(username: string) {
     return this.http.get<{
-      username: string,
-      email: string,
-    }>('http://localhost:3000/admin/username');
+      message: string,
+      user: { email: string, username: string}
+    }>('http://localhost:3000/admin/' + username);
   }
 
-  verifyUser() {
-
+  verifyUser(username: string) {
+    this.http.post<{message: string}>('http://localhost:3000/admin/', {username: username})
+      .subscribe(res => {
+        console.log('sadfasdfasdfasdf');
+        this.router.navigate(['/admin']);
+      });
   }
 }

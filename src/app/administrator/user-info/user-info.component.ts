@@ -11,15 +11,21 @@ export class UserInfoComponent implements OnInit {
 
   constructor(public adminService: AdministrationService, public route: ActivatedRoute) {}
 
+  tempUser: UserModel;
+
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('username')) {
         console.log(paramMap.get('username'));
         this.adminService.getUserInfo(paramMap.get('username'))
-          .subscribe(user => {
-
+          .subscribe(res => {
+            this.tempUser = {email: res.user.email, username: res.user.username, password: null};
           });
       }
     });
+  }
+
+  onVerify(username: string) {
+    this.adminService.verifyUser(username);
   }
 }

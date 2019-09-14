@@ -29,11 +29,6 @@ export class UserListComponent implements OnInit, OnDestroy {
       });
   }
 
-  onVerify() {
-    this.adminService.verifyUser();
-  }
-
-
   ngOnDestroy() {
     this.adminSub.unsubscribe();
   }

@@ -8,4 +8,6 @@ router.get('',controller.getUsers);
 
 router.get('/:username',controller.getUserInfo);
 
+router.post('',controller.verifyUser);
+
 module.exports = router;

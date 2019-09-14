@@ -1,6 +1,5 @@
 <mat-tab-group>
     <mat-tab label="Pending Verification">
-      <ng-template matTabContent>
         <mat-card>
             <mat-list *ngIf="!loading && pendingUsers.length > 0">
               <mat-list-item *ngFor="let user of pendingUsers">{{user.username}}
@@ -12,7 +11,6 @@
 
             </mat-list>
             </mat-card>
-      </ng-template>
     </mat-tab>
     <mat-tab label="Verified Users">
       <mat-card *ngIf="!loading && verifiedUsers.length > 0">
