@@ -37,6 +37,7 @@ import { LoginComponent } from './authentication/login/login.component';
 import { AuctionCreateComponent } from './auctions/auction-create/auction-create.component';
 import { AuctionListComponent } from './auctions/auction-list/auction-list.component';
 import { UserListComponent } from './administrator/user-list.component';
+import { UserInfoComponent } from './administrator/user-info/user-info.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { UserListComponent } from './administrator/user-list.component';
     LoginComponent,
     AuctionCreateComponent,
     AuctionListComponent,
-    UserListComponent
+    UserListComponent,
+    UserInfoComponent
   ],
   imports: [
     BrowserModule,

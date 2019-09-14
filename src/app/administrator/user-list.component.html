@@ -4,7 +4,7 @@
         <mat-card>
             <mat-list *ngIf="!loading && pendingUsers.length > 0">
               <mat-list-item *ngFor="let user of pendingUsers">{{user.username}}
-                <button mat-raised-button color="accent" routerLink = "">Verify</button>
+                <a mat-raised-button color="accent" [routerLink] = "['/userinfo',user.username]">Verify</a>
                 <button mat-raised-button color="warn">Delete</button>
                   <mat-divider>
                 </mat-divider>

@@ -24,7 +24,7 @@ export class AdministrationService {
     .subscribe((res) => {
       let i = 0;
       let tempUser: UserModel;
-      for ( i= 0; i < res.users.length; i++) {
+      for ( i = 0; i < res.users.length; i++) {
         tempUser = {
           username: res.users[i].username,
           email: res.users[i].email,
