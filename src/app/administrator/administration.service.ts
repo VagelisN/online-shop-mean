@@ -40,6 +40,13 @@ export class AdministrationService {
     });
   }
 
+  getUserInfo(username: string) {
+    return this.http.get<{
+      username: string,
+      email: string,
+    }>('http://localhost:3000/admin/username');
+  }
+
   verifyUser() {
 
   }

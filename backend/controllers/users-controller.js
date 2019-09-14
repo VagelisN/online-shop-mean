@@ -59,11 +59,11 @@ exports.newUser =  (req, res, next) => {
         })
       }
       // user in db but not verified
-      if (!fetchedUser.verified) {
-        return res.status(401).json({
-          message: "User Pending Verification from Admin"
-        })
-      }
+      // if (!fetchedUser.verified) {
+      //   return res.status(401).json({
+      //     message: "User Pending Verification from Admin"
+      //   })
+      // }
       const token = jwt.sign(
         { username: fetchedUser.username, userId: fetchedUser._id },
         "this_password_should_be_secret",

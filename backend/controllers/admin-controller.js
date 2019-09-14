@@ -10,3 +10,13 @@ exports.getUsers =  (req, res, next) => {
     }
   });
 };
+
+exports.getUserInfo = (req, res, next) => {
+  User.findOne({ username: req.body.username })
+    .then(user => {
+      res.status(200).json({
+        message: 'fetched user',
+        user: user
+      })
+    });
+};
