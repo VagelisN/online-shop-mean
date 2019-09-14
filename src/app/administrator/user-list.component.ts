@@ -10,7 +10,8 @@ import { AdministrationService } from './administration.service';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit, OnDestroy {
-  users: UserModel[] = [];
+  verifiedUsers: UserModel[] = [];
+  pendingUsers: UserModel [] = [];
   loading = false;
 
   private adminSub: Subscription;
@@ -18,14 +19,21 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(public adminService: AdministrationService) {}
 
   ngOnInit() {
-    console.log("pppppppppppppppppppp");
     this.loading = true;
     this.adminService.getUsers();
     this.adminSub = this.adminService.getUsersUpdatedListener()
-      .subscribe((users: UserModel[]) => {
+      .subscribe( ( {verifiedUsers, pendingUsers} ) => {
         this.loading = false;
-        this.users = users;
+        this.verifiedUsers = verifiedUsers;
+        this.pendingUsers = pendingUsers;
+        console.log("verified", verifiedUsers);
+        console.log("pending", pendingUsers);
+
       });
+  }
+
+  onVerify() {
+    this.adminService.verifyUser();
   }
 
 

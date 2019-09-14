@@ -10,13 +10,15 @@ const userSchema = mongoose.Schema({
   lastname: {type: String },
   email: {type: String, required: true, unique: true},
   phone: {type: String},
-  location: {type: [Number] },
+  longtitude: Number,
+  latitude: Number,
   afm: {type: Number},
   password: {type: String, required: true},
   sellerRating: {type: String},
   sellerRatingVotes: {type: Number},
   buyerRating: {type: Number},
-  buyerRatingVotes: {type: Number}
+  buyerRatingVotes: {type: Number},
+  verified: {type: Boolean, required: true}
 });
 
 userSchema.plugin(uniqueValidator);

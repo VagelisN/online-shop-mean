@@ -1,5 +1,28 @@
-<mat-list *ngIf="!loading && users.length > 0">
-  <mat-list-item *ngFor="let user of users">{{user.username}}</mat-list-item>
-  <mat-divider></mat-divider>
-</mat-list>
-<p class="info-text mat-body-1" *ngIf="users.length == 0 && !loading">No users added yet!</p>
+<mat-tab-group>
+    <mat-tab label="Pending Verification">
+      <ng-template matTabContent>
+        <mat-card>
+            <mat-list *ngIf="!loading && pendingUsers.length > 0">
+              <mat-list-item *ngFor="let user of pendingUsers">{{user.username}}
+                <button mat-raised-button color="accent" routerLink = "">Verify</button>
+                <button mat-raised-button color="warn">Delete</button>
+                  <mat-divider>
+                </mat-divider>
+              </mat-list-item>
+
+            </mat-list>
+            </mat-card>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Verified Users">
+      <mat-card *ngIf="!loading && verifiedUsers.length > 0">
+          <mat-list *ngIf="!loading && verifiedUsers.length > 0">
+            <mat-list-item *ngFor="let user of verifiedUsers">{{user.username}}
+                <mat-divider>
+              </mat-divider>
+            </mat-list-item>
+
+          </mat-list>
+          </mat-card>
+    </mat-tab>
+</mat-tab-group>

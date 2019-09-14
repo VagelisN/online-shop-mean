@@ -72,7 +72,8 @@ export class AuthenticationService {
     this.errorTextSub.next(error);
     if (
       error === 'Wrong Password Entered' ||
-      error === 'This Username does not exist') {
+      error === 'This Username does not exist' ||
+      error === 'User Pending Verification from Admin') {
         this.router.navigate(['/login']);
     } else if (
         error === 'A user with this email adress exists' ||

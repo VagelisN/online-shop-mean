@@ -13,7 +13,8 @@ exports.newUser =  (req, res, next) => {
         sellerRating: '4.5',
         sellerRatingVotes: 1,
         buyerRating: 0,
-        buyerRatingVotes: 0
+        buyerRatingVotes: 0,
+        verified: false
       });
       user.save()
         .then(result => {
@@ -55,6 +56,12 @@ exports.newUser =  (req, res, next) => {
       if ( !result ) {
         return res.status(401).json({
           message: "Wrong Password Entered"
+        })
+      }
+      // user in db but not verified
+      if (!fetchedUser.verified) {
+        return res.status(401).json({
+          message: "User Pending Verification from Admin"
         })
       }
       const token = jwt.sign(

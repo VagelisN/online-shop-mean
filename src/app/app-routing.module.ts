@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'auction/create', component: AuctionCreateComponent, canActivate: [AuthenticationGuard]},
   { path: 'auction/edit/:auctionId', component: AuctionCreateComponent },
   { path: 'auction', component: AuctionListComponent },
-  { path: 'admin', component: UserListComponent, canActivate: [AuthenticationGuard] },
+  { path: 'admin', component: UserListComponent},
   { path: 'auction/:auctionId', component: AuctionListComponent}
 ];
 
