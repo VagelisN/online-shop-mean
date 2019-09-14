@@ -3,6 +3,7 @@ import { Auctions } from '../auction.model';
 import { Subscription } from 'rxjs';
 import { AuctionsService } from '../auctions.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { AuthenticationService } from './../../authentication/authentication.service';
 
 @Component({
   selector: 'app-auction-list',
@@ -12,12 +13,14 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 export class AuctionListComponent implements OnInit, OnDestroy {
   auctions: Auctions[] = [];
   isLoading = false;
+  bidValue = null;
   private auctionId = null;
   auction: Auctions = null;
   private mode = 'all';
   private auctionsSub: Subscription;
   constructor(public auctionsService: AuctionsService,
-              public route: ActivatedRoute) {}
+              public route: ActivatedRoute,
+              public authenticationService: AuthenticationService) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -88,5 +91,24 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   toNumber(str: string) {
     return parseFloat(str);
+  }
+
+  // Check's if the logged in user is the owner of the auction (if sellerId = logged user)
+  checkOwnership(sellerId) {
+    return (sellerId === this.authenticationService.getLoggedUserId());
+  }
+
+
+  onBidSubmit() {
+    if (this.bidValue === null || this.bidValue === 0) {
+      return;
+    }
+    // Check if the current highest bid is higher than the one submitted here.
+    if (parseFloat(this.auction.highestBid) > this.bidValue ) {
+      return;
+      // Handle error messages to the form
+    }
+    const userId = this.authenticationService.getLoggedUserId();
+    this.auctionsService.submitBid(this.auction.id, userId, this.bidValue);
   }
 }

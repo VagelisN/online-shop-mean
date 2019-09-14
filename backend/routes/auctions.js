@@ -39,5 +39,7 @@ router.delete("/:id", verifyToken, controller.deleteAuction);
 
 router.patch("/start/:id", verifyToken, controller.startAuction);
 
+router.patch('/bid/:id', controller.bidAuction);
+
 
 module.exports = router;

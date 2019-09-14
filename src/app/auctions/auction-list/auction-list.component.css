@@ -2,12 +2,24 @@ mat-spinner {
   margin: 2rem auto;
 }
 
+img {
+  width: 100%;
+  height: 100%;
+}
+
 mat-grid-list {
   margin: 1rem 1rem;
 }
 
 mat-grid-tile {
-  background-color: lightblue;
+  background-color: rgb(182, 220, 255);
+  border-style: ridge;
+}
+
+mat-grid-tile a {
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
 .grid {
@@ -15,21 +27,39 @@ mat-grid-tile {
   height: 100%;
 }
 
-.grid h3 {
+.auction-image-all {
+  width: 100%;
+  height: 100%;
   margin: 0 auto;
 }
 
-.auction-image {
-  width: 35%;
-  float: right;
-  background-color: black;
-  margin-right: 1rem;
+.auction-image-all img {
+  height: 70%;
+  width: auto;
+  max-width: 100%;
+  float: center;
+  box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.5);
+  margin: 0 auto;
 }
 
-.auction-image img {
+.auction-description {
   width: 100%;
-  float: right;
-  box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.5);
+  height: 25%;
+  margin: 0 auto;
+  float: bottom;
+}
+
+.auction-description h4 {
+  margin: 0 auto;
+  display: inline-block;
+  text-align: justify;
+  text-shadow: 2px 1px lightgray;
+}
+
+.auction-description p {
+  margin-top: 0;
+  margin-left: 15px;
+  display: inline-block;
 }
 
 .grid-info {
@@ -48,7 +78,7 @@ mat-grid-tile {
   margin: 2rem 5rem;
   display: block;
   text-align: center;
-  background-color: blue;
+  background-color: rgb(90, 162, 255);
 }
 
 agm-map {
@@ -65,8 +95,19 @@ agm-map {
   text-align: center;
 }
 
+.auction-image-single {
+  width: 40%;
+  height: auto;
+  float: right;
+  margin: 0 0;
+}
+
 .buttons {
   width: 100%;
   display: block;
   text-align: right;
+}
+
+.bid {
+  margin: 1rem 1rem;
 }

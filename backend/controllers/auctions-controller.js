@@ -9,9 +9,7 @@ function updateRatings(documents) {
     }
     resolve();
   })
-
 }
-
 
 async function updateSingleRating(auction) {
   return new Promise( resolve => {
@@ -126,6 +124,7 @@ exports.startAuction = (req, res, next) => {
       if (today < endDate) {
         var query = { _id: req.params.id };
         var newValue = { $set: { startDate: today } };
+        // Mporei na allaksei se auction.save()  <==========================
         Auction.updateOne(query, newValue, () => {
           console.log("Started an auction");
           res.status(201).json({
@@ -148,4 +147,53 @@ exports.startAuction = (req, res, next) => {
       });
     }
   })
+};
+
+exports.bidAuction = (req, res, next) => {
+
+  // First of all, get the auction from the database.
+  Auction.findById(req.params.id).then(auction => {
+    // Check if there are any bids
+    if (auction.bids === null) {
+      // Create a bid schema and push the new bid
+      auction.bids = {
+        amount: req.body.bid,
+        time: new Date(),
+        bidder: req.body.id
+      }
+      // Update the highest bid, the first bid and the number of bids.
+      auction.highestBid = req.body.bid;
+      auction.firstBid = auction.bids[0];
+      auction.numberOfBids = 1;
+    } else {
+      // Check if the bid is valid and update the bids in the schema
+      if (req.body.bid > auction.highestBid) {
+        auction.bids.push({
+          amount: req.body.bid,
+          time: new Date(),
+          bidder: req.body.id
+        });
+        // Then update the number of bids and the highestBid
+        auction.highestBid = req.body.bid;
+        auction.numberOfBids ++;
+
+      } else {
+        res.status(500).json({
+          message: 'Bid is lower than the current highest.'
+        });
+      }
+    }
+    auction.save().then(() => {
+      res.status(200).json({
+        message: 'Bid submitted succesfully'
+      });
+    })
+  })
+  .catch(() => {
+    console.log('Could not find auction.');
+    res.status(404).json({
+      message: 'Couldn\'t find auction.'
+    })
+  })
+
 };

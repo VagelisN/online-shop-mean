@@ -2,32 +2,28 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
   <!-- List all auctions. -->
-  <mat-grid-list cols="2" rowHeight="2:1" *ngIf="getMode() && !isLoading">
+  <mat-grid-list cols="4" rowHeight="2:1" *ngIf="getMode() && !isLoading">
     <mat-grid-tile *ngFor="let auction of auctions">
+        <a
+        mat-button color="primary"
+        [routerLink]="['/auction/', auction.id]">
       <div class="grid">
-          <h3>{{ auction.name }}</h3>
-          <div class="auction-image">
-              <img [src]="auction.image" [alt]="auction.name">
+          <div class="auction-image-all">
+              <img [title]="auction.name"[src]="auction.image" [alt]="auction.name">
+              <div class="auction-description">
+                <h4>{{auction.name}}</h4>
+                <p>{{auction.buyPrice}} $</p>
+              </div>
           </div>
-          <div class="grid-info" *ngIf="checkBuyPrice(auction.buyPrice)">
-              <p>Instant buy price: </p> <h4>{{ auction.buyPrice }}</h4>
-              <p>Auction deadline: </p><h4>{{auction.endDate }}</h4>
-          </div>
-          <a
-            mat-button color="primary"
-            [routerLink]="['/auction/', auction.id]">
-            See full auction.
-          </a>
       </div>
-
+    </a>
     </mat-grid-tile>
   </mat-grid-list>
-
 
   <!-- If we need to show just one auction. -->
   <div class="single-auction" *ngIf="!getMode() && !isLoading">
       <h2>{{ auction.name }}</h2>
-      <div class="auction-image">
+      <div class="auction-image-single">
           <img [src]="this.auction.image" [alt]="this.auction.name">
       </div>
       <div class="grid-info">
@@ -39,13 +35,24 @@
           <p>Country: {{this.auction.country}}</p>
           <p>Address: {{this.auction.address}}</p>
           <p>Highest bid: {{this.auction.highestBid}}</p>
+          <p>Description: {{this.auction.description}}</p>
           <agm-map [latitude]="toNumber(this.auction.latitude)" [longitude]="toNumber(this.auction.longitude)">
               <agm-marker
                 [latitude]="this.auction.latitude"
                 [longitude]="this.auction.longitude">
               </agm-marker>
           </agm-map>
-          <div class="buttons">
+          <div class="bid" *ngIf="this.auction.startDate !== null">
+              <input type="number" [(ngModel)]="bidValue">
+              <button
+                mat-button
+                color="warn"
+                (click)="onBidSubmit()">Bid!
+              </button>
+          </div>
+
+
+          <div class="buttons" *ngIf="checkOwnership(this.auction.sellerId)">
               <button
                 mat-button
                 color="accent"

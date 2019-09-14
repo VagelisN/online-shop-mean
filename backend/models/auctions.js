@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const bidSchema = mongoose.Schema({
   amount: Number,
-  time: String, //This will change to a date data type
-  bidder: {type: mongoose.Types.ObjectId, ref: 'users'}
+  time: Date, //This will change to a date data type
+  bidder: String
 });
 
 

@@ -19,8 +19,6 @@ import {
   MatCardModule,
   MatInputModule,
   MatExpansionModule,
-  MatProgressSpinner,
-  MatDatepicker,
   MatProgressSpinnerModule,
   MatDatepickerModule,
   MatNativeDateModule,

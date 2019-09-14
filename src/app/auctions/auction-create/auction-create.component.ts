@@ -46,6 +46,7 @@ export class AuctionCreateComponent implements OnInit {
       this.geoCoder = new google.maps.Geocoder();
 
       console.log('Searchelement: ', this.searchElementRef);
+      // Kati fortwnei prin arxikopoihthei kai bgainei error sto console.
       const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {types: ['address']} );
       autocomplete.addListener('place_changed', () => {
         this.ngZone.run(() => {

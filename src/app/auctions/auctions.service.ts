@@ -171,4 +171,18 @@ export class AuctionsService {
       this.router.navigate(['/auction']);
     });
   }
+
+  submitBid(auctionId: string, userId: string , tbid: number) {
+    const bid = {
+      id: userId,
+      bid: tbid
+    };
+    this.http.patch<{message: string}>('http://localhost:3000/auctions/bid/' + auctionId, bid)
+    .subscribe((res) => {
+      console.log(res.message);
+      this.router.navigate(['/auction/' + auctionId]);
+    });
+  }
 }
+
+
