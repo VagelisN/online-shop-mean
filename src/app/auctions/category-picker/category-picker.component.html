@@ -1,6 +1,5 @@
 <button mat-button (click)="onPickCategory()" [matMenuTriggerFor]="animals">Pick a category</button>
 
 <mat-menu #animals="matMenu">
-    <button mat-menu-item [matMenuTriggerFor]="vertebrates">Vertebrates</button>
-    <button mat-menu-item [matMenuTriggerFor]="invertebrates">Invertebrates</button>
-  </mat-menu>
+    <button mat-menu-item *ngFor="let category of categories" >{{category.name}}</button>
+</mat-menu>

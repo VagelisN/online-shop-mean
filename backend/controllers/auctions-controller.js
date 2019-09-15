@@ -1,4 +1,5 @@
 const Auction = require('./../models/auctions');
+const Category = require('./../models/categories');
 const Users = require('./../models/users');
 
 
@@ -199,5 +200,16 @@ exports.bidAuction = (req, res, next) => {
 };
 
 exports.getCategories = (req, res, next) => {
+  let parentId = req.params.parentId;
+  if (req.params.parentId == "null") {parentId = null;}
+  Category.find({parentId: parentId}).then( async documents => {
+    if (documents !== null) {
 
-}
+    }
+    // Send back the auctions as json.
+    res.status(200).json({
+      message: 'Categories fetched succesfully from database.',
+      categories: documents
+    });
+  });
+};

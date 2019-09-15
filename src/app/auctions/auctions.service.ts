@@ -185,8 +185,8 @@ export class AuctionsService {
   }
 
   getCategories(parentId: string) {
-    return this.http.get<{message: string, auctions: any}>(
-      'http://localhost:3000/auction/categories/' + parentId
+    return this.http.get<{message: string, categories: any}>(
+      'http://localhost:3000/auctions/categories/' + parentId
     );
   }
 }
