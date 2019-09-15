@@ -28,7 +28,7 @@ export class AuthenticationService {
     this.http
       .post('http://localhost:3000/users/signup', newUser)
       .subscribe( () => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/signup/pending']);
       });
   }
 

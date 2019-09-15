@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  // "Bearer sdfsdfsdfgkqkfovbij" the struct of authorization so split
   try {
     const token = req.headers.authorization;
     const decodedToken = jwt.verify(token, "this_password_should_be_secret");

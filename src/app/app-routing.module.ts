@@ -7,6 +7,7 @@ import { AuctionListComponent } from './auctions/auction-list/auction-list.compo
 import { AuthenticationGuard } from './authentication/authentication.guard';
 import { UserListComponent } from './administrator/user-list.component';
 import { UserInfoComponent } from './administrator/user-info/user-info.component';
+import { PendingScreenComponent } from './authentication/pending-screen/pending-screen.component';
 
 const routes: Routes = [
   { path: 'signup', component: SignupComponent },
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: 'auction', component: AuctionListComponent },
   { path: 'admin', component: UserListComponent},
   { path: 'userinfo/:username', component: UserInfoComponent },
-  { path: 'auction/:auctionId', component: AuctionListComponent}
+  { path: 'auction/:auctionId', component: AuctionListComponent},
+  { path: 'signup/pending', component: PendingScreenComponent}
 ];
 
 @NgModule({

@@ -1,7 +1,7 @@
 <mat-tab-group>
     <mat-tab label="Pending Verification">
-        <mat-card>
-            <mat-list *ngIf="!loading && pendingUsers.length > 0">
+        <mat-card  *ngIf="!loading && pendingUsers.length > 0">
+            <mat-list>
               <mat-list-item *ngFor="let user of pendingUsers">{{user.username}}
                 <a mat-raised-button color="accent" [routerLink] = "['/userinfo',user.username]">Verify</a>
                 <button mat-raised-button color="warn">Delete</button>
@@ -14,8 +14,9 @@
     </mat-tab>
     <mat-tab label="Verified Users">
       <mat-card *ngIf="!loading && verifiedUsers.length > 0">
-          <mat-list *ngIf="!loading && verifiedUsers.length > 0">
+          <mat-list>
             <mat-list-item *ngFor="let user of verifiedUsers">{{user.username}}
+                <a mat-raised-button color="accent" [routerLink] = "['/userinfo',user.username]">See details</a>
                 <mat-divider>
               </mat-divider>
             </mat-list-item>

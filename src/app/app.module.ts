@@ -36,6 +36,7 @@ import { AuctionCreateComponent } from './auctions/auction-create/auction-create
 import { AuctionListComponent } from './auctions/auction-list/auction-list.component';
 import { UserListComponent } from './administrator/user-list.component';
 import { UserInfoComponent } from './administrator/user-info/user-info.component';
+import { PendingScreenComponent } from './authentication/pending-screen/pending-screen.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { UserInfoComponent } from './administrator/user-info/user-info.component
     AuctionCreateComponent,
     AuctionListComponent,
     UserListComponent,
-    UserInfoComponent
+    UserInfoComponent,
+    PendingScreenComponent
   ],
   imports: [
     BrowserModule,

@@ -76,6 +76,7 @@ exports.newUser =  (req, res, next) => {
       });
     })
     .catch(err => {
+      console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
       res.status(500).json({
         error: err
       });

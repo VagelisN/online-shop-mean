@@ -18,6 +18,8 @@ export class AdministrationService {
   getUsersUpdatedListener() { return this.usersUpdated; }
 
   getUsers() {
+    this.verifiedUsers = [];
+    this.pendingUsers = [];
     // console.log('In getAuctions() !');
     this.http.get<{message: string, users: any}>(
       'http://localhost:3000/admin'

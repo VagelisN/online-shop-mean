@@ -24,11 +24,14 @@ exports.getUserInfo = (req, res, next) => {
 
 exports.verifyUser = (req, res, next) => {
   var query = { username: req.body.username };
-  var newValue = { verified: true };
-  User.updateOne(query, newValue, (result) => {
-    console.log(result,"asdasdasdasd");
-    res.status(200).json({
-      message: 'user Verified'
-    })
+  var newValue = {$set: { verified: true } };
+  User.findOneAndUpdate(query, newValue, {new: true},(err,doc) => {
+    if(!err) {
+      res.status(200).json({
+        message: 'user Verified'
+      })
+    } else {
+      console.log(err);
+    }
   });
 };
