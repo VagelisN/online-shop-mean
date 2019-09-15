@@ -23,7 +23,8 @@ import {
   MatDatepickerModule,
   MatNativeDateModule,
   MatGridListModule,
-  MatTabsModule
+  MatTabsModule,
+  MatMenuModule
 
 } from '@angular/material';
 
@@ -38,6 +39,7 @@ import { UserListComponent } from './administrator/user-list.component';
 import { UserInfoComponent } from './administrator/user-info/user-info.component';
 import { PendingScreenComponent } from './authentication/pending-screen/pending-screen.component';
 import { MustMatchDirective } from './authentication/signup/must-match.directive';
+import { CategoryPickerComponent } from './auctions/category-picker/category-picker.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,8 @@ import { MustMatchDirective } from './authentication/signup/must-match.directive
     UserListComponent,
     UserInfoComponent,
     PendingScreenComponent,
-    MustMatchDirective
+    MustMatchDirective,
+    CategoryPickerComponent
   ],
   imports: [
     BrowserModule,
@@ -73,6 +76,7 @@ import { MustMatchDirective } from './authentication/signup/must-match.directive
     HttpClientModule,
     MatGridListModule,
     MatTabsModule,
+    MatMenuModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCyEMjnrac_8UM5_xd0aRy9n74wKxYHB3s',
       libraries: ['places']

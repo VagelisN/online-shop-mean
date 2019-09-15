@@ -197,3 +197,7 @@ exports.bidAuction = (req, res, next) => {
   })
 
 };
+
+exports.getCategories = (req, res, next) => {
+
+}

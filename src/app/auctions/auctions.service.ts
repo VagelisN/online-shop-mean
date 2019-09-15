@@ -183,6 +183,14 @@ export class AuctionsService {
       this.router.navigate(['/auction/' + auctionId]);
     });
   }
+
+  getCategories(parentId: string) {
+    return this.http.get<{message: string, auctions: any}>(
+      'http://localhost:3000/auction/categories/' + parentId
+    );
+  }
 }
+
+
 
 

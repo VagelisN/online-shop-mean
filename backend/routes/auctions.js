@@ -41,5 +41,7 @@ router.patch("/start/:id", verifyToken, controller.startAuction);
 
 router.patch('/bid/:id', controller.bidAuction);
 
+router.get('/categories/:parentId', controller.getCategories);
+
 
 module.exports = router;
