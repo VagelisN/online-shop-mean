@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, NG_VALIDATORS } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -37,6 +37,7 @@ import { AuctionListComponent } from './auctions/auction-list/auction-list.compo
 import { UserListComponent } from './administrator/user-list.component';
 import { UserInfoComponent } from './administrator/user-info/user-info.component';
 import { PendingScreenComponent } from './authentication/pending-screen/pending-screen.component';
+import { MustMatchDirective } from './authentication/signup/must-match.directive';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { PendingScreenComponent } from './authentication/pending-screen/pending-
     AuctionListComponent,
     UserListComponent,
     UserInfoComponent,
-    PendingScreenComponent
+    PendingScreenComponent,
+    MustMatchDirective
   ],
   imports: [
     BrowserModule,

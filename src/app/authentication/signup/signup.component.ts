@@ -3,6 +3,8 @@ import { NgForm } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
 import { Subscription } from 'rxjs';
 
+import { MustMatchDirective } from './must-match.directive';
+
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -12,6 +14,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   buttonText = 'Signup';
   errorText = '';
   errorTextSub: Subscription;
+  model: any = {};
   constructor(private authenticationService: AuthenticationService) {}
 
   ngOnInit() {

@@ -1,6 +1,6 @@
 <mat-card class="error" *ngIf="errorText">{{errorText}}</mat-card>
 <mat-card>
-    <form (submit)="onSignup(signupForm)"  #signupForm="ngForm" *ngIf="!isLoading">
+    <form (submit)="onSignup(signupForm)"  #signupForm="ngForm" *ngIf="!isLoading" [mustMatch]="['password', 'confirmPassword']" >
         <mat-form-field>
             <input
             name="email"
@@ -27,14 +27,26 @@
         <mat-form-field>
             <input
             name="password"
-            ngModel
+            [(ngModel)]="model.password"
             type="password"
             matInput
             placeholder="Password"
             #passwordInput="ngModel"
-            required>
-            <mat-error *ngIf="passwordInput.invalid">Please entera valid password.</mat-error>
+            required
+            minlength="3">
+            <mat-error *ngIf="passwordInput.invalid">Password must contain at least six characters</mat-error>
           </mat-form-field>
+          <mat-form-field>
+              <input
+              name="confirmPassword"
+              [(ngModel)]="model.confirmPassword"
+              type="password"
+              matInput
+              placeholder="Confirm Password"
+              #ConfirmPasswordInput="ngModel"
+              required>
+              <mat-error *ngIf="ConfirmPasswordInput.invalid">Passwords Do Not Match</mat-error>
+            </mat-form-field>
         <mat-form-field>
             <input
             name="firstname"
