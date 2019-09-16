@@ -1,22 +1,49 @@
 <button mat-button (click)="onPickCategory(null,0)" [matMenuTriggerFor]="firstLevelCategories">Pick a category</button>
+
+
       <mat-menu #firstLevelCategories="matMenu">
-          <button  mat-menu-item *ngFor="let category of categories[0]" (mouseenter)="onPickCategory(category._id,1)" [matMenuTriggerFor]="secondLevelCategories">{{category.name}}</button>
+          <button
+          mat-menu-item
+          *ngFor="let category of categories[0]"
+          (mouseenter)="onPickCategory(category._id,1)"
+          [matMenuTriggerFor]="secondLevelCategories">
+          {{category.name}}
+        </button>
       </mat-menu>
 
       <mat-menu #secondLevelCategories="matMenu">
-          <button  mat-menu-item *ngFor="let category of categories[1]" (mouseenter)="onPickCategory(category._id,2)" [matMenuTriggerFor]="thirdLevelCategories">{{category.name}}</button>
+        <span *ngFor="let category of categories[1]">
+            <span (mouseenter)="onPickCategory(category._id,2)">
+              <button *ngIf="categories[2]?.length > 0 && categories[2][0]?.parentId == category._id" mat-menu-item  [matMenuTriggerFor]="thirdLevelCategories">{{category.name}}</button>
+              <button *ngIf= "categories[2][0]?.parentId != category._id" (click)="onCategoryChosen(category._id)" mat-menu-item >{{category.name}}</button>
+            </span>
+        </span>
       </mat-menu>
 
       <mat-menu #thirdLevelCategories="matMenu">
-          <button  mat-menu-item *ngFor="let category of categories[2]" (mouseenter)="onPickCategory(category._id,3)" [matMenuTriggerFor]="fourthLevelCategories">{{category.name}}</button>
+          <span *ngFor="let category of categories[2]">
+              <span (mouseenter)="onPickCategory(category._id,3)">
+                <button *ngIf="categories[3]?.length > 0 && categories[3][0]?.parentId == category._id" [matMenuTriggerFor]="fourthLevelCategories" mat-menu-item >{{category.name}}</button>
+                <button *ngIf= "categories[3][0]?.parentId != category._id" (click)="onCategoryChosen(category._id)" mat-menu-item >{{category.name}}</button>
+              </span>
+          </span>
       </mat-menu>
 
       <mat-menu #fourthLevelCategories="matMenu">
-          <button  mat-menu-item *ngFor="let category of categories[3]" (mouseenter)="onPickCategory(category._id,4)" [matMenuTriggerFor]="fifthLevelCategories">{{category.name}}</button>
+          <span *ngFor="let category of categories[3]">
+              <span (mouseenter)="onPickCategory(category._id,4)">
+                <button *ngIf="categories[4]?.length > 0 && categories[4][0]?.parentId == category._id" [matMenuTriggerFor]="fifthLevelCategories"  mat-menu-item >{{category.name}}</button>
+                <button *ngIf= "categories[4][0]?.parentId != category._id" mat-menu-item (click)="onCategoryChosen(category._id)" >{{category.name}}</button>
+              </span>
+          </span>
       </mat-menu>
 
-
       <mat-menu #fifthLevelCategories="matMenu">
-          <button mat-menu-item *ngFor="let category of categories[4]" >{{category.name}}</button>
+          <span *ngFor="let category of categories[4]">
+              <span (mouseenter)="onPickCategory(category._id,5)">
+                <button *ngIf="categories[5]?.length > 0 && categories[5][0]?.parentId == category._id" mat-menu-item >{{category.name}}</button>
+                <button *ngIf= "categories[5][0]?.parentId != category._id" (click)="onCategoryChosen(category._id)" mat-menu-item  >{{category.name}}</button>
+              </span>
+          </span>
       </mat-menu>
 

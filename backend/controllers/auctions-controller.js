@@ -213,3 +213,33 @@ exports.getCategories = (req, res, next) => {
     });
   });
 };
+
+function findPath(categoryId,path) {
+  return new Promise(resolve =>{
+    Category.findOne({ _id: categoryId}, async function (err, item){
+      if (err) {
+        console.log(err);
+        resolve();
+        return
+      }
+      path.unshift(item._id, item.name);
+      console.log(path);
+      if(item.parentId != null) {
+        await findPath(item.parentId, path);
+        resolve();
+      }
+      else {
+        resolve();
+      }
+    });
+  })
+}
+
+exports.getPath = async (req, res, next) => {
+  let path = [];
+  await findPath(req.params.id, path);
+  res.status(200).json({
+    message: 'Found Path',
+    path: path
+  });
+}

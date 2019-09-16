@@ -43,5 +43,7 @@ router.patch('/bid/:id', controller.bidAuction);
 
 router.get('/categories/:parentId', controller.getCategories);
 
+router.get('/categories/path/:id', controller.getPath);
+
 
 module.exports = router;
