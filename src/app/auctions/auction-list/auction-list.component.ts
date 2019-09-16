@@ -14,6 +14,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   auctions: Auctions[] = [];
   isLoading = false;
   bidValue = null;
+  searchBox;
   private auctionId = null;
   auction: Auctions = null;
   private mode = 'all';
