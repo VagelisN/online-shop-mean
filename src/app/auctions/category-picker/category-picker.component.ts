@@ -4,19 +4,20 @@ import { Categories } from './../category.model';
 
 @Component({
   selector: 'app-cat-picker',
-  templateUrl: './category-picker.component.html'
+  templateUrl: './category-picker.component.html',
+  styleUrls: ['./category-picker.component.css']
 })
 export class CategoryPickerComponent {
 
-  categories: Categories[];
+  categories: Categories[][] = [[], [], [], [], []];
 
   constructor(private auctionsService: AuctionsService) {}
 
-
-  onPickCategory() {
-    this.auctionsService.getCategories(null)
+  onPickCategory(parentId: string, categoryLevel: number) {
+    this.auctionsService.getCategories(parentId)
       .subscribe( res => {
-        this.categories = res.categories;
+        this.categories[categoryLevel] = res.categories;
+        console.log(this.categories[categoryLevel].length);
       });
   }
 }

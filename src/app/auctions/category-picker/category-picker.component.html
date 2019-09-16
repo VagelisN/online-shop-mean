@@ -1,5 +1,22 @@
-<button mat-button (click)="onPickCategory()" [matMenuTriggerFor]="animals">Pick a category</button>
+<button mat-button (click)="onPickCategory(null,0)" [matMenuTriggerFor]="firstLevelCategories">Pick a category</button>
+      <mat-menu #firstLevelCategories="matMenu">
+          <button  mat-menu-item *ngFor="let category of categories[0]" (mouseenter)="onPickCategory(category._id,1)" [matMenuTriggerFor]="secondLevelCategories">{{category.name}}</button>
+      </mat-menu>
 
-<mat-menu #animals="matMenu">
-    <button mat-menu-item *ngFor="let category of categories" >{{category.name}}</button>
-</mat-menu>
+      <mat-menu #secondLevelCategories="matMenu">
+          <button  mat-menu-item *ngFor="let category of categories[1]" (mouseenter)="onPickCategory(category._id,2)" [matMenuTriggerFor]="thirdLevelCategories">{{category.name}}</button>
+      </mat-menu>
+
+      <mat-menu #thirdLevelCategories="matMenu">
+          <button  mat-menu-item *ngFor="let category of categories[2]" (mouseenter)="onPickCategory(category._id,3)" [matMenuTriggerFor]="fourthLevelCategories">{{category.name}}</button>
+      </mat-menu>
+
+      <mat-menu #fourthLevelCategories="matMenu">
+          <button  mat-menu-item *ngFor="let category of categories[3]" (mouseenter)="onPickCategory(category._id,4)" [matMenuTriggerFor]="fifthLevelCategories">{{category.name}}</button>
+      </mat-menu>
+
+
+      <mat-menu #fifthLevelCategories="matMenu">
+          <button mat-menu-item *ngFor="let category of categories[4]" >{{category.name}}</button>
+      </mat-menu>
+
