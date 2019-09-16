@@ -73,7 +73,7 @@ export class AuctionCreateComponent implements OnInit {
       description : new FormControl(null, {validators: [Validators.required]}),
       country : new FormControl(null, {validators: [Validators.required]}),
       endDate: new FormControl(null, {validators: [Validators.required]}),
-      buyPrice : new FormControl('', {validators: [Validators.min(0),
+      buyPrice : new FormControl(null, {validators: [Validators.min(0),
                                         Validators.max(100000),
                                         Validators.pattern('^[0-9]*$')]}),
       category : new FormControl(null, {validators: [Validators.required]}),

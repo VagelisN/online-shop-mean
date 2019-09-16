@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Auctions } from '../auction.model';
 import { Subscription } from 'rxjs';
+import { Options } from 'ng5-slider';
 import { AuctionsService } from '../auctions.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthenticationService } from './../../authentication/authentication.service';
@@ -11,10 +12,24 @@ import { AuthenticationService } from './../../authentication/authentication.ser
   styleUrls: ['./auction-list.component.css']
 })
 export class AuctionListComponent implements OnInit, OnDestroy {
+
+  // auctions is used to store all the auctions from the database
+  // tempAuctions is used to store only the auctions that the user will see.
   auctions: Auctions[] = [];
+  tempAuctions: Auctions[] = [];
   isLoading = false;
   bidValue = null;
-  searchBox;
+  searchValue = '';
+
+  // Variables used for the price slider
+  sliderMinValue = 0;
+  sliderMaxValue = 2500;
+  sliderOptions: Options = {
+    floor: 0,
+    ceil: 2500,
+    step: 25
+  };
+
   private auctionId = null;
   auction: Auctions = null;
   private mode = 'all';
@@ -61,6 +76,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
           .subscribe((auctions: Auctions[]) => {
             this.isLoading = false;
             this.auctions = auctions;
+            this.tempAuctions = auctions;
           });
         }
     });
@@ -111,5 +127,42 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     }
     const userId = this.authenticationService.getLoggedUserId();
     this.auctionsService.submitBid(this.auction.id, userId, this.bidValue);
+  }
+
+  checkPrice(auction) {
+    if (auction.buyPrice !== null) {
+      if (parseFloat(auction.buyPrice) > this.sliderMinValue
+          && parseFloat(auction.buyPrice) < this.sliderMaxValue) {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  onSearchSubmit() {
+    if (this.searchValue === '') {
+      this.tempAuctions = this.auctions.filter(auction => {
+        return this.checkPrice(auction);
+      });
+    } else {
+      this.searchValue = this.searchValue.toLowerCase();
+      this.tempAuctions = this.auctions.filter(auction => {
+        // We have to check different fields.
+
+        // Check if the searchValue is in the name field
+        if (auction.name.toLowerCase().includes(this.searchValue)) {
+          return this.checkPrice(auction);
+        }
+        // Check if the searchValue is in the description field
+        if (auction.description.toLowerCase().includes(this.searchValue)) {
+          return this.checkPrice(auction);
+        }
+        // Check if the searchValue is in the location field
+        if (auction.address.toLowerCase().includes(this.searchValue)) {
+          return this.checkPrice(auction);
+        }
+      });
+    }
   }
 }

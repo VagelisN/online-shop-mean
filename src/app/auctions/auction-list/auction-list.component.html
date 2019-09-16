@@ -2,9 +2,17 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
   <!-- List all auctions. -->
+  <div class="md-block search-bar">
+      <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
+      <input mat-input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
+      <button mat-button (click)="onSearchSubmit()">
+        <i class="material-icons">
+          search
+        </i>
+      </button>
+  </div>
   <mat-grid-list cols="4" rowHeight="2:1" *ngIf="getMode() && !isLoading">
-    <input type="text" placeholder="Search auctions..." [(ngModel)]="searchBox">
-    <mat-grid-tile *ngFor="let auction of auctions | filter: searchBox">
+    <mat-grid-tile *ngFor="let auction of tempAuctions">
         <a
         mat-button color="primary"
         [routerLink]="['/auction/', auction.id]">
