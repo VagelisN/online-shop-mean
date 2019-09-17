@@ -16,13 +16,13 @@ async function updateSingleRating(auction) {
   return new Promise( resolve => {
     Users.findById(auction.sellerId)
     .then(user => {
-      console.log("Sellerrating = ", auction.sellerRating);
+      // console.log("Sellerrating = ", auction.sellerRating);
       auction.sellerRating = user.sellerRating;
-      console.log("New sellerRating = ",auction.sellerRating);
+      // console.log("New sellerRating = ",auction.sellerRating);
       resolve();
     })
     .catch(() => {
-      console.log("SellerId was not found in user's collection.");
+      // console.log("SellerId was not found in user's collection.");
       resolve();
     })
   })
@@ -69,19 +69,35 @@ exports.createAuction =  (req, res, next) => {
 // Prepei na kanw search sthn bash twn users kai na kanw fetch to seller rating tou seller prin epistrepsw ta auctions
 
 exports.getAuctions = (req, res, next) => {
-  console.log("Reached the backend");
-  Auction.find().then( async documents => {
-    if (documents !== null) {
-      // Update sellerRating from the users database
-      await updateRatings(documents);
-    }
-    // Send back the auctions as json.
-    res.status(200).json({
-      message: 'Auctions fetched succesfully from database.',
-      auctions: documents
+  console.log("Reached the backend getAuctions()");
+  // Plus sign converts pageSize from string to number
+  const pageSize = +req.query.pageSize;
+  const currentPage = +req.query.currentPage;
+  let fetchedAuctions;
+  const auctionQuery = Auction.find();
+  if (pageSize && currentPage) {
+    auctionQuery
+    .skip(pageSize * (currentPage - 1))
+    .limit(pageSize);
+  }
+  auctionQuery.then( documents => {
+      fetchedAuctions = documents;
+      return Auction.countDocuments();
+    })
+    .then(async count => {
+      if (fetchedAuctions !== null) {
+        // Update sellerRating from the users database
+        await updateRatings(fetchedAuctions);
+      }
+      // Send back the auctions as json.
+      res.status(200).json({
+        message: 'Auctions fetched succesfully from database.',
+        auctions: fetchedAuctions,
+        maxAuctions: count
+      });
+
     });
-  });
-};
+}
 
 
 exports.getSingleAuction = (req, res, next) => {

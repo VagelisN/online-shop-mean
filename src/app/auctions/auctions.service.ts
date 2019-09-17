@@ -8,18 +8,19 @@ import { Router } from '@angular/router';
 @Injectable({providedIn: 'root'})
 export class AuctionsService {
   private auctions: Auctions[] = [];
-  private auctionsUpdated = new Subject<Auctions[]>();
+  private auctionsUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  getAuctions() {
-    // console.log('In getAuctions() !');
-    this.http.get<{message: string, auctions: any}>(
-      'http://localhost:3000/auctions'
+  getAuctions(pageSize, currentPage) {
+    const queryParams = `?pageSize=${pageSize}&currentPage=${currentPage}`;
+    console.log('in getAuctions() pagesize and currentpage: ', pageSize, currentPage);
+    this.http.get<{message: string, auctions: any, maxAuctions: number}>(
+      'http://localhost:3000/auctions' + queryParams
     )
-    .pipe(map((auctionData) => {
-      return auctionData.auctions.map(auction => {
-        console.log('In getAuctions, rating: ', auction.sellerRating);
+    .pipe(
+      map(auctionData => {
+      return { auctions: auctionData.auctions.map(auction => {
         return {
           name: auction.name,
           description: auction.description,
@@ -36,11 +37,14 @@ export class AuctionsService {
           address: auction.address,
           sellerRating: auction.sellerRating
         };
-      });
+      })
+      , maxAuctions: auctionData.maxAuctions
+      };
     }))
-    .subscribe((transformedAuctions) => {
-      this.auctions = transformedAuctions;
-      this.auctionsUpdated.next([...this.auctions]);
+    .subscribe((transformedAuctionData) => {
+      this.auctions = transformedAuctionData.auctions;
+      this.auctionsUpdated.next({ auctions: [...this.auctions],
+                                  auctionCount: transformedAuctionData.maxAuctions});
     });
   }
 
@@ -96,29 +100,6 @@ export class AuctionsService {
                      sellerRating: string}>
                      ('http://localhost:3000/auctions/create', auctionData )
      .subscribe( (responseData) => {
-        console.log(responseData.message);
-        console.log(responseData.auctionId);
-        // console.log(responseData.imagePath);
-        const auction: Auctions = {
-          id: responseData.auctionId,
-          name: tname,
-          description: tdescription,
-          country: tcountry,
-          buyPrice: tbuyPrice,
-          category: tcategory,
-          latitude: tlat,
-          longitude: tlong,
-          image: responseData.imagePath,
-          highestBid: '0',
-          endDate: tends,
-          address: taddress,
-          startDate: '',
-          sellerId: tsellerId,
-          sellerRating: responseData.sellerRating
-        };
-        // Once we receive confirmation from server, then update locally
-        this.auctions.push(auction);
-        this.auctionsUpdated.next([...this.auctions]);
         this.router.navigate(['/auction']);
      });
   }
@@ -145,23 +126,12 @@ export class AuctionsService {
     };
     this.http.put('http://localhost:3000/auctions/' + tid, auction)
     .subscribe(response => {
-      const updatedAuctions = [...this.auctions];
-      const oldAuctionIndex = updatedAuctions.findIndex(p => p.id === auction.id);
-      updatedAuctions[oldAuctionIndex] = auction;
-      this.auctions = updatedAuctions;
-      this.auctionsUpdated.next([...this.auctions]);
       this.router.navigate(['/auction']);
     });
   }
 
   deleteAuction(auctionId: string) {
-    this.http.delete('http://localhost:3000/auctions/' + auctionId)
-    .subscribe(() => {
-      const updatedAuctions = this.auctions.filter(auction => auction.id !== auctionId);
-      this.auctions = updatedAuctions;
-      this.auctionsUpdated.next([...this.auctions]);
-      this.router.navigate(['/auction']);
-    });
+    return this.http.delete('http://localhost:3000/auctions/' + auctionId);
   }
 
   startAuction(auctionId: string) {

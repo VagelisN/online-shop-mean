@@ -5,6 +5,7 @@ import { Options } from 'ng5-slider';
 import { AuctionsService } from '../auctions.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthenticationService } from './../../authentication/authentication.service';
+import { PageEvent } from '@angular/material';
 
 @Component({
   selector: 'app-auction-list',
@@ -20,6 +21,13 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   isLoading = false;
   bidValue = null;
   searchValue = '';
+  bidErrorMessage = null;
+
+  // Paginator related variables
+  totalAuctions = 0;
+  auctionsPerPage = 1;
+  pageSizeOptions = [1, 2, 4, 6, 10];
+  currentPage = 1;
 
   // Variables used for the price slider
   sliderMinValue = 0;
@@ -71,19 +79,24 @@ export class AuctionListComponent implements OnInit, OnDestroy {
         });
       } else {
         // If there is not an id in the url we will list all auctions
-          this.auctionsService.getAuctions();
+        // getAuctions() params are from the paginator ( requesting page 1 )
+          this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
           this.auctionsSub = this.auctionsService.getAuctionUpdateListener()
-          .subscribe((auctions: Auctions[]) => {
+          .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
             this.isLoading = false;
-            this.auctions = auctions;
-            this.tempAuctions = auctions;
+            this.auctions = auctionData.auctions;
+            this.totalAuctions = auctionData.auctionCount;
           });
         }
     });
   }
 
   onDelete(auctionId: string) {
-    this.auctionsService.deleteAuction(auctionId);
+    this.isLoading = true;
+    this.auctionsService.deleteAuction(auctionId)
+    .subscribe(() => {
+      this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
+    });
   }
 
   onStart(auctionId: string) {
@@ -115,17 +128,27 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     return (sellerId === this.authenticationService.getLoggedUserId());
   }
 
+  onChangePage(pageData: PageEvent) {
+    this.isLoading = true;
+    this.currentPage = pageData.pageIndex + 1;
+    this.auctionsPerPage = pageData.pageSize;
+    this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
+    this.isLoading = false;
+  }
 
   onBidSubmit() {
-    if (this.bidValue === null || this.bidValue === 0) {
+    if (this.bidValue === null || this.bidValue <= 0) {
+      this.bidErrorMessage = 'Please insert a valid amount.';
       return;
     }
     // Check if the current highest bid is higher than the one submitted here.
     if (parseFloat(this.auction.highestBid) > this.bidValue ) {
+      this.bidErrorMessage = 'Your bid is lower than the current highest bid.';
       return;
       // Handle error messages to the form
     }
     const userId = this.authenticationService.getLoggedUserId();
+    this.bidErrorMessage = null;
     this.auctionsService.submitBid(this.auction.id, userId, this.bidValue);
   }
 
