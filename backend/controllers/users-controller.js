@@ -72,11 +72,11 @@ exports.newUser =  (req, res, next) => {
       res.status(200).json({
         token: token,
         // decoding the token at the frontend is slow so pass it here
-        userId: fetchedUser._id
+        userId: fetchedUser._id,
+        username: fetchedUser.username
       });
     })
     .catch(err => {
-      console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
       res.status(500).json({
         error: err
       });

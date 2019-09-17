@@ -13,6 +13,7 @@ export class AuthenticationService {
 
   private userId: string;
   private token: string;
+  private username: string;
   constructor(private http: HttpClient, private router: Router) {}
 
   getUserAuthenticated() { return this.userAuthenticated; }
@@ -36,13 +37,19 @@ export class AuthenticationService {
     return this.userId;
   }
 
+  getUsername() {
+    return this.username;
+  }
+
   loginUser(username: string, password: string) {
     this.http
-      .post<{token: string, userId: string}>('http://localhost:3000/users/login', {username, password})
+      .post<{token: string, userId: string, username: string}>('http://localhost:3000/users/login', {username, password})
       .subscribe( (response) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('userId', response.userId);
+        localStorage.setItem('username', response.username);
         this.userAuthenticated = true;
+        this.username = response.username;
         this.userAuthenticatedSub.next(true);
         this.router.navigate(['/']);
       });
@@ -51,8 +58,10 @@ export class AuthenticationService {
   logoutUser() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
+    localStorage.removeItem('username');
     this.token = null;
     this.userId = null;
+    this.username = null;
     this.userAuthenticated = false;
     this.userAuthenticatedSub.next(false);
     this.router.navigate(['/']);
@@ -65,6 +74,9 @@ export class AuthenticationService {
     }
     this.token = token;
     this.userId = localStorage.getItem('userId');
+    this.username = localStorage.getItem('username');
+    console.log("aaaaaaaaaaa",this.username);
+    console.log("asssssssssssssssssssssss" , this.userId);
     this.userAuthenticated = true;
   }
 

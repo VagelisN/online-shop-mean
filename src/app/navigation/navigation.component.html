@@ -35,6 +35,7 @@
         <button mat-icon-button ><mat-icon  *ngIf="userAuthenticated"  >message</mat-icon></button>
       </div>
       <button mat-button *ngIf="userAuthenticated" (click)="onLogout()">Logout</button>
+      <button mat-button *ngIf="userAuthenticated" >{{username}}</button>
 
 
 

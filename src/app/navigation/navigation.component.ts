@@ -18,6 +18,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     );
 
   userAuthenticated = false;
+  username = '';
   private userAuthenticatedSub: Subscription;
 
   constructor(
@@ -26,8 +27,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userAuthenticated = this.authenticationService.getUserAuthenticated();
+    this.username = this.authenticationService.getUsername();
     this.userAuthenticatedSub = this.authenticationService.getAuthenticationSub().subscribe(newValue => {
       this.userAuthenticated = newValue;
+      if (newValue) {
+        this.username = this.authenticationService.getUsername();
+      }
     });
   }
 
