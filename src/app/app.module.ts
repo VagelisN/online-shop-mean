@@ -25,7 +25,8 @@ import {
   MatNativeDateModule,
   MatGridListModule,
   MatTabsModule,
-  MatMenuModule
+  MatMenuModule,
+  MatSelectModule
 
 } from '@angular/material';
 
@@ -79,6 +80,7 @@ import { CategoryPickerComponent } from './auctions/category-picker/category-pic
     MatTabsModule,
     MatMenuModule,
     Ng5SliderModule,
+    MatSelectModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCyEMjnrac_8UM5_xd0aRy9n74wKxYHB3s',
       libraries: ['places']

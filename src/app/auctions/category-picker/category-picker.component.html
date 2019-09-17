@@ -1,11 +1,11 @@
 <button mat-button (click)="onPickCategory(null,0)" [matMenuTriggerFor]="firstLevelCategories">Pick a category</button>
 
-
       <mat-menu #firstLevelCategories="matMenu">
           <button
           mat-menu-item
           *ngFor="let category of categories[0]"
           (mouseenter)="onPickCategory(category._id,1)"
+          #menuTrigger="matMenuTrigger"
           [matMenuTriggerFor]="secondLevelCategories">
           {{category.name}}
         </button>

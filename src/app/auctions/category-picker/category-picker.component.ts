@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AuctionsService } from '../auctions.service';
 import { Categories } from './../category.model';
+import { MatMenuTrigger } from '@angular/material';
 
 @Component({
   selector: 'app-cat-picker',
-  templateUrl: './category-picker.component.html'
+  templateUrl: './category-picker.component.html',
+  styleUrls: ['./category-picker.component.css']
 })
 export class CategoryPickerComponent {
 
   categories: Categories[][] = [[], [], [], [], [], [], []];
+
+  @ViewChild(MatMenuTrigger, null) trigger: MatMenuTrigger;
 
   constructor(private auctionsService: AuctionsService) {}
 
@@ -23,5 +27,10 @@ export class CategoryPickerComponent {
     this.auctionsService.findPath(id).subscribe(res => {
       console.log(res.path);
     });
+  }
+
+  onNextLevel(id: string) {
+    this.trigger.openMenu();
+    console.log("asdfasdasd");
   }
 }
