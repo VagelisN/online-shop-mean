@@ -3,6 +3,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AuthenticationService } from '../authentication/authentication.service';
+import { AuctionsService } from '../auctions/auctions.service';
+import { Categories } from './../auctions/category.model';
 
 @Component({
   selector: 'app-navigation',
@@ -19,11 +21,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   userAuthenticated = false;
   username = '';
+  categories: Categories[] = [];
   private userAuthenticatedSub: Subscription;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private authenticationService: AuthenticationService) {}
+    private authenticationService: AuthenticationService,
+    private auctionsService: AuctionsService) {}
 
   ngOnInit() {
     this.userAuthenticated = this.authenticationService.getUserAuthenticated();
@@ -38,6 +42,19 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   onLogout() {
     this.authenticationService.logoutUser();
+  }
+
+  onPickCategory() {
+    this.auctionsService.getCategories(null)
+      .subscribe( res => {
+        this.categories = res.categories;
+      });
+  }
+
+  onCategoryChosen(id: string) {
+    this.auctionsService.findPath(id).subscribe(res => {
+      console.log(res.path);
+    });
   }
 
   ngOnDestroy() { this.userAuthenticatedSub.unsubscribe(); }

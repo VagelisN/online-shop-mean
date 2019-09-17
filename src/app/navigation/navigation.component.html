@@ -26,7 +26,7 @@
       <span><a routerLink = "/">online-shop</a></span>
       <span class ="spacer"></span>
       <input type="search" placeholder="Search" matInput>
-      <app-cat-picker></app-cat-picker>
+
       <span class="spacer"></span>
       <a mat-button *ngIf="!userAuthenticated" routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>
       <a mat-button *ngIf="!userAuthenticated" routerLink = "/login" routerLinkActive= "mat-accent ">Login</a>
@@ -39,6 +39,19 @@
 
 
 
+    </mat-toolbar>
+    <mat-toolbar style="height: 20px;" color="primary">
+      <button mat-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">Shop By Category</button>
+      <mat-menu #firstLevelCategories="matMenu">
+
+        <button
+        mat-menu-item
+        *ngFor="let category of categories">
+        <span style="font-size: 17px;">
+          {{category.name}}
+        </span>
+        </button>
+    </mat-menu>
     </mat-toolbar>
         <!-- Add Content Here -->
     <ng-content>

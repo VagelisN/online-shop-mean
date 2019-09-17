@@ -32,3 +32,10 @@ a {
 input {
   text-align: center;
 }
+
+::ng-deep .mat-menu-panel {width:100%!important;padding: 0 10px!important;}
+
+.mat-menu-item {
+  float: center;
+  height:33px;
+}
