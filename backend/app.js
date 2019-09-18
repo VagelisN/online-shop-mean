@@ -7,6 +7,7 @@ const path = require('path');
 const userRoutes = require('./routes/users');
 const auctionRoutes = require('./routes/auctions');
 const adminRoutes = require('./routes/admin');
+const messageRoutes = require('./routes/messages');
 
 const app = express();
 
@@ -42,5 +43,6 @@ app.use((req,res,next) => {
 app.use('/users', userRoutes);
 app.use('/auctions', auctionRoutes);
 app.use('/admin', adminRoutes);
+app.use('/messages', messageRoutes);
 
 module.exports = app;

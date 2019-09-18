@@ -4,10 +4,12 @@ const controller = require('../controllers/admin-controller');
 
 const router = express.Router();
 
-router.get('',controller.getUsers);
+const verifyToken = require('./../verify-token');
 
-router.get('/:username',controller.getUserInfo);
+router.get('', verifyToken,controller.getUsers);
 
-router.post('',controller.verifyUser);
+router.get('/:username', verifyToken,controller.getUserInfo);
+
+router.post('', verifyToken, controller.verifyUser);
 
 module.exports = router;

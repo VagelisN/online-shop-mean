@@ -42,6 +42,7 @@ import { UserInfoComponent } from './administrator/user-info/user-info.component
 import { PendingScreenComponent } from './authentication/pending-screen/pending-screen.component';
 import { MustMatchDirective } from './authentication/signup/must-match.directive';
 import { CategoryPickerComponent } from './auctions/category-picker/category-picker.component';
+import { MessagesComponent } from './user/messages/messages.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { CategoryPickerComponent } from './auctions/category-picker/category-pic
     UserInfoComponent,
     PendingScreenComponent,
     MustMatchDirective,
-    CategoryPickerComponent
+    CategoryPickerComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,

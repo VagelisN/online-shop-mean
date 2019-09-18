@@ -9,6 +9,7 @@ import { UserListComponent } from './administrator/user-list.component';
 import { UserInfoComponent } from './administrator/user-info/user-info.component';
 import { PendingScreenComponent } from './authentication/pending-screen/pending-screen.component';
 import { AdministrationGuard } from './administrator/admin.guard';
+import { MessagesComponent } from './user/messages/messages.component';
 
 const routes: Routes = [
   { path: 'signup', component: SignupComponent },
@@ -19,7 +20,8 @@ const routes: Routes = [
   { path: 'admin', component: UserListComponent, canActivate: [AdministrationGuard]},
   { path: 'userinfo/:username', component: UserInfoComponent, canActivate: [AdministrationGuard] },
   { path: 'auction/:auctionId', component: AuctionListComponent},
-  { path: 'signup/pending', component: PendingScreenComponent}
+  { path: 'signup/pending', component: PendingScreenComponent},
+  { path: 'user/messages', component: MessagesComponent, canActivate: [AuthenticationGuard]}
 ];
 
 @NgModule({

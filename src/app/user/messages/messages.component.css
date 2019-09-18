@@ -1,0 +1,9 @@
+mat-grid-tile{
+  justify-content: flex-start !important ;
+  align-items: flex-start !important;
+}
+
+mat-grid-tile-header {
+  background-color: white;
+  height: fit-content;
+}

@@ -1,0 +1,17 @@
+<mat-card stle="height= 100%">
+  <mat-grid-list cols="11" rowHeight="2:4">
+      <mat-grid-tile colspan="1">
+        <mat-grid-tile-header>
+            <mat-list >
+                <button mat-button> Sent </button>
+                <br>
+                <button mat-button> Inbox </button>
+               </mat-list>
+        </mat-grid-tile-header>
+
+      </mat-grid-tile>
+      <mat-grid-tile style="background-color:aqua"colspan="10">
+        <mat-card *ngFor="let message of inbox">{{message.title}} {{message.content}}</mat-card>
+      </mat-grid-tile>
+  </mat-grid-list>
+</mat-card>
