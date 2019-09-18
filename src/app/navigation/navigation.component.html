@@ -46,7 +46,8 @@
 
         <button
         mat-menu-item
-        *ngFor="let category of categories">
+        *ngFor="let category of categories"
+        (click)="onCategoryChosen(category._id)">
         <span style="font-size: 17px;">
           {{category.name}}
         </span>

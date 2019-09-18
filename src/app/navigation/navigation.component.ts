@@ -52,9 +52,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   onCategoryChosen(id: string) {
-    this.auctionsService.findPath(id).subscribe(res => {
-      console.log(res.path);
-    });
   }
 
   ngOnDestroy() { this.userAuthenticatedSub.unsubscribe(); }
