@@ -9,12 +9,13 @@ import { Router } from '@angular/router';
 export class AuctionsService {
   private auctions: Auctions[] = [];
   private auctionsUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
+  private auctionSearchUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
   getAuctions(pageSize, currentPage) {
     const queryParams = `?pageSize=${pageSize}&currentPage=${currentPage}`;
-    console.log('in getAuctions() pagesize and currentpage: ', pageSize, currentPage);
+    // console.log('in getAuctions() pagesize and currentpage: ', pageSize, currentPage);
     this.http.get<{message: string, auctions: any, maxAuctions: number}>(
       'http://localhost:3000/auctions' + queryParams
     )
@@ -54,7 +55,12 @@ export class AuctionsService {
     return this.auctionsUpdated.asObservable();
   }
 
+  getAuctionSearchUpdateListener() {
+    return this.auctionSearchUpdated.asObservable();
+  }
+
   getSingleAuction(id: string) {
+    console.log('In getSingleAuction in auctions.service.ts');
     return this.http.get<{
       _id: string,
       name: string,
@@ -71,7 +77,7 @@ export class AuctionsService {
       address: string,
       sellerId: string,
       sellerRating: string
-    }>('http://localhost:3000/auctions/' + id);
+    }>('http://localhost:3000/auctions/get/' + id);
   }
 
   addAuction(tname: string, tdescription: string, tcountry: string,
@@ -152,6 +158,43 @@ export class AuctionsService {
       console.log(res.message);
       this.router.navigate(['/auction/' + auctionId]);
     });
+  }
+
+
+  searchAuctions(tminPrice: number, tmaxPrice: number, tsearchValue: string, currentPage: number, pageSize: number) {
+    console.log('In searchAuctions in auctions.service.ts');
+    const searchParams =
+      `?minPrice=${tminPrice}&maxPrice=${tmaxPrice}&searchValue=${tsearchValue}&currentPage=${currentPage}&pageSize=${pageSize}`;
+    this.http.get<{message: string, auctions: any, auctionCount: number}>
+      ('http://localhost:3000/auctions/search' + searchParams)
+      .pipe(
+        map(auctionData => {
+          return { auctions: auctionData.auctions.map(auction => {
+            return {
+              name: auction.name,
+              description: auction.description,
+              country: auction.country,
+              category: auction.category,
+              buyPrice: auction.buyPrice,
+              id: auction._id,
+              image: auction.image,
+              highestBid: auction.highestBid,
+              startDate: auction.startDate,
+              endDate: auction.endDate,
+              latitude: parseFloat(auction.latitude),
+              longitude: parseFloat(auction.longitude),
+              address: auction.address,
+              sellerRating: auction.sellerRating
+            };
+          })
+          , auctionCount: auctionData.auctionCount
+        };
+      }))
+      .subscribe((transformedAuctionData) => {
+        this.auctions = transformedAuctionData.auctions;
+        this.auctionsUpdated.next({ auctions: [...this.auctions],
+                                    auctionCount: transformedAuctionData.auctionCount});
+      });
   }
 
   getCategories(parentId: string) {

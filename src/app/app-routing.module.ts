@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'auction', component: AuctionListComponent },
   { path: 'admin', component: UserListComponent, canActivate: [AdministrationGuard]},
   { path: 'userinfo/:username', component: UserInfoComponent, canActivate: [AdministrationGuard] },
-  { path: 'auction/:auctionId', component: AuctionListComponent, canActivate: [AdministrationGuard]},
+  { path: 'auction/:auctionId', component: AuctionListComponent},
   { path: 'signup/pending', component: PendingScreenComponent}
 ];
 

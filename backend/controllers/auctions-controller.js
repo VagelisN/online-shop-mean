@@ -99,9 +99,77 @@ exports.getAuctions = (req, res, next) => {
     });
 }
 
+function checkPrice(auction, sliderMinValue, sliderMaxValue) {
+  if (auction.buyPrice !== null) {
+    if (parseFloat(auction.buyPrice) > sliderMinValue
+        && parseFloat(auction.buyPrice) < sliderMaxValue) {
+      return true;
+    }
+  } else {
+    return true;
+  }
+}
+
+exports.searchAuctions = (req, res, next) => {
+  const pageSize = +req.query.pageSize;
+  const currentPage = +req.query.currentPage;
+  const minValue = +req.query.minPrice;
+  const maxValue = +req.query.maxPrice;
+  const searchValue = req.query.searchValue.toLowerCase();
+  console.log('Reached searchAuctions in the backend.',minValue, maxValue, searchValue);
+  console.log('Pagesize: ', pageSize, 'currentPage: ', currentPage);
+  let filteredAuctions = [];
+  Auction.find().then(documents => {
+    console.log(documents);
+    console.log('Finished printing documents.');
+    if (searchValue === '') {
+      filteredAuctions = documents.filter(auction => {
+        return checkPrice(auction, minValue, maxValue);
+      })
+    } else {
+      filteredAuctions = documents.filter(auction => {
+        // We have to check different fields.
+        console.log(auction);
+        console.log('-------------');
+        // Check if the searchValue is in the name field
+        /*
+        console.log(String(auction.name).toLowerCase(),'|apoedwkaiperatipota');
+        console.log(searchValue,'|apoedwkaiperatipota');
+        const result = (auction.name == searchValue);
+        console.log('Includes result: ', result);
+        */
+        if (auction.name.toLowerCase().includes(searchValue)) {
+          console.log('Name was found. So its a price issue.');
+          return checkPrice(auction, minValue, maxValue);
+        }
+        // Check if the searchValue is in the description field
+        if (auction.description.toLowerCase().includes(searchValue)) {
+          return checkPrice(auction, minValue, maxValue);
+        }
+        // Check if the searchValue is in the location field
+        if (auction.address.toLowerCase().includes(searchValue)) {
+          return checkPrice(auction, minValue, maxValue);
+        }
+      })
+    }
+    const tauctionCount = filteredAuctions.length;
+    // Find the indexes we need to send back
+    console.log(filteredAuctions);
+    filteredAuctions = filteredAuctions.slice(pageSize * (currentPage - 1) , (pageSize * currentPage)  );
+    res.status(200).json({
+      message: 'Search fetched auctions succesfully.',
+      auctions: filteredAuctions,
+      auctionCount: tauctionCount
+    });
+  })
+
+
+
+}
+
 
 exports.getSingleAuction = (req, res, next) => {
-  console.log("In edit method. reached the right backend function");
+  console.log("In edit method. reached the right backend function. req.params.id: ",req.params.id);
   Auction.findById(req.params.id).then(auction => {
     if (auction) {
 

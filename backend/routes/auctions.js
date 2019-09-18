@@ -33,11 +33,13 @@ router.post('/create', verifyToken, multer({storage: storage}).single('image'), 
 
 router.get('', controller.getAuctions);
 
-router.get("/:id", controller.getSingleAuction);
+router.get('/get/:id', controller.getSingleAuction);
 
-router.delete("/:id", verifyToken, controller.deleteAuction);
+router.get('/search', controller.searchAuctions);
 
-router.patch("/start/:id", verifyToken, controller.startAuction);
+router.delete('/:id', verifyToken, controller.deleteAuction);
+
+router.patch('/start/:id', verifyToken, controller.startAuction);
 
 router.patch('/bid/:id', controller.bidAuction);
 

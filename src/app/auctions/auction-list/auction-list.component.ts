@@ -25,8 +25,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   // Paginator related variables
   totalAuctions = 0;
-  auctionsPerPage = 1;
-  pageSizeOptions = [1, 2, 4, 6, 10];
+  auctionsPerPage = 4;
+  pageSizeOptions = [ 2, 4, 6, 10];
   currentPage = 1;
 
   // Variables used for the price slider
@@ -42,16 +42,18 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   auction: Auctions = null;
   private mode = 'all';
   private auctionsSub: Subscription;
+  private auctionSearchSub: Subscription;
   constructor(public auctionsService: AuctionsService,
               public route: ActivatedRoute,
               public authenticationService: AuthenticationService) {}
 
   ngOnInit() {
     this.isLoading = true;
-
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      console.log(paramMap);
       // If we have an id on the url, we'll show just one auction
       if (paramMap.has('auctionId')) {
+        console.log('auction-list has id on url.');
         this.mode = 'single';
         this.auctionId = paramMap.get('auctionId');
         this.auctionsService.getSingleAuction(this.auctionId)
@@ -129,6 +131,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   }
 
   onChangePage(pageData: PageEvent) {
+    console.log(pageData);
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.auctionsPerPage = pageData.pageSize;
@@ -164,6 +167,18 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   }
 
   onSearchSubmit() {
+    // Call searchAuctions() from auction.service.ts
+    console.log('onSearchSubmit in auction-list.component');
+    this.auctionsService.searchAuctions(this.sliderMinValue, this.sliderMaxValue, this.searchValue,
+                                        this.currentPage, this.auctionsPerPage);
+    this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
+    .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
+      this.isLoading = false;
+      this.auctions = auctionData.auctions;
+      this.totalAuctions = auctionData.auctionCount;
+    });
+  }
+    /*
     if (this.searchValue === '') {
       this.tempAuctions = this.auctions.filter(auction => {
         return this.checkPrice(auction);
@@ -188,4 +203,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       });
     }
   }
+  */
+
 }
