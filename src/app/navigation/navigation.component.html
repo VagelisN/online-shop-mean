@@ -32,7 +32,10 @@
       <a mat-button *ngIf="!userAuthenticated" routerLink = "/login" routerLinkActive= "mat-accent ">Login</a>
       <div>
         <a mat-button *ngIf="userAuthenticated" routerLink = "/auction/create">Create an auction</a>
-       <a mat-button *ngIf="userAuthenticated" routerLink = "/user/messages"><mat-icon >message</mat-icon></a>
+       <a mat-button *ngIf="userAuthenticated" routerLink = "/user/messages">
+        <mat-icon *ngIf="numOfUnreadMessages > 0" matBadge={{numOfUnreadMessages}} matBadgeColor="warn">message</mat-icon>
+        <mat-icon *ngIf="numOfUnreadMessages == 0" >message</mat-icon>
+      </a>
       </div>
       <button mat-button *ngIf="userAuthenticated" (click)="onLogout()">Logout</button>
       <button mat-button *ngIf="userAuthenticated" >{{username}}</button>

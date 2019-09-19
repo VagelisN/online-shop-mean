@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from './authentication/authentication.service';
+import { MessageService } from './user/messages/message.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { AuthenticationService } from './authentication/authentication.service';
 export class AppComponent implements OnInit {
   title = 'online-shop';
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(private authenticationService: AuthenticationService, private mesageService: MessageService) {}
 
   ngOnInit() {
     this.authenticationService.setUserData();

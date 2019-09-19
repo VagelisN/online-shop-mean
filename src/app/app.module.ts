@@ -26,7 +26,8 @@ import {
   MatGridListModule,
   MatTabsModule,
   MatMenuModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+  MatBadgeModule
 
 } from '@angular/material';
 
@@ -82,6 +83,7 @@ import { MessagesComponent } from './user/messages/messages.component';
     MatTabsModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatBadgeModule,
     Ng5SliderModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCyEMjnrac_8UM5_xd0aRy9n74wKxYHB3s',

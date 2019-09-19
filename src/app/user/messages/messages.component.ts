@@ -4,6 +4,7 @@ import { MessageService } from './message.service';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
 import { map } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
+import {  Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-messages',
@@ -13,12 +14,15 @@ import { NgForm } from '@angular/forms';
 export class MessagesComponent implements OnInit {
 
   inbox: Message[] = [
-    {title: "a",
+    {
+      _id: '12343dfdf234',
+      title: "a",
     content: "kerdis",
     from: 'chrom',
     fromId: '5d7cd68787919120ff20a62d',
     to: "samus",
-    toId: '5d7d08ff73f0be4094648f21'}
+    toId: '5d7d08ff73f0be4094648f21',
+    isRead: true}
   ];
   sent: Message[] = [];
   username = '';
@@ -37,12 +41,14 @@ export class MessagesComponent implements OnInit {
           return {inbox: res.messages.map(
             message => {
               return {
+                _id: message._id,
                 title: message.title,
                 content: message.content,
                 from: message.from,
                 fromId: message.fromId,
                 to: message.to,
-                toId: message.toId
+                toId: message.toId,
+                isRead: message.isRead
               };
             })
           };
@@ -56,18 +62,22 @@ export class MessagesComponent implements OnInit {
   messageOpened(message: Message) {
     this.openMessage = message;
     this.messageOpen = true;
+    if (message.isRead === false) {
+      this.messageService.messageRead(message);
+    }
   }
 
   onReply(form: NgForm) {
     const reply: Message = {
+      _id: null,
       title: form.value.title,
       content: form.value.content,
       to: this.openMessage.from,
       toId: this.openMessage.fromId,
       from: this.openMessage.to,
-      fromId: this.openMessage.toId
+      fromId: this.openMessage.toId,
+      isRead: false
     };
-    console.log(reply);
     this.messageService.sendMessage(reply);
   }
 
