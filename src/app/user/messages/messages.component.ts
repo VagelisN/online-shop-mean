@@ -3,6 +3,7 @@ import { Message } from './messages.model';
 import { MessageService } from './message.service';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
 import { map } from 'rxjs/operators';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-messages',
@@ -11,17 +12,26 @@ import { map } from 'rxjs/operators';
 })
 export class MessagesComponent implements OnInit {
 
-  inbox: Message[] = [{title: "akoma", content: "me aito", _id: "asdasd"},
-   {title: "akoma", content: "me aito", _id: "asdasd"},
-   {title: "akoma", content: "me aito", _id: "asdasd"}
-];
+  inbox: Message[] = [
+    {title: "a",
+    content: "kerdis",
+    from: 'chrom',
+    fromId: '5d7cd68787919120ff20a62d',
+    to: "samus",
+    toId: '5d7d08ff73f0be4094648f21'}
+  ];
   sent: Message[] = [];
+  username = '';
   userId = '';
+  messageOpen = false;
+  openMessage: Message;
+  openReply = false;
   constructor(private messageService: MessageService, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
+    this.username = this.authenticationService.getUsername();
     this.userId = this.authenticationService.getLoggedUserId();
-    this.messageService.getMessages(this.userId)
+    this.messageService.getMessages(this.username)
       .pipe(
         map(res => {
           return {inbox: res.messages.map(
@@ -29,15 +39,36 @@ export class MessagesComponent implements OnInit {
               return {
                 title: message.title,
                 content: message.content,
-                _id: message._id
+                from: message.from,
+                fromId: message.fromId,
+                to: message.to,
+                toId: message.toId
               };
             })
           };
         })
       )
       .subscribe(transformedInbox => {
-        console.log(transformedInbox, "asdasd");
+         this.inbox = transformedInbox.inbox;
       });
+  }
+
+  messageOpened(message: Message) {
+    this.openMessage = message;
+    this.messageOpen = true;
+  }
+
+  onReply(form: NgForm) {
+    const reply: Message = {
+      title: form.value.title,
+      content: form.value.content,
+      to: this.openMessage.from,
+      toId: this.openMessage.fromId,
+      from: this.openMessage.to,
+      fromId: this.openMessage.toId
+    };
+    console.log(reply);
+    this.messageService.sendMessage(reply);
   }
 
 }

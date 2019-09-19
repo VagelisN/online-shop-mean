@@ -11,7 +11,24 @@
 
       </mat-grid-tile>
       <mat-grid-tile style="background-color:aqua"colspan="10">
-        <mat-card *ngFor="let message of inbox">{{message.title}} {{message.content}}</mat-card>
+        <div *ngIf= "!messageOpen">
+          <mat-card *ngFor="let message of inbox"><button (click) ="messageOpened(message)">{{message.title}}</button></mat-card>
+        </div>
+        <div *ngIf= "messageOpen && !openReply">
+
+          <mat-card >From: {{openMessage.from}} Title: {{openMessage.title}}</mat-card>
+          <mat-card >Content: {{openMessage.content}}</mat-card>
+
+          <div><button mat-raised-button color="accent" (click)="openReply = true">Reply</button></div>
+
+        </div>
+        <div *ngIf= "openReply">
+            <form (submit)="onReply(replyForm)" #replyForm="ngForm">
+              <mat-form-field><input ngModel name="title" matInput type="text" placeholder="Title" required></mat-form-field>
+              <mat-form-field><textarea ngModel name="content" matInput  placeholder="Message" required></textarea></mat-form-field>
+              <div><button [disabled]="replyForm.invalid" mat-raised-button color="accent" type="submit">Send Reply</button></div>
+            </form>
+        </div>
       </mat-grid-tile>
   </mat-grid-list>
 </mat-card>
