@@ -19,7 +19,10 @@ export class UserInfoComponent implements OnInit {
         console.log(paramMap.get('username'));
         this.adminService.getUserInfo(paramMap.get('username'))
           .subscribe(res => {
-            this.tempUser = {email: res.user.email, username: res.user.username, password: null};
+            this.tempUser = {email: res.user.email, username: res.user.username, password: null,
+                             firstname: res.user.firstname, lastname: res.user.lastname, phone: res.user.phone,
+                             afm: res.user.afm, latitude: res.user.latitude, longitude: res.user.longitude,
+                             address: res.user.address  };
           });
       }
     });

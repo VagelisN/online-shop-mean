@@ -2,7 +2,7 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
   <!-- List all auctions. -->
-  <div class="search-bar" *ngIf="!isLoading">
+  <div class="search-bar" *ngIf="!isLoading && getMode()">
       <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
       <input mat-input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
       <button mat-button (click)="onSearchSubmit()">

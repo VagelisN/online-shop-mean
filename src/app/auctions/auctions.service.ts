@@ -143,7 +143,9 @@ export class AuctionsService {
   }
 
   deleteAuction(auctionId: string) {
-    return this.http.delete('http://localhost:3000/auctions/' + auctionId);
+    this.http.delete('http://localhost:3000/auctions/' + auctionId).subscribe( res => {
+      this.router.navigate(['/auction']);
+    });
   }
 
   startAuction(auctionId: string) {

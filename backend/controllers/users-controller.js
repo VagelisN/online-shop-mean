@@ -6,10 +6,18 @@ const Users = require('../models/users');
 exports.newUser =  (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
+      console.log('Longitude: ', req.body.longitude);
       const user = new Users({
         username: req.body.username,
         email: req.body.email,
         password: hash,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        phone: req.body.phone,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+        address: req.body.address,
+        afm: req.body.afm,
         sellerRating: '4.5',
         sellerRatingVotes: 1,
         buyerRating: 0,

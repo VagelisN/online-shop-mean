@@ -99,10 +99,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   onDelete(auctionId: string) {
     this.isLoading = true;
-    this.auctionsService.deleteAuction(auctionId)
-    .subscribe(() => {
-      this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
-    });
+    this.auctionsService.deleteAuction(auctionId);
+    this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
   }
 
   onStart(auctionId: string) {

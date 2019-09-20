@@ -31,7 +31,14 @@ export class AdministrationService {
         tempUser = {
           username: res.users[i].username,
           email: res.users[i].email,
-          password: null
+          password: null,
+          firstname: null,
+          lastname: null,
+          afm: null,
+          phone: null,
+          latitude: null,
+          longitude: null,
+          address: null
         };
         if (res.users[i].verified) {
           this.verifiedUsers.push(tempUser);
@@ -46,12 +53,12 @@ export class AdministrationService {
   getUserInfo(username: string) {
     return this.http.get<{
       message: string,
-      user: { email: string, username: string}
+      user: UserModel
     }>('http://localhost:3000/admin/' + username);
   }
 
-  verifyUser(username: string) {
-    this.http.post<{message: string}>('http://localhost:3000/admin/', {username: username})
+  verifyUser(tusername: string) {
+    this.http.post<{message: string}>('http://localhost:3000/admin/', {username: tusername})
       .subscribe(res => {
         console.log('sadfasdfasdfasdf');
         this.router.navigate(['/admin']);

@@ -65,6 +65,7 @@
             type="text"
             matInput
             placeholder="Last Name"
+            required
             #lastnameInput="ngModel"
             >
             <mat-error *ngIf="lastnameInput.invalid"> Please enter a Last Name. </mat-error>
@@ -76,20 +77,10 @@
             type="text"
             matInput
             placeholder="Phone Number"
+            required
             #phoneInput="ngModel"
             >
             <mat-error *ngIf="phoneInput.invalid"> Please enter a  Valid Phone Number. </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <input
-            name="location"
-            ngModel
-            type="text"
-            matInput
-            placeholder="Location"
-            #locationInput="ngModel"
-            >
-            <mat-error *ngIf="locationInput.invalid"> Please enter a  Valid Location. </mat-error>
         </mat-form-field>
         <mat-form-field>
             <input
@@ -99,9 +90,25 @@
             matInput
             placeholder="afm"
             #afmInput="ngModel"
+            required
             >
             <mat-error *ngIf="afmInput.invalid"> Please enter a  Valid Location. </mat-error>
         </mat-form-field>
+        <mat-card>
+          <h5>Please enter your location.</h5>
+          <agm-map
+          [latitude]="latitude"
+          [longitude]="longitude"
+          [zoom]="zoom"
+          >
+            <agm-marker
+            [latitude]="latitude"
+            [longitude]="longitude"
+            [markerDraggable]="true"
+            (dragEnd)=(markerDragEnd($event))>
+            </agm-marker>
+          </agm-map>
+        </mat-card>
         <div style="text-align: center">
         <button
         style="width: 120px;"
