@@ -26,8 +26,8 @@ import {
   MatGridListModule,
   MatTabsModule,
   MatMenuModule,
-  MatPaginatorModule
-
+  MatPaginatorModule,
+  MatDialogModule
 } from '@angular/material';
 
 import { AgmCoreModule } from '@agm/core';
@@ -43,6 +43,7 @@ import { PendingScreenComponent } from './authentication/pending-screen/pending-
 import { MustMatchDirective } from './authentication/signup/must-match.directive';
 import { CategoryPickerComponent } from './auctions/category-picker/category-picker.component';
 import { MessagesComponent } from './user/messages/messages.component';
+import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
 
 @NgModule({
   declarations: [
@@ -57,8 +58,10 @@ import { MessagesComponent } from './user/messages/messages.component';
     PendingScreenComponent,
     MustMatchDirective,
     CategoryPickerComponent,
-    MessagesComponent
+    MessagesComponent,
+    DialogConfirmationComponent
   ],
+  entryComponents: [ DialogConfirmationComponent ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -83,6 +86,7 @@ import { MessagesComponent } from './user/messages/messages.component';
     MatMenuModule,
     MatPaginatorModule,
     Ng5SliderModule,
+    MatDialogModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCyEMjnrac_8UM5_xd0aRy9n74wKxYHB3s',
       libraries: ['places']

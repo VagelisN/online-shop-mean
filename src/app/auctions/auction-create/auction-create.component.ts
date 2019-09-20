@@ -106,7 +106,8 @@ export class AuctionCreateComponent implements OnInit {
             highestBid: auctionData.highestBid,
             address: auctionData.address,
             sellerId: auctionData.sellerId,
-            sellerRating: auctionData.sellerRating
+            sellerRating: auctionData.sellerRating,
+            bids: null
           };
           this.isLoading = false;
           this.form.setValue({

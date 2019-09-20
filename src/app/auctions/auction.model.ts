@@ -14,4 +14,9 @@ export interface Auctions {
   address: string;
   sellerId: string;
   sellerRating: string;
+  bids: [{
+    amount: number,
+    time: Date, // This will change to a date data type
+    bidder: string
+  }];
  }
