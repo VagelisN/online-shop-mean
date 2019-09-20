@@ -23,8 +23,9 @@ export class AuthenticationService {
   getErrorTextSub() { return this.errorTextSub; }
 
   // sends an http put request to the backend to create new user
-  sendNewUser(email: string, username: string, password: string) {
-    const newUser: UserModel = { username, email, password };
+  sendNewUser(email: string, username: string, password: string, firstname: string,
+              lastname: string, phone: string, afm: string, latitude: string, longitude: string, address: string) {
+    const newUser: UserModel = { username, email, password, firstname, lastname, phone, afm, latitude, longitude, address };
     console.log(newUser);
     this.http
       .post('http://localhost:3000/users/signup', newUser)

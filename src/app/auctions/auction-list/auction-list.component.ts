@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Auctions } from '../auction.model';
 import { Subscription } from 'rxjs';
 import { Options } from 'ng5-slider';
@@ -6,6 +7,7 @@ import { AuctionsService } from '../auctions.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthenticationService } from './../../authentication/authentication.service';
 import { PageEvent } from '@angular/material';
+import { DialogConfirmationComponent } from 'src/app/dialog-confirmation/dialog-confirmation.component';
 
 @Component({
   selector: 'app-auction-list',
@@ -45,7 +47,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   private auctionSearchSub: Subscription;
   constructor(public auctionsService: AuctionsService,
               public route: ActivatedRoute,
-              public authenticationService: AuthenticationService) {}
+              public authenticationService: AuthenticationService,
+              public dialog: MatDialog) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -74,7 +77,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
             highestBid: auctionData.highestBid,
             address: auctionData.address,
             sellerId: auctionData.sellerId,
-            sellerRating: auctionData.sellerRating
+            sellerRating: auctionData.sellerRating,
+            bids: auctionData.bids
           };
           console.log(this.auction);
           this.isLoading = false;
@@ -95,10 +99,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   onDelete(auctionId: string) {
     this.isLoading = true;
-    this.auctionsService.deleteAuction(auctionId)
-    .subscribe(() => {
-      this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
-    });
+    this.auctionsService.deleteAuction(auctionId);
+    this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
   }
 
   onStart(auctionId: string) {
@@ -144,15 +146,30 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       this.bidErrorMessage = 'Please insert a valid amount.';
       return;
     }
-    // Check if the current highest bid is higher than the one submitted here.
-    if (parseFloat(this.auction.highestBid) > this.bidValue ) {
-      this.bidErrorMessage = 'Your bid is lower than the current highest bid.';
-      return;
-      // Handle error messages to the form
-    }
-    const userId = this.authenticationService.getLoggedUserId();
-    this.bidErrorMessage = null;
-    this.auctionsService.submitBid(this.auction.id, userId, this.bidValue);
+    // If the value of the bid is valid then show the pop up for the user to confirm the bid.
+    const dialogRef = this.dialog.open( DialogConfirmationComponent );
+
+    // afterClose().subscribe() gets the button that the user pressed on the popup dialog
+    dialogRef.afterClosed().subscribe(result => {
+      // If result is true then the user confirmed the bid
+      if (result === 'true') {
+        // Check if the current highest bid is higher than the one submitted here.
+        if (parseFloat(this.auction.highestBid) > this.bidValue ) {
+          this.bidErrorMessage = 'Your bid is lower than the current highest bid.';
+          return;
+          // Handle error messages to the form
+        }
+        const userId = this.authenticationService.getLoggedUserId();
+        this.bidErrorMessage = null;
+        this.auctionsService.submitBid(this.auction.id, userId, this.bidValue);
+      } else {
+        this.bidValue = null;
+        this.bidErrorMessage = null;
+        return;
+      }
+    });
+
+
   }
 
   checkPrice(auction) {
@@ -178,31 +195,4 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       this.totalAuctions = auctionData.auctionCount;
     });
   }
-    /*
-    if (this.searchValue === '') {
-      this.tempAuctions = this.auctions.filter(auction => {
-        return this.checkPrice(auction);
-      });
-    } else {
-      this.searchValue = this.searchValue.toLowerCase();
-      this.tempAuctions = this.auctions.filter(auction => {
-        // We have to check different fields.
-
-        // Check if the searchValue is in the name field
-        if (auction.name.toLowerCase().includes(this.searchValue)) {
-          return this.checkPrice(auction);
-        }
-        // Check if the searchValue is in the description field
-        if (auction.description.toLowerCase().includes(this.searchValue)) {
-          return this.checkPrice(auction);
-        }
-        // Check if the searchValue is in the location field
-        if (auction.address.toLowerCase().includes(this.searchValue)) {
-          return this.checkPrice(auction);
-        }
-      });
-    }
-  }
-  */
-
 }

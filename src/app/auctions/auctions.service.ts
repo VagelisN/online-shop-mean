@@ -76,7 +76,12 @@ export class AuctionsService {
       image: string,
       address: string,
       sellerId: string,
-      sellerRating: string
+      sellerRating: string,
+      bids: [{
+        amount: number,
+        time: Date, // This will change to a date data type
+        bidder: string
+      }]
     }>('http://localhost:3000/auctions/get/' + id);
   }
 
@@ -128,7 +133,8 @@ export class AuctionsService {
       address: taddress,
       startDate: '',
       sellerId: tsellerId,
-      sellerRating: ''
+      sellerRating: '',
+      bids: null
     };
     this.http.put('http://localhost:3000/auctions/' + tid, auction)
     .subscribe(response => {
@@ -137,7 +143,9 @@ export class AuctionsService {
   }
 
   deleteAuction(auctionId: string) {
-    return this.http.delete('http://localhost:3000/auctions/' + auctionId);
+    this.http.delete('http://localhost:3000/auctions/' + auctionId).subscribe( res => {
+      this.router.navigate(['/auction']);
+    });
   }
 
   startAuction(auctionId: string) {

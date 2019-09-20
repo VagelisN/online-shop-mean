@@ -1,7 +1,78 @@
 const Auction = require('./../models/auctions');
 const Category = require('./../models/categories');
 const Users = require('./../models/users');
+const Message = require('./../models/messages');
 
+const cron = require('node-cron');
+
+
+function checkIfEnded(auction) {
+  const endDate = new Date(auction.endDate);
+  const today = new Date();
+  let highestBid = null;
+  let highestBidder = null;
+  // If we passed the endDate
+  if (endDate < today) {
+    // Check if there are any valid bids.
+    if (auction.bids) {
+      highestBid = auction.bids[auction.bids.length - 1];
+      // Double check that we got the right bid.
+      if (highestBid.amount === auction.highestBid) {
+        highestBidder = highestBid.bidder;
+      }
+    }
+    // Send a message to the seller with auction information and the bidder details.
+    if (highestBidder) {
+      const sellerMessage = new Message ({
+        title: 'Your auction with id: '+ auction.id +' has been completed.',
+        content: 'You can now communicate with the winner of the auction.',
+        from: highestBidder,
+        to: auction.sellerId
+      });
+      sellerMessage.save().then(() => {
+        console.log('Auction with id: '+ auction.id+' has ended.');
+      })
+      // Insert the message to the database
+    } else {
+      const sellerMessage = new Message ({
+        title: 'Your auction with id: '+ auction.id +' has been completed.',
+        content: 'Unfortunately there were no bids for your item.',
+        from: null,
+        to: auction.sellerId
+      });
+      sellerMessage.save().then(() => {
+        console.log('Auction with id: '+ auction.id+' has ended.');
+      })
+    }
+    // Send a message to the highest bidder with information about the seller.
+    if (highestBidder) {
+      const bidderMessage = new Message ({
+        title: 'You have won the auction with id: '+ auction.id +'.',
+        content: 'You can now communicate with the seller.',
+        from: auction.sellerId,
+        to: highestBidder
+      });
+      sellerMessage.save().then(() => {
+        console.log('Auction with id: '+ auction.id+' has ended.');
+      })
+    }
+    return true;
+  } else {
+    // If the auction hasn't ended return false
+    return false;
+  }
+}
+
+// Here we check if an auction is ended and we inform the winner and the seller.
+// This function will run every day at 00:00:01
+cron.schedule("00 00 01 * *", () => {
+  Auction.find().then(documents => {
+    for (let index = 0; index < documents.length; index++) {
+      const auction = documents[index];
+      checkIfEnded(auction);
+    }
+  });
+})
 
 function updateRatings(documents) {
   return new Promise( async resolve =>  {
@@ -176,9 +247,9 @@ exports.getSingleAuction = (req, res, next) => {
       // Update the sellerRating from the user's database
       Users.findById(auction.sellerId).then(user => {
         auction.sellerRating = user.sellerRating;
+        // Send the auction as json.
+        res.status(200).json(auction);
       });
-      // Send the auction as json.
-      res.status(200).json(auction);
     } else {
       res.status(404).json({
         message: "Auction was not found."
@@ -207,11 +278,8 @@ exports.startAuction = (req, res, next) => {
       const endDate = new Date(auction.endDate);
       var today = new Date();
       if (today < endDate) {
-        var query = { _id: req.params.id };
-        var newValue = { $set: { startDate: today } };
-        // Mporei na allaksei se auction.save()  <==========================
-        Auction.updateOne(query, newValue, () => {
-          console.log("Started an auction");
+        auction.startDate = today;
+        auction.save().then(() => {
           res.status(201).json({
             message: "Auction started succesfully."
           });
@@ -238,6 +306,16 @@ exports.bidAuction = (req, res, next) => {
 
   // First of all, get the auction from the database.
   Auction.findById(req.params.id).then(auction => {
+    // We check if the auction has started in the front end.
+
+    // Check if the auction has ended.
+    if (checkIfEnded(auction)) {
+      // checkIfEnded returns true if the auction has ended.
+      res.status(500).json({
+        message: 'Cannot bid, because the auction has ended.'
+      });
+    }
+
     // Check if there are any bids
     if (auction.bids === null) {
       // Create a bid schema and push the new bid

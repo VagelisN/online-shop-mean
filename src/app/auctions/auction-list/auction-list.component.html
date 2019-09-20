@@ -2,7 +2,7 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
   <!-- List all auctions. -->
-  <div class="search-bar" *ngIf="!isLoading">
+  <div class="search-bar" *ngIf="!isLoading && getMode()">
       <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
       <input mat-input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
       <button mat-button (click)="onSearchSubmit()">
@@ -60,16 +60,17 @@
               </agm-marker>
           </agm-map>
           <div class="bid" *ngIf="this.auction.startDate !== null">
-              <input type="number" [(ngModel)]="bidValue">
+              <input type="number" [(ngModel)]="bidValue" placeholder="Bid amount">
               <button
-                mat-button
+                mat-raised-button
                 color="warn"
-                (click)="onBidSubmit()">Bid!
+                (click)="onBidSubmit()">Submit Bid!
               </button>
               <mat-error *ngIf="bidErrorMessage">{{bidErrorMessage}}</mat-error>
           </div>
 
-          <div class="buttons" *ngIf="checkOwnership(this.auction.sellerId)">
+          <div class="seller" *ngIf="checkOwnership(this.auction.sellerId)">
+            <div class="buttons">
               <button
                 mat-button
                 color="accent"
@@ -80,8 +81,22 @@
                 mat-button color="primary"
                 [routerLink]="['/auction/edit', this.auction.id]"
                 *ngIf="this.auction.startDate === null">Edit auction</a>
-            <button mat-button color="warn" (click)="onDelete(this.auction.id)">Delete auction</button>
+              <button mat-button color="warn" (click)="onDelete(this.auction.id)">Delete auction</button>
+            </div>
+            <div class="bids" *ngIf="auction.bids !== null">
+              <h3>List of bids for {{auction.name}}.</h3>
+              <mat-accordion multi="true">
+                <mat-expansion-panel *ngFor="let bid of auction.bids">
+                  <mat-expansion-panel-header>
+                    <p>Bid amount:  {{bid.amount}}</p>
+                  </mat-expansion-panel-header>
+                  <p>Time: {{bid.time}}</p>
+                  <p>Bidder's id: {{bid.bidder.slice(0,10)}}</p>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
           </div>
+
       </div>
   </div>
 

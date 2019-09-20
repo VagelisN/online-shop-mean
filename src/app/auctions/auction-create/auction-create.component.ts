@@ -30,40 +30,17 @@ export class AuctionCreateComponent implements OnInit {
   latitude = 0;
   longitude = 0;
   zoom: number;
-  @ViewChild('search', { static: false })
-  public searchElementRef: ElementRef = null;
 
   constructor(public auctionsService: AuctionsService,
               public route: ActivatedRoute,
               private mapsAPILoader: MapsAPILoader,
-              private ngZone: NgZone,
               public authenticationService: AuthenticationService) {}
 
   ngOnInit() {
     // Set up things for map input
     this.mapsAPILoader.load().then(() => {
-      this.setCurrentLocation();
       this.geoCoder = new google.maps.Geocoder();
-
-      console.log('Searchelement: ', this.searchElementRef);
-      // Kati fortwnei prin arxikopoihthei kai bgainei error sto console.
-      const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {types: ['address']} );
-      autocomplete.addListener('place_changed', () => {
-        this.ngZone.run(() => {
-          // get the place result
-          const place: google.maps.places.PlaceResult = autocomplete.getPlace();
-
-          // verify result
-          if (place.geometry === undefined || place.geometry === null) {
-            return;
-          }
-
-          // set latitude, longitude and zoom
-          this.latitude = place.geometry.location.lat();
-          this.longitude = place.geometry.location.lng();
-          this.zoom = 12;
-        });
-      });
+      this.setCurrentLocation();
     });
     // Finished setting up the map
 
@@ -106,7 +83,8 @@ export class AuctionCreateComponent implements OnInit {
             highestBid: auctionData.highestBid,
             address: auctionData.address,
             sellerId: auctionData.sellerId,
-            sellerRating: auctionData.sellerRating
+            sellerRating: auctionData.sellerRating,
+            bids: null
           };
           this.isLoading = false;
           this.form.setValue({
