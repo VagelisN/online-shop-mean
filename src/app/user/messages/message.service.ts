@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Message } from './messages.model';
-import { count } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -21,7 +20,15 @@ export class MessageService {
   getMessages(username: string) {
     if (username) {
       return this.http.get<{messages: any}>(
-        'http://localhost:3000/messages/' + username
+        'http://localhost:3000/messages/inbox/' + username
+      );
+    }
+  }
+
+  getSentMessages(username: string) {
+    if (username) {
+      return this.http.get<{messages: any}>(
+        'http://localhost:3000/messages/sent/' + username
       );
     }
   }
@@ -46,5 +53,12 @@ export class MessageService {
       this.unreadCount = res.count;
       this.unreadCountSub.next(this.unreadCount);
     });
+  }
+
+  deleteMessage(messageId: string, username: string) {
+    this.http.patch('http://localhost:3000/messages', {messageId, username})
+      .subscribe( res => {
+        console.log(res);
+      });
   }
 }

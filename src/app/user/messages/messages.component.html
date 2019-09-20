@@ -3,16 +3,22 @@
       <mat-grid-tile colspan="1">
         <mat-grid-tile-header>
             <mat-list >
-                <button mat-button> Sent </button>
+                <button mat-button (click)="atSent= true"> Sent </button>
                 <br>
-                <button mat-button> Inbox </button>
+                <button mat-button (click)="atInbox = true"> Inbox </button>
                </mat-list>
         </mat-grid-tile-header>
 
       </mat-grid-tile>
       <mat-grid-tile style="background-color:aqua"colspan="10">
-        <div *ngIf= "!messageOpen">
+        <div *ngIf= "!messageOpen && atInbox">
           <mat-card *ngFor="let message of inbox">
+            <button *ngIf="message.isRead" (click) ="messageOpened(message)">{{message.title}}</button>
+            <button style="font-weight: bold" *ngIf="!message.isRead" (click) ="messageOpened(message)">{{message.title}}</button>
+          </mat-card>
+        </div>
+        <div *ngIf= "!messageOpen && atSent">
+          <mat-card *ngFor="let message of sent">
             <button *ngIf="message.isRead" (click) ="messageOpened(message)">{{message.title}}</button>
             <button style="font-weight: bold" *ngIf="!message.isRead" (click) ="messageOpened(message)">{{message.title}}</button>
           </mat-card>
@@ -23,6 +29,7 @@
           <mat-card >Content: {{openMessage.content}}</mat-card>
 
           <div><button mat-raised-button color="accent" (click)="openReply = true">Reply</button></div>
+          <div><button mat-raised-button color="warn" (click)="onDeleteMessage(openMessage._id)">Delete</button></div>
 
         </div>
         <div *ngIf= "openReply">

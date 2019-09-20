@@ -2,7 +2,7 @@ const Message = require('../models/messages');
 
 exports.getMessages = (req, res, next) => {
   username = req.params.username;
-  Message.find({to: username}).sort('-timestamp').then( documents => {
+  Message.find({to: username, receiverDeleted: false}).sort('-timestamp').then( documents => {
     if (documents !== null) {
       console.log(documents, username);
       res.status(200).json({
@@ -11,6 +11,18 @@ exports.getMessages = (req, res, next) => {
     }
   });
 };
+
+exports.getSentMessages  = (req, res, next) => {
+  username = req.params.username;
+  Message.find({from: username, senderDeleted: false}).sort('-timestamp').then( documents => {
+    if (documents !== null) {
+      console.log(documents, username);
+      res.status(200).json({
+        messages: documents
+      });
+    }
+  });
+}
 
 exports.sendMessage = (req, res, next) => {
   message = new Message({
@@ -48,4 +60,48 @@ exports.countUnread = (req, res, next) => {
         count: count
       })
     })
+}
+
+exports.deleteMessage = (req, res, next) => {
+  Message.findOne({_id: req.body.messageId})
+    .then(message => {
+      let deletedFrom = req.body.username;
+      console.log(message, username)
+      if( message.from === deletedFrom) {
+        Message.updateOne({_id: message._id}, {senderDeleted: true}, {new: true}, (err, doc) => {
+          if(doc){
+            if(message.receiverDeleted) {
+              console.log("mallon egine?")
+              Message.deleteOne({_id: message._id}).then(result =>{
+                  return res.status(200).json({
+                  message: 'message deleted'
+                });
+              })
+            } else {
+              return res.status(200).json({
+                message: 'message deleted from one part'
+              })
+            }
+          }
+        });
+      } else if (message.to === deletedFrom) {
+        Message.updateOne({_id: message._id}, {receiverDeleted: true}, {new: true}, (err, doc) => {
+          if(doc){
+            console.log("EDWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",doc);
+            if(message.senderDeleted) {
+              console.log("mallon egine?")
+              Message.deleteOne({_id: message._id}).then(result =>{
+                return res.status(200).json({
+                  message: 'message deleted'
+                });
+              })
+            } else {
+              return res.status(200).json({
+                message: 'message deleted from one part'
+              })
+            }
+          }
+        });
+      }
+    });
 }

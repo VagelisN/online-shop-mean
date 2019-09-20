@@ -30,6 +30,8 @@ export class MessagesComponent implements OnInit {
   messageOpen = false;
   openMessage: Message;
   openReply = false;
+  atSent = true;
+  atInbox = false;
   constructor(private messageService: MessageService, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
@@ -55,8 +57,30 @@ export class MessagesComponent implements OnInit {
         })
       )
       .subscribe(transformedInbox => {
-         this.inbox = transformedInbox.inbox;
+           this.inbox = transformedInbox.inbox;
       });
+    this.messageService.getSentMessages(this.username)
+    .pipe(
+      map(res => {
+        return {sent: res.messages.map(
+          message => {
+            return {
+              _id: message._id,
+              title: message.title,
+              content: message.content,
+              from: message.from,
+              fromId: message.fromId,
+              to: message.to,
+              toId: message.toId,
+              isRead: message.isRead
+            };
+          })
+        };
+      })
+    )
+    .subscribe(transformedSent => {
+          this.sent = transformedSent.sent;
+    });
   }
 
   messageOpened(message: Message) {
@@ -79,6 +103,10 @@ export class MessagesComponent implements OnInit {
       isRead: false
     };
     this.messageService.sendMessage(reply);
+  }
+
+  onDeleteMessage(messageId: string) {
+    this.messageService.deleteMessage(messageId, this.username);
   }
 
 }
