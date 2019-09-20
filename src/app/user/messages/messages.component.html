@@ -12,7 +12,10 @@
       </mat-grid-tile>
       <mat-grid-tile style="background-color:aqua"colspan="10">
         <div *ngIf= "!messageOpen">
-          <mat-card *ngFor="let message of inbox"><button (click) ="messageOpened(message)">{{message.title}}</button></mat-card>
+          <mat-card *ngFor="let message of inbox">
+            <button *ngIf="message.isRead" (click) ="messageOpened(message)">{{message.title}}</button>
+            <button style="font-weight: bold" *ngIf="!message.isRead" (click) ="messageOpened(message)">{{message.title}}</button>
+          </mat-card>
         </div>
         <div *ngIf= "messageOpen && !openReply">
 

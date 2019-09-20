@@ -7,6 +7,7 @@ const messageSchema = mongoose.Schema({
  fromId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
  to: {type: String, ref: 'User.username', required: true},
  toId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+ isRead: {type: Boolean, default: false},
  timestamp: {type: Date, default: Date.now}
 });
 

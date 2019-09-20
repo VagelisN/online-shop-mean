@@ -27,7 +27,8 @@ import {
   MatTabsModule,
   MatMenuModule,
   MatPaginatorModule,
-  MatDialogModule
+  MatDialogModule,
+  MatBadgeModule
 } from '@angular/material';
 
 import { AgmCoreModule } from '@agm/core';
@@ -85,6 +86,7 @@ import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confir
     MatTabsModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatBadgeModule,
     Ng5SliderModule,
     MatDialogModule,
     AgmCoreModule.forRoot({

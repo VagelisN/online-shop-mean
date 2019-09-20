@@ -28,3 +28,24 @@ exports.sendMessage = (req, res, next) => {
     });
   })
 }
+
+exports.messageRead = (req, res, next) => {
+  messageId = req.params.messageId;
+  Message.updateOne({_id: messageId}, {isRead: true})
+    .then( preUpdateMessage =>{
+      res.status(200).json({
+        message: 'isRead set to true'
+      });
+    })
+}
+
+exports.countUnread = (req, res, next) => {
+  username = req.params.username;
+  Message.countDocuments({to: username, isRead: false})
+    .then(count => {
+      res.status(200).json({
+        message: 'retrieved unread count',
+        count: count
+      })
+    })
+}

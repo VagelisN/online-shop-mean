@@ -75,8 +75,6 @@ export class AuthenticationService {
     this.token = token;
     this.userId = localStorage.getItem('userId');
     this.username = localStorage.getItem('username');
-    console.log("aaaaaaaaaaa",this.username);
-    console.log("asssssssssssssssssssssss" , this.userId);
     this.userAuthenticated = true;
   }
 

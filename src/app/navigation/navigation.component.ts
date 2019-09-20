@@ -5,6 +5,7 @@ import { map, shareReplay } from 'rxjs/operators';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { AuctionsService } from '../auctions/auctions.service';
 import { Categories } from './../auctions/category.model';
+import { MessageService } from '../user/messages/message.service';
 
 @Component({
   selector: 'app-navigation',
@@ -22,12 +23,15 @@ export class NavigationComponent implements OnInit, OnDestroy {
   userAuthenticated = false;
   username = '';
   categories: Categories[] = [];
+  numOfUnreadMessages = 0;
   private userAuthenticatedSub: Subscription;
+  private unreadCountSub: Subscription;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private authenticationService: AuthenticationService,
-    private auctionsService: AuctionsService) {}
+    private auctionsService: AuctionsService,
+    private messageService: MessageService) {}
 
   ngOnInit() {
     this.userAuthenticated = this.authenticationService.getUserAuthenticated();
@@ -38,6 +42,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.username = this.authenticationService.getUsername();
       }
     });
+    this.unreadCountSub = this.messageService.getUnreadCountSub()
+    .subscribe(count => {
+      this.numOfUnreadMessages = count;
+    });
+    this.messageService.getUnreadCount(this.username);
   }
 
   onLogout() {
