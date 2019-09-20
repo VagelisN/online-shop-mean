@@ -13,6 +13,9 @@ import {  Subscription } from 'rxjs';
 })
 export class MessagesComponent implements OnInit {
 
+  defaultElevation = 2;
+  raisedElevation = 8;
+
   inbox: Message[] = [
     {
       _id: '12343dfdf234',
@@ -30,8 +33,7 @@ export class MessagesComponent implements OnInit {
   messageOpen = false;
   openMessage: Message;
   openReply = false;
-  atSent = true;
-  atInbox = false;
+  whichFolder = 'inbox';
   constructor(private messageService: MessageService, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
@@ -57,7 +59,7 @@ export class MessagesComponent implements OnInit {
         })
       )
       .subscribe(transformedInbox => {
-           this.inbox = transformedInbox.inbox;
+         this.inbox = transformedInbox.inbox;
       });
     this.messageService.getSentMessages(this.username)
     .pipe(
@@ -86,8 +88,11 @@ export class MessagesComponent implements OnInit {
   messageOpened(message: Message) {
     this.openMessage = message;
     this.messageOpen = true;
+    console.log(message);
     if (message.isRead === false) {
+      console.log('perasa');
       this.messageService.messageRead(message);
+      message.isRead = true;
     }
   }
 
@@ -103,10 +108,37 @@ export class MessagesComponent implements OnInit {
       isRead: false
     };
     this.messageService.sendMessage(reply);
+    this.messageOpen = false;
+    this.openReply = false;
   }
 
   onDeleteMessage(messageId: string) {
     this.messageService.deleteMessage(messageId, this.username);
+    if ( this.whichFolder === 'inbox') {
+      const elementPos = this.inbox.map((x) => x._id).indexOf(messageId);
+      this.inbox.splice(elementPos, 1);
+    } else {
+      const elementPos = this.sent.map((x) => x._id).indexOf(messageId);
+      this.sent.splice(elementPos, 1);
+    }
+  }
+
+  onClickedInbox() {
+    this.openReply = false;
+    this.messageOpen = false;
+    this.whichFolder = 'inbox';
+  }
+
+  onClickedSent() {
+    this.openReply = false;
+    this.messageOpen = false;
+    this.whichFolder = 'sent';
+  }
+
+  onBack(from: string) {
+    if (from === 'reply') {
+      this.openReply = false;
+    }
   }
 
 }

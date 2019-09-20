@@ -7,3 +7,25 @@ mat-grid-tile-header {
   background-color: white;
   height: fit-content;
 }
+
+.container {
+  width: 80%;
+  margin: auto;
+  margin-top: 16px;
+}
+
+.mailbox {
+  height: 800px;
+  margin: auto;
+}
+
+.hiddenDelete mat-icon {
+  display: none;
+}
+.hiddenDelete:hover mat-icon {
+  display: inline;;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

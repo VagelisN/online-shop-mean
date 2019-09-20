@@ -45,6 +45,7 @@ import { MustMatchDirective } from './authentication/signup/must-match.directive
 import { CategoryPickerComponent } from './auctions/category-picker/category-picker.component';
 import { MessagesComponent } from './user/messages/messages.component';
 import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
+import { MaterialElevationDirective } from './elevation.directive';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confir
     MustMatchDirective,
     CategoryPickerComponent,
     MessagesComponent,
-    DialogConfirmationComponent
+    DialogConfirmationComponent,
+    MaterialElevationDirective
   ],
   entryComponents: [ DialogConfirmationComponent ],
   imports: [
