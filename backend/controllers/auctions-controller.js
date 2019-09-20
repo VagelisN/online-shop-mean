@@ -2,8 +2,66 @@ const Auction = require('./../models/auctions');
 const Category = require('./../models/categories');
 const Users = require('./../models/users');
 const Message = require('./../models/messages');
+const ObjectID = require('mongodb').ObjectID;
 
 const cron = require('node-cron');
+
+function sendAuctionMessages(auction, highestBidder) {
+  console.log('About to send messages......');
+  Users.findById(auction.sellerId).then(seller => {
+    // Send a message to the seller with auction information and the bidder details.
+    const sellerUsername = seller.username;
+    if (highestBidder) {
+      Users.findById(highestBidder).then(user => {
+        const bidderUsername = user.username;
+        const sellerMessage = new Message ({
+          title: 'Your auction with id: '+ auction.id +' has been completed.',
+          content: 'You can now communicate with the winner of the auction.',
+          fromId: highestBidder,
+          from: sellerUsername,
+          to: bidderUsername,
+          toId: highestBidder
+        });
+        // Save the message in the database
+        sellerMessage.save().then(() => {
+          console.log('Auction with id: '+ auction.id+' has ended.');
+        })
+      });
+    } else {
+      const sellerMessage = new Message ({
+        title: 'Your auction with id: '+ auction.id +' has been completed.',
+        content: 'Unfortunately there were no bids for your item.',
+        from: null,
+        fromId: null,
+        to: sellerUsername,
+        toId: auction.sellerId,
+        senderDeleted: true
+      });
+      sellerMessage.save().then(() => {
+        console.log('Auction with id: '+ auction.id+' has ended.');
+      })
+    }
+    // Send a message to the highest bidder with information about the seller.
+    if (highestBidder) {
+      Users.findById(highestBidder).then(user => {
+        bidderUsername = user.username;
+        const bidderMessage = new Message ({
+          title: 'You have won the auction with id: '+ auction.id +'.',
+          content: 'You can now communicate with the seller.',
+          from: sellerUsername,
+          fromId: auction.sellerId,
+          to: bidderUsername,
+          toId: highestBidder
+        });
+        bidderMessage.save().then(() => {
+          console.log('Auction with id: '+ auction.id+' has ended.');
+        })
+      });
+    }
+  });
+  return true;
+}
+
 
 
 function checkIfEnded(auction) {
@@ -21,47 +79,14 @@ function checkIfEnded(auction) {
         highestBidder = highestBid.bidder;
       }
     }
-    // Send a message to the seller with auction information and the bidder details.
-    if (highestBidder) {
-      const sellerMessage = new Message ({
-        title: 'Your auction with id: '+ auction.id +' has been completed.',
-        content: 'You can now communicate with the winner of the auction.',
-        from: highestBidder,
-        to: auction.sellerId
-      });
-      sellerMessage.save().then(() => {
-        console.log('Auction with id: '+ auction.id+' has ended.');
-      })
-      // Insert the message to the database
-    } else {
-      const sellerMessage = new Message ({
-        title: 'Your auction with id: '+ auction.id +' has been completed.',
-        content: 'Unfortunately there were no bids for your item.',
-        from: null,
-        to: auction.sellerId
-      });
-      sellerMessage.save().then(() => {
-        console.log('Auction with id: '+ auction.id+' has ended.');
-      })
-    }
-    // Send a message to the highest bidder with information about the seller.
-    if (highestBidder) {
-      const bidderMessage = new Message ({
-        title: 'You have won the auction with id: '+ auction.id +'.',
-        content: 'You can now communicate with the seller.',
-        from: auction.sellerId,
-        to: highestBidder
-      });
-      sellerMessage.save().then(() => {
-        console.log('Auction with id: '+ auction.id+' has ended.');
-      })
-    }
-    return true;
+    return sendAuctionMessages(auction, highestBidder);
   } else {
     // If the auction hasn't ended return false
     return false;
   }
 }
+
+
 
 // Here we check if an auction is ended and we inform the winner and the seller.
 // This function will run every day at 00:00:01
@@ -243,10 +268,13 @@ exports.getSingleAuction = (req, res, next) => {
   console.log("In edit method. reached the right backend function. req.params.id: ",req.params.id);
   Auction.findById(req.params.id).then(auction => {
     if (auction) {
-
       // Update the sellerRating from the user's database
-      Users.findById(auction.sellerId).then(user => {
-        auction.sellerRating = user.sellerRating;
+      Users.findById(ObjectID(auction.sellerId)).then(user => {
+        if (user) {
+          auction.sellerRating = user.sellerRating;
+        } else {
+          auction.sellerRating = 0;
+        }
         // Send the auction as json.
         res.status(200).json(auction);
       });
@@ -274,7 +302,6 @@ exports.startAuction = (req, res, next) => {
     if (auction.startDate === null) {
 
       // Check whether the endDate has passed
-      const tempEndDate = auction.endDate.split('-');
       const endDate = new Date(auction.endDate);
       var today = new Date();
       if (today < endDate) {
@@ -340,6 +367,15 @@ exports.bidAuction = (req, res, next) => {
         auction.highestBid = req.body.bid;
         auction.numberOfBids ++;
 
+        // Check if the bid is higher than the buyPrice
+        if (auction.buyPrice) {
+          if (parseFloat(req.body.bid) >= parseFloat(auction.buyPrice)) {
+            sendAuctionMessages(auction, req.body.id);
+            res.status(200).json({
+              message: 'Your bid has been submitted succesfully. It\'s higher than the buyPrice so you win!'
+            })
+          }
+        }
       } else {
         res.status(500).json({
           message: 'Bid is lower than the current highest.'
