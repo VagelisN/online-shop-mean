@@ -34,7 +34,10 @@ export class SignupComponent implements OnInit, OnDestroy {
       this.setCurrentLocation();
     });
 
+
     this.errorTextSub = this.authenticationService.getErrorTextSub().subscribe(error => {
+      this.buttonText = 'Signup';
+      document.querySelector('mat-sidenav-content').scrollTop = 0;
       this.errorText = error;
     });
 
@@ -52,7 +55,6 @@ export class SignupComponent implements OnInit, OnDestroy {
                                            this.latitude.toString(),
                                            this.longitude.toString(),
                                            this.address);
-    this.buttonText = 'Signup';
   }
 
   ngOnDestroy() {

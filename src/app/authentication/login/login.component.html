@@ -1,7 +1,11 @@
-<mat-card class="error" *ngIf="errorText">{{errorText}}</mat-card>
+<div style ="margin-top: 16px;" fxLayout="row" fxLayoutAlign="center center">
+    <h1 class="mat-h1">Login to Online Shop</h1>
+</div>
+
+<mat-card class="error" *ngIf="errorText"><h2 class="mat-title">{{errorText}}</h2></mat-card>
 <mat-card>
-  <form (submit)="onLogin(loginForm)" #loginForm="ngForm">
-    <mat-form-field>
+  <form fxLayout ="row warp" fxLayoutAlign="center center" (submit)="onLogin(loginForm)" #loginForm="ngForm">
+    <mat-form-field fxFlex="70">
       <input
       name="username"
       ngModel
@@ -13,7 +17,7 @@
       <mat-error *ngIf="usernameInput.invalid"> Please enter a Username. </mat-error>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field fxFlex="70">
       <input
       name="password"
       ngModel
@@ -23,20 +27,18 @@
       #passwordInput="ngModel"
       required>
 
-      <mat-error *ngIf="passwordInput.invalid">Please entera valid password.</mat-error>
+      <mat-error *ngIf="passwordInput.invalid">Please enter a valid password.</mat-error>
     </mat-form-field>
-    <div style = "text-align: center">
-    <button
-    style="width: 120px;"
-    *ngIf="!loading"
-    mat-raised-button
-    color = 'accent'
-    type="submit"
-    [disabled]="loginForm.invalid">
-
-    {{buttonText}}
-    </button>
-
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+      <button
+      fxFlex="30"
+      *ngIf="!loading"
+      mat-raised-button
+      color = 'accent'
+      type="submit"
+      [disabled]="loginForm.invalid">
+      {{buttonText}}
+      </button>
     </div>
   </form>
 </mat-card>

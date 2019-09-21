@@ -8,15 +8,8 @@ mat-grid-tile-header {
   height: fit-content;
 }
 
-.container {
-  width: 80%;
-  margin: auto;
-  margin-top: 16px;
-}
-
 .mailbox {
   height: 800px;
-  margin: auto;
 }
 
 .hiddenDelete mat-icon {
@@ -26,6 +19,3 @@ mat-grid-tile-header {
   display: inline;;
 }
 
-.spacer {
-  flex: 1 1 auto;
-}

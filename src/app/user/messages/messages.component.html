@@ -1,117 +1,92 @@
-<mat-card class="container">
+<div fxLayout="row" fxLayoutAlign="center center">
+<mat-card fxFlex ="80" style="margin-top: 16px;">
     <mat-drawer-container class="mailbox">
-        <mat-drawer mode="side" opened style="width:10%; text-align: center;">
-            <mat-list >
-                <button *ngIf="whichFolder ==='inbox'" color="accent" mat-flat-button (click)="onClickedInbox()"> Inbox <mat-icon>inbox</mat-icon> </button>
-                <button *ngIf="whichFolder !=='inbox'"  mat-flat-button (click)="onClickedInbox()"> Inbox <mat-icon>inbox</mat-icon> </button>
-                <button  *ngIf="whichFolder ==='sent'" color="accent" mat-flat-button (click)="onClickedSent()"> Sent &nbsp; <mat-icon> send</mat-icon></button>
-                <button *ngIf="whichFolder !=='sent'" mat-flat-button (click)="onClickedSent()"> Sent &nbsp; <mat-icon> send</mat-icon></button>
-               </mat-list>
+
+        <mat-drawer mode="side" opened style="width: 9%">
+          <button *ngIf="whichFolder ==='inbox'" color="accent" mat-flat-button (click)="onClickedInbox()"> Inbox <mat-icon>inbox</mat-icon> </button>
+          <button *ngIf="whichFolder !=='inbox'"  mat-flat-button (click)="onClickedInbox()"> Inbox <mat-icon>inbox</mat-icon> </button>
+          <button style="margin-top: 7px;" *ngIf="whichFolder ==='sent'" color="accent" mat-flat-button (click)="onClickedSent()"> Sent &nbsp; <mat-icon> send</mat-icon></button>
+          <button style="margin-top: 7px;" *ngIf="whichFolder !=='sent'" mat-flat-button (click)="onClickedSent()"> Sent &nbsp; <mat-icon> send</mat-icon></button>
         </mat-drawer>
+
         <mat-drawer-content>
 
+        <!-- Inbox Page -->
         <span *ngIf="whichFolder==='inbox' && !messageOpen">
             <mat-card class="hiddenDelete" (click) ="messageOpened(message)" *ngFor="let message of inbox" style="margin-bottom: 5px; cursor: pointer;"
             appMaterialElevation [defaultElevation]="0" raisedElevation="6">
-
-            <div *ngIf="message.isRead" >
-              <span>from: &nbsp; {{message.from}} </span>
-              <span style="padding-left: 10%;">{{message.title}}</span>
-              <button (click)="onDeleteMessage(message._id)" style="margin-left: 50%" mat-button><mat-icon style="color:dimgray">delete</mat-icon></button>
-            </div>
-
-            <div  *ngIf="!message.isRead">
-                <span style="font-weight: bold;" (click) ="messageOpened(message)">from: &nbsp; {{message.from}}</span>
-                <span style="font-weight: bold; padding-left: 10%;" >{{message.title}}</span>
-                <button (click)="onDeleteMessage(message._id)" style="margin-left: 50%" mat-button><mat-icon style="color:dimgray" >delete</mat-icon></button>
+            <div fxLayout="row">
+              <div fxFlex="70" fxLayout="row" *ngIf="message.isRead">
+                  <span fxFlex="30" class="mat-body-1" style="font-size: 16px;">from: &nbsp; {{message.from}} </span>
+                  <span fxFlex="70" class="mat-body-1" style="font-size: 16px;">{{message.title}}</span>
+              </div>
+              <div fxFlex="70" fxLayout="row" *ngIf="!message.isRead">
+                  <span fxFlex="30"style="font-size: 16px; font-weight: bold;" (click) ="messageOpened(message)">from: &nbsp; {{message.from}}</span>
+                  <span fxFlex="70" style="font-size: 16px; font-weight: bold;" >{{message.title}}</span>
+              </div>
+              <div fxFlex="30" fxLayout="row" fxLayoutAlign="end">
+                  <button (click)="onDeleteMessage(message._id)" mat-button><mat-icon style="color:dimgray">delete</mat-icon></button>
+              </div>
             </div>
         </mat-card>
         </span>
 
+        <!-- Sent Page -->
         <span *ngIf="whichFolder==='sent' && !messageOpen">
-            <mat-card class="hiddenDelete" *ngFor="let message of sent" (click) ="messageOpened(message)" style="margin-bottom: 5px; cursor: pointer;"
+            <mat-card class="hiddenDelete" (click) ="messageOpened(message)" *ngFor="let message of sent" style="margin-bottom: 5px; cursor: pointer;"
             appMaterialElevation [defaultElevation]="0" raisedElevation="6">
-              <span>to: &nbsp; {{message.to}} </span>
-              <span style="padding-left: 10%;">{{message.title}}</span>
-              <button (click)="onDeleteMessage(message._id)" style="margin-left: 50%" mat-button><mat-icon style="color:dimgray" >delete</mat-icon></button>
+            <div fxLayout="row">
+              <div fxFlex="70" fxLayout="row">
+                  <span fxFlex="30" class="mat-body-1" style="font-size: 16px;">from: &nbsp; {{message.from}} </span>
+                  <span fxFlex="70" class="mat-body-1" style="font-size: 16px;">{{message.title}}</span>
+              </div>
+              <div fxFlex="30" fxLayout="row" fxLayoutAlign="end">
+                  <button (click)="onDeleteMessage(message._id)" mat-button><mat-icon style="color:dimgray">delete</mat-icon></button>
+              </div>
+            </div>
         </mat-card>
         </span>
 
-        <span *ngIf= "messageOpen && !openReply">
+        <!-- Open Message Page -->
+        <div *ngIf= "messageOpen && !openReply" fxLayout="row">
           <div style="width: 75%; margin:auto;">
               <h2 style="padding-left: 10px;" class="mat-h2">{{openMessage.title}}</h2>
-              <span style="padding-left: 10px;">from: &nbsp;{{openMessage.from}}</span>
-          <mat-card style= " margin-top: 20px;" >
+              <div fxLayout="row">
+                <div fxFlex="50" fxLayout="row" fxLayoutAlign="start">
+                    <span style="padding-left: 10px;">from: &nbsp;{{openMessage.from}}</span>
+                </div>
+                <div fxFlex="50" fxLayout="row" fxLayoutAlign="end">
+                    <button (click)="onDeleteMessage(openMessage._id)" mat-button><mat-icon style="color:dimgray">delete</mat-icon></button>
+                </div>
+
+              </div>
+
+          <mat-card class ="mat-body-1" style= "font-size: 15px; margin-top: 20px;" >
             {{openMessage.content}}
             <div *ngIf="whichFolder==='inbox'" style="text-align: center; margin-top: 15px;">
               <button (click)="openReply = true" mat-raised-button color="accent">Reply</button>
-              <button style="margin-left: 5px;" (click)="messageOpen=false" mat-raised-button color="accent">Back</button>
+              <button style="margin-left: 7px;" (click)="messageOpen=false" mat-raised-button color="accent">Back</button>
             </div>
           </mat-card>
         </div>
-        </span>
+      </div>
 
-        <div *ngIf= "openReply" style="text-align: center;">
-          <mat-card style ="width: 80%; margin: auto; margin-top: 20px; ">
-              <form (submit)="onReply(replyForm)" #replyForm="ngForm">
-                  <mat-form-field style="width: 80%"><input ngModel name="title" matInput type="text" placeholder="Title" required></mat-form-field>
-                  <br>
-                  <mat-form-field  style="width: 80%"><textarea ngModel  rows ="6"name="content" matInput  placeholder="Message" required></textarea></mat-form-field>
-                  <div>
+        <!-- Reply Page -->
+        <div *ngIf= "openReply" fxLayout="row">
+          <mat-card style ="width: 80%; margin: auto; margin-top: 20px;" >
+              <form (submit)="onReply(replyForm)" #replyForm="ngForm" fxLayout="row warp" fxLayoutAlign="center center">
+                  <mat-form-field fxFlex="80"><input ngModel name="title" matInput type="text" placeholder="Title" required></mat-form-field>
+                  <mat-form-field fxFlex="80"><textarea ngModel  rows ="6"name="content" matInput  placeholder="Message" required></textarea></mat-form-field>
+                  <div fxFlex = 100 fxLayout="row" fxLayoutAlign="center center">
                     <button [disabled]="replyForm.invalid" mat-raised-button color="accent" type="submit">Send Reply</button>
-                    <button style="margin-left: 5px;"mat-raised-button color="accent" (click)="this.openReply = false">Back</button>
+                    <button mat-raised-button color="accent" style="margin-left: 7px;" (click)="this.openReply = false">Back</button>
                   </div>
                 </form>
           </mat-card>
 
         </div>
         </mat-drawer-content>
+
       </mat-drawer-container>
 </mat-card>
-
-
-
-<!-- <mat-card stle="height= 100%">
-  <mat-grid-list cols="11" rowHeight="2:4">
-      <mat-grid-tile colspan="1">
-        <mat-grid-tile-header>
-            <mat-list >
-                <button mat-button (click)="atSent= true"> Sent </button>
-                <br>
-                <button mat-button (click)="atInbox = true"> Inbox </button>
-               </mat-list>
-        </mat-grid-tile-header>
-
-      </mat-grid-tile>
-      <mat-grid-tile style="background-color:aqua"colspan="10">
-        <div *ngIf= "!messageOpen && atInbox">
-          <mat-card *ngFor="let message of inbox">
-            <button *ngIf="message.isRead" (click) ="messageOpened(message)">{{message.title}}</button>
-            <button style="font-weight: bold" *ngIf="!message.isRead" (click) ="messageOpened(message)">{{message.title}}</button>
-          </mat-card>
-        </div>
-        <div *ngIf= "!messageOpen && atSent">
-          <mat-card *ngFor="let message of sent">
-            <button *ngIf="message.isRead" (click) ="messageOpened(message)">{{message.title}}</button>
-            <button style="font-weight: bold" *ngIf="!message.isRead" (click) ="messageOpened(message)">{{message.title}}</button>
-          </mat-card>
-        </div>
-        <div *ngIf= "messageOpen && !openReply">
-
-          <mat-card >From: {{openMessage.from}} Title: {{openMessage.title}}</mat-card>
-          <mat-card >Content: {{openMessage.content}}</mat-card>
-
-          <div><button mat-raised-button color="accent" (click)="openReply = true">Reply</button></div>
-          <div><button mat-raised-button color="warn" (click)="onDeleteMessage(openMessage._id)">Delete</button></div>
-
-        </div>
-        <div *ngIf= "openReply">
-            <form (submit)="onReply(replyForm)" #replyForm="ngForm">
-              <mat-form-field><input ngModel name="title" matInput type="text" placeholder="Title" required></mat-form-field>
-              <mat-form-field><textarea ngModel name="content" matInput  placeholder="Message" required></textarea></mat-form-field>
-              <div><button [disabled]="replyForm.invalid" mat-raised-button color="accent" type="submit">Send Reply</button></div>
-            </form>
-        </div>
-      </mat-grid-tile>
-  </mat-grid-list>
-</mat-card> -->
+</div>

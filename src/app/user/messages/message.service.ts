@@ -36,7 +36,6 @@ export class MessageService {
   sendMessage(message: Message) {
     this.http.post('http://localhost:3000/messages/send', message)
       .subscribe(res => {
-        console.log('makaronia');
       });
   }
 

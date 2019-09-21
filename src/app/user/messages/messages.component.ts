@@ -121,6 +121,7 @@ export class MessagesComponent implements OnInit {
       const elementPos = this.sent.map((x) => x._id).indexOf(messageId);
       this.sent.splice(elementPos, 1);
     }
+    this.messageOpen = false;
   }
 
   onClickedInbox() {

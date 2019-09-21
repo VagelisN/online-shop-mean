@@ -1,7 +1,12 @@
-<mat-card class="error" *ngIf="errorText">{{errorText}}</mat-card>
-<mat-card>
-    <form (submit)="onSignup(signupForm)"  #signupForm="ngForm" *ngIf="!isLoading" [mustMatch]="['password', 'confirmPassword']" >
-        <mat-form-field>
+<div style ="margin-top: 16px;" fxLayout="row" fxLayoutAlign="center center">
+    <h1 class="mat-h1">Sign up to Online Shop</h1>
+</div>
+<mat-card class="error" *ngIf="errorText"><h2 class="mat-title">{{errorText}}</h2></mat-card>
+<mat-card style="margin-bottom: 150px;">
+    <form
+    fxLayout ="row warp" fxLayoutAlign="center center"
+    (submit)="onSignup(signupForm)"  #signupForm="ngForm" *ngIf="!isLoading" [mustMatch]="['password', 'confirmPassword']">
+        <mat-form-field fxFlex="70">
             <input
             name="email"
             ngModel
@@ -13,7 +18,7 @@
             email>
             <mat-error *ngIf="emailInput.invalid"> Please enter a valid email adress. </mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field fxFlex="70">
             <input
             name="username"
             ngModel
@@ -24,7 +29,7 @@
             required >
             <mat-error *ngIf="usernameInput.invalid"> Please enter a Username. </mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field fxFlex="70">
             <input
             name="password"
             [(ngModel)]="model.password"
@@ -36,7 +41,7 @@
             minlength="3">
             <mat-error *ngIf="passwordInput.invalid">Password must contain at least six characters</mat-error>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field fxFlex="70">
               <input
               name="confirmPassword"
               [(ngModel)]="model.confirmPassword"
@@ -47,7 +52,7 @@
               required>
               <mat-error *ngIf="ConfirmPasswordInput.invalid">Passwords Do Not Match</mat-error>
             </mat-form-field>
-        <mat-form-field>
+        <mat-form-field fxFlex="70">
             <input
             name="firstname"
             ngModel
@@ -58,7 +63,7 @@
             >
             <mat-error *ngIf="firstnameInput.invalid"> Please enter a First Name. </mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field fxFlex="70">
             <input
             name="lastname"
             ngModel
@@ -70,7 +75,7 @@
             >
             <mat-error *ngIf="lastnameInput.invalid"> Please enter a Last Name. </mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field fxFlex="70">
             <input
             name="phone"
             ngModel
@@ -82,7 +87,7 @@
             >
             <mat-error *ngIf="phoneInput.invalid"> Please enter a  Valid Phone Number. </mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field fxFlex="70">
             <input
             name="afm"
             ngModel
@@ -94,7 +99,7 @@
             >
             <mat-error *ngIf="afmInput.invalid"> Please enter a  Valid Location. </mat-error>
         </mat-form-field>
-        <mat-card>
+        <mat-card fxFlex="85">
           <h5>Please enter your location.</h5>
           <agm-map
           [latitude]="latitude"
@@ -109,7 +114,7 @@
             </agm-marker>
           </agm-map>
         </mat-card>
-        <div style="text-align: center">
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center" style="margin-top: 16px;">
         <button
         style="width: 120px;"
         mat-raised-button

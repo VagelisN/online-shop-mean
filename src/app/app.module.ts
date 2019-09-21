@@ -46,6 +46,7 @@ import { CategoryPickerComponent } from './auctions/category-picker/category-pic
 import { MessagesComponent } from './user/messages/messages.component';
 import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
 import { MaterialElevationDirective } from './elevation.directive';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { MaterialElevationDirective } from './elevation.directive';
     MatBadgeModule,
     Ng5SliderModule,
     MatDialogModule,
+    FlexLayoutModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCyEMjnrac_8UM5_xd0aRy9n74wKxYHB3s',
       libraries: ['places']

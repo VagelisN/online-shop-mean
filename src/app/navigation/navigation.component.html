@@ -15,6 +15,7 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
+      <mat-toolbar-row>
       <button
         type="button"
         aria-label="Toggle sidenav"
@@ -39,24 +40,24 @@
       </div>
       <button mat-button *ngIf="userAuthenticated" (click)="onLogout()">Logout</button>
       <button mat-button *ngIf="userAuthenticated" >{{username}}</button>
+    </mat-toolbar-row>
+      <mat-toolbar-row style="height: 20px;" color="primary">
+        <button mat-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">Shop By Category</button>
+        <mat-menu #firstLevelCategories="matMenu">
 
-
+          <button
+          mat-menu-item
+          *ngFor="let category of categories"
+          (click)="onCategoryChosen(category._id)">
+          <span style="font-size: 17px;">
+            {{category.name}}
+          </span>
+          </button>
+      </mat-menu>
+      </mat-toolbar-row>
 
     </mat-toolbar>
-    <mat-toolbar style="height: 20px;" color="primary">
-      <button mat-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">Shop By Category</button>
-      <mat-menu #firstLevelCategories="matMenu">
 
-        <button
-        mat-menu-item
-        *ngFor="let category of categories"
-        (click)="onCategoryChosen(category._id)">
-        <span style="font-size: 17px;">
-          {{category.name}}
-        </span>
-        </button>
-    </mat-menu>
-    </mat-toolbar>
         <!-- Add Content Here -->
     <ng-content>
     </ng-content>
