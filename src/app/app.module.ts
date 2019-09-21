@@ -46,6 +46,7 @@ import { CategoryPickerComponent } from './auctions/category-picker/category-pic
 import { MessagesComponent } from './user/messages/messages.component';
 import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
 import { MaterialElevationDirective } from './elevation.directive';
+import { UserAuctionsComponent } from './user-auctions/user-auctions.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { MaterialElevationDirective } from './elevation.directive';
     CategoryPickerComponent,
     MessagesComponent,
     DialogConfirmationComponent,
-    MaterialElevationDirective
+    MaterialElevationDirective,
+    UserAuctionsComponent
   ],
   entryComponents: [ DialogConfirmationComponent ],
   imports: [

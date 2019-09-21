@@ -1,0 +1,25 @@
+agm-map {
+  height: 300px;
+  width: 60%;
+  margin: auto;
+}
+
+mat-accordion {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+mat-expansion-panel {
+  width: 60%;
+  margin: auto;
+}
+
+h3 {
+  margin: 1rem 1rem;
+  text-align: center;
+}
+
+img {
+  width: 50%;
+  float: right;
+}

@@ -1,0 +1,38 @@
+<mat-accordion>
+  <h3>Your auction's:</h3>
+  <mat-expansion-panel *ngFor="let auction of auctions">
+    <mat-expansion-panel-header>
+      <h4>{{auction.name}}</h4>
+    </mat-expansion-panel-header>
+    <img [src]="this.auction.image" [alt]="this.auction.name">
+    <p *ngIf="checkBuyPrice(auction.buyPrice)">
+      Instant buy price: {{ auction.buyPrice }}
+    </p>
+    <p>Auction deadline: {{auction.endDate }}</p>
+    <p>Item category: {{auction.category}}</p>
+    <p>Country: {{auction.country}}</p>
+    <p>Address: {{auction.address}}</p>
+    <p>Highest bid: {{auction.highestBid}}</p>
+    <p>Description: {{auction.description}}</p>
+    <agm-map [latitude]="toNumber(this.auction.latitude)" [longitude]="toNumber(this.auction.longitude)">
+      <agm-marker
+        [latitude]="this.auction.latitude"
+        [longitude]="this.auction.longitude">
+      </agm-marker>
+    </agm-map>
+    <mat-action-row>
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="onStart(this.auction.id)"
+        *ngIf="this.auction.startDate === null">Start auction
+      </button>
+      <a
+        mat-raised-button color="primary"
+        [routerLink]="['/auction/edit', this.auction.id]"
+        *ngIf="this.auction.startDate === null">Edit auction
+      </a>
+      <button mat-button color="warn" (click)="onDelete(this.auction.id)">Delete auction</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
