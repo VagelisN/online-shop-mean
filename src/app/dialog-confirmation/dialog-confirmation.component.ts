@@ -5,7 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './dialog-confirmation.component.html',
 })
 export class DialogConfirmationComponent implements OnInit {
-
   constructor() { }
 
   ngOnInit() {

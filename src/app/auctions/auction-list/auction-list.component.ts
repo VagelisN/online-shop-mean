@@ -8,6 +8,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthenticationService } from './../../authentication/authentication.service';
 import { PageEvent } from '@angular/material';
 import { DialogConfirmationComponent } from 'src/app/dialog-confirmation/dialog-confirmation.component';
+import { BidDialogComponent } from './../../bid-dialog/bid-dialog.component';
 
 @Component({
   selector: 'app-auction-list',
@@ -167,8 +168,14 @@ export class AuctionListComponent implements OnInit, OnDestroy {
         return;
       }
     });
+  }
 
-
+  onBidList(auction) {
+    let tempBids = auction.bids;
+    if (tempBids.length > 8) {
+      tempBids = tempBids.splice(-8);
+    }
+    this.dialog.open( BidDialogComponent, {data: {bids: tempBids, name: auction.name}});
   }
 
   checkPrice(auction) {

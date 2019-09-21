@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>List of bids for {{data.name}}.</h2>
+<mat-dialog-content>
+  <mat-accordion multi="true">
+      <mat-expansion-panel *ngFor="let bid of data.bids">
+        <mat-expansion-panel-header>
+          <p>Bid amount:  {{bid.amount}}</p>
+        </mat-expansion-panel-header>
+        <p>Time: {{bid.time}}</p>
+        <p>Bidder's id: {{bid.bidder.slice(0,10)}}</p>
+      </mat-expansion-panel>
+  </mat-accordion>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close color="warn">
+    Close dialog
+  </button>
+</mat-dialog-actions>
