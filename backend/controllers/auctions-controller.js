@@ -279,7 +279,7 @@ exports.getSingleAuction = (req, res, next) => {
   Auction.findById(req.params.id).then(auction => {
     if (auction) {
       // Update the sellerRating from the user's database
-      Users.findById(ObjectID(auction.sellerId)).then(user => {
+      Users.findById(auction.sellerId).then(user => {
         if (user) {
           auction.sellerRating = user.sellerRating;
         } else {
