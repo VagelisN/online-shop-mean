@@ -11,7 +11,7 @@ export class AuthenticationService {
   private userAuthenticatedSub = new Subject<boolean>();
   private errorTextSub = new Subject<string>();
 
-  private userId: string;
+  private userId: string = null;
   private token: string;
   private username: string;
   constructor(private http: HttpClient, private router: Router) {}
@@ -49,10 +49,17 @@ export class AuthenticationService {
         localStorage.setItem('token', response.token);
         localStorage.setItem('userId', response.userId);
         localStorage.setItem('username', response.username);
+        this.userId = response.userId;
         this.userAuthenticated = true;
         this.username = response.username;
         this.userAuthenticatedSub.next(true);
-        this.router.navigate(['/']);
+        console.log('|' + this.username + '|');
+        console.log('Check if admin result is: ', (this.username === 'admin'));
+        if (this.username === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/']);
+        }
       });
   }
 

@@ -59,7 +59,7 @@
                 [longitude]="this.auction.longitude">
               </agm-marker>
           </agm-map>
-          <div class="bid" *ngIf="this.auction.startDate !== null">
+          <div class="bid" *ngIf="this.auction.startDate !== null && this.authenticationService.getLoggedUserId()">
               <input type="number" [(ngModel)]="bidValue" placeholder="Bid amount">
               <button
                 mat-raised-button

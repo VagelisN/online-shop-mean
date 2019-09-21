@@ -1,7 +1,7 @@
 <mat-card>
   <mat-spinner *ngIf="isLoading"></mat-spinner>
   <form [formGroup]="form" (submit)="onSaveAuction()" *ngIf="!isLoading">
-    <mat-card>
+    <mat-card class="formClass">
       <mat-card-header>Create an auction!</mat-card-header>
       <mat-form-field>
         <input

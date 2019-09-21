@@ -19,7 +19,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   // auctions is used to store all the auctions from the database
   // tempAuctions is used to store only the auctions that the user will see.
   auctions: Auctions[] = [];
-  tempAuctions: Auctions[] = [];
   isLoading = false;
   bidValue = null;
   searchValue = '';
@@ -173,14 +172,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   }
 
   checkPrice(auction) {
-    if (auction.buyPrice !== null) {
-      if (parseFloat(auction.buyPrice) > this.sliderMinValue
-          && parseFloat(auction.buyPrice) < this.sliderMaxValue) {
-        return true;
-      }
-    } else {
-      return true;
-    }
+    return (auction.buyPrice !== null);
   }
 
   onSearchSubmit() {

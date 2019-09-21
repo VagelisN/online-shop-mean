@@ -47,6 +47,7 @@ import { MessagesComponent } from './user/messages/messages.component';
 import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
 import { MaterialElevationDirective } from './elevation.directive';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { UserAuctionsComponent } from './user-auctions/user-auctions.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     CategoryPickerComponent,
     MessagesComponent,
     DialogConfirmationComponent,
-    MaterialElevationDirective
+    MaterialElevationDirective,
+    UserAuctionsComponent
   ],
   entryComponents: [ DialogConfirmationComponent ],
   imports: [

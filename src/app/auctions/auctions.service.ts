@@ -10,6 +10,7 @@ export class AuctionsService {
   private auctions: Auctions[] = [];
   private auctionsUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
   private auctionSearchUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
+  private userAuctionsUpdated = new Subject<Auctions[]>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -215,6 +216,43 @@ export class AuctionsService {
     return this.http.get<{message: string, path: string[]}>(
       'http://localhost:3000/auctions/categories/path/' + id
     );
+  }
+
+  // These functions are used for the path /user/auctions so a user can manage his auctions.
+  getUserAuctions(userId) {
+    this.http.get<{message: string, auctions: any}>(
+      'http://localhost:3000/auctions/user/' + userId
+    )
+    .pipe(
+      map(auctionData => {
+      return { auctions: auctionData.auctions.map(auction => {
+        return {
+          name: auction.name,
+          description: auction.description,
+          country: auction.country,
+          category: auction.category,
+          buyPrice: auction.buyPrice,
+          id: auction._id,
+          image: auction.image,
+          highestBid: auction.highestBid,
+          startDate: auction.startDate,
+          endDate: auction.endDate,
+          latitude: parseFloat(auction.latitude),
+          longitude: parseFloat(auction.longitude),
+          address: auction.address,
+          sellerRating: auction.sellerRating
+        };
+      })
+    };
+  }))
+    .subscribe((transformedAuctionData) => {
+      this.auctions = transformedAuctionData.auctions;
+      this.userAuctionsUpdated.next([...this.auctions]);
+    });
+  }
+
+  getUserAuctionsUpdateListener() {
+    return this.userAuctionsUpdated.asObservable();
   }
 }
 

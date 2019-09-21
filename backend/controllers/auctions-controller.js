@@ -162,7 +162,17 @@ exports.createAuction =  (req, res, next) => {
 };
 
 
-// Prepei na kanw search sthn bash twn users kai na kanw fetch to seller rating tou seller prin epistrepsw ta auctions
+exports.getUserAuctions = (req, res, next) => {
+  const userId = req.params.id;
+  // Search the auctions collection with sellerId = userId
+  Auction.find({sellerId: userId})
+  .then(documents => {
+    res.status(200).json({
+      message: 'Auctions fetched succesfully.',
+      auctions: documents
+    });
+  })
+}
 
 exports.getAuctions = (req, res, next) => {
   console.log("Reached the backend getAuctions()");
@@ -269,7 +279,7 @@ exports.getSingleAuction = (req, res, next) => {
   Auction.findById(req.params.id).then(auction => {
     if (auction) {
       // Update the sellerRating from the user's database
-      Users.findById(ObjectID(auction.sellerId)).then(user => {
+      Users.findById(auction.sellerId).then(user => {
         if (user) {
           auction.sellerRating = user.sellerRating;
         } else {
