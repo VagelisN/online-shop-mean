@@ -1,7 +1,37 @@
-<mat-card>
-  <p *ngIf="tempUser">
-  {{tempUser.email}}
-  {{tempUser.username}}
-  </p>
-  <div><button mat-raised-button color="accent" (click)="onVerify(tempUser.username)" >Verify</button></div>
-</mat-card>
+<div style="margin-top: 16px;" fxLayout="row" fxLayoutAlign="center center">
+  <mat-card fxFlex="45" fxLayout="row warp" fxLayoutAlign="center center">
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+      <p fxFlex="50" fxLayout="row" fxLayoutAlign="end"class="mat-body-2" style="font-size: 16px;"> Email: &nbsp; </p>
+      <p fxFlex="50"class="mat-body-1" style="font-size: 16px;" *ngIf="tempUser">{{tempUser.email}}</p>
+    </div>
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+        <p fxFlex="50" fxLayout="row" fxLayoutAlign="end"class="mat-body-2" style="font-size: 16px;"> Username: &nbsp; </p>
+        <p fxFlex="50"class="mat-body-1" style="font-size: 16px;" *ngIf="tempUser">{{tempUser.username}}</p>
+    </div>
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+        <p fxFlex="50" fxLayout="row" fxLayoutAlign="end"class="mat-body-2" style="font-size: 16px;"> Firstname: &nbsp; </p>
+        <p fxFlex="50"class="mat-body-1" style="font-size: 16px;" *ngIf="tempUser">{{tempUser.firstname}}</p>
+    </div>
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+        <p fxFlex="50" fxLayout="row" fxLayoutAlign="end"class="mat-body-2" style="font-size: 16px;"> Lastname: &nbsp; </p>
+        <p fxFlex="50"class="mat-body-1" style="font-size: 16px;" *ngIf="tempUser">{{tempUser.lastname}}</p>
+    </div>
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+        <p fxFlex="50" fxLayout="row" fxLayoutAlign="end"class="mat-body-2" style="font-size: 16px;"> Phone: &nbsp; </p>
+        <p fxFlex="50"class="mat-body-1" style="font-size: 16px;" *ngIf="tempUser">{{tempUser.phone}}</p>
+    </div>
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+        <p fxFlex="50" fxLayout="row" fxLayoutAlign="end"class="mat-body-2" style="font-size: 16px;"> Afm: &nbsp; </p>
+        <p fxFlex="50"class="mat-body-1" style="font-size: 16px;" *ngIf="tempUser">{{tempUser.afm}}</p>
+    </div>
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+        <p fxFlex="50" fxLayout="row" fxLayoutAlign="end"class="mat-body-2" style="font-size: 16px;"> address: &nbsp; </p>
+        <p fxFlex="50"class="mat-body-1" style="font-size: 16px;" *ngIf="tempUser">{{tempUser.address}}</p>
+    </div>
+
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+        <button mat-raised-button color="accent" (click)="onVerify(tempUser.username)" >Verify</button>
+      </div>
+    </mat-card>
+</div>
+
