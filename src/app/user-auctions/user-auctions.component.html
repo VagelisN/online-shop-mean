@@ -8,10 +8,11 @@
   <mat-card *ngFor="let auction of auctions">
     <h4>{{auction.name}}</h4>
     <p>Highest bid: {{auction.highestBid}}</p>
-    <star-rating value="5" checkedcolor="yellow" uncheckedcolor="gray" size="2rem" readonly="false"
-                 (rate)="onRateUser($event, 'seller')" *ngIf="checkIfSeller(auction)"></star-rating>
-    <star-rating value="5" checkedcolor="yellow" uncheckedcolor="gray" size="2rem" readonly="false"
-                 (rate)="onRateUser($event, 'bidder')" *ngIf="checkIfBidder(auction.bids)"></star-rating>
+    <p>Please rate your experience: </p>
+    <star-rating value="5" checkedcolor="red" uncheckedcolor="gray" size="20px" readonly="false"
+                 (rate)="onRateUser($event, 'seller', auction.id)" *ngIf="checkIfSeller(auction)"></star-rating>
+    <star-rating value="5" checkedcolor="yellow" uncheckedcolor="gray" size="3rem" readonly="false"
+                 (rate)="onRateUser($event, 'bidder', auction.id)" *ngIf="checkIfBidder(auction.bids)"></star-rating>
   </mat-card>
 </mat-card>
 

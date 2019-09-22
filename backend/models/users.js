@@ -15,10 +15,10 @@ const userSchema = mongoose.Schema({
   address: String,
   afm: {type: String},
   password: {type: String, required: true},
-  sellerRating: {type: String},
-  sellerRatingVotes: {type: Number},
-  buyerRating: {type: Number},
-  buyerRatingVotes: {type: Number},
+  sellerRating: {type: Number, default: 0},
+  sellerRatingVotes: {type: Number, default: 0},
+  buyerRating: {type: Number, default: 0},
+  buyerRatingVotes: {type: Number, default: 0},
   verified: {type: Boolean, required: true}
 });
 

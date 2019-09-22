@@ -256,6 +256,16 @@ export class AuctionsService {
   getUserAuctionsUpdateListener() {
     return this.userAuctionsUpdated.asObservable();
   }
+
+  rateUser(trating, ttype, auctionId) {
+    this.http.patch<{message: string}>('http://localhost:3000/auctions/rate/' + auctionId,
+     {rating: trating,
+      type: ttype})
+    .subscribe((res) => {
+      console.log(res.message);
+      this.router.navigate(['/user/auctions']);
+    });
+  }
 }
 
 

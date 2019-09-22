@@ -71,11 +71,11 @@ export class UserAuctionsComponent implements OnInit {
     }
   }
 
-  onRateUser(event, type) {
-    if (type === 'bidder') {
-      // Bidder rating of the highest bidder
-    } else {
-      // Seller rating
-    }
+  onRateUser(event, type, auctionId) {
+    console.log(auctionId);
+    console.log(event);
+    const rating = event.newValue;
+    console.log('New rating is: ', rating);
+    this.auctionsService.rateUser(rating, type, auctionId);
   }
 }

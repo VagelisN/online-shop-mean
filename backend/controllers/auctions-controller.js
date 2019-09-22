@@ -451,3 +451,53 @@ exports.getPath = async (req, res, next) => {
     path: path
   });
 }
+
+exports.rateUser = (req, res, next) => {
+  const auctionId = req.params.id;
+  const rating = req.body.rating;
+  const type = req.body.type;
+  let userId = null;
+  // Find the auction
+  Auction.findById(auctionId).then(auction => {
+    // Depending on the type fetch the user
+    if (type === 'seller') {
+      userId = auction.sellerId;
+    } else {
+      // Rate the highest bidder
+      userId = auction.bids[auction.bids.length - 1].bidder;
+    }
+    Users.findById(userId).then(user => {
+      // Depending on the type, update the rating
+      if (type === 'seller') {
+        const totalVotes = user.sellerRatingVotes;
+        if (totalVotes <= 0) {
+          user.sellerRating = rating;
+          user.sellerRatingVotes = 1;
+        } else {
+          user.sellerRating = user.sellerRating + ((rating - user.sellerRating) / (totalVotes + 1));
+          user.sellerRatingVotes ++;
+        }
+      } else {
+        const totalVotes = user.buyerRatingVotes;
+        if (totalVotes <= 0) {
+          user.buyerRating = rating;
+          user.buyerRatingVotes = 1;
+        } else {
+          user.buyerRating = user.buyerRating +  ((rating - user.buyerRating )/ (totalVotes + 1));
+          user.buyerRatingVotes ++;
+        }
+      }
+      // Then save the user and send back a response
+      user.save().then(() => {
+        res.status(200).json({
+          message: 'Rating was updated succesfully.'
+        });
+      })
+    })
+  })
+  .catch(() => {
+    res.status(500).json({
+      message: 'Auction was not found'
+    })
+  })
+}
