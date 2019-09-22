@@ -9,6 +9,7 @@ import { AuthenticationService } from './../../authentication/authentication.ser
 import { PageEvent } from '@angular/material';
 import { DialogConfirmationComponent } from 'src/app/dialog-confirmation/dialog-confirmation.component';
 import { BidDialogComponent } from './../../bid-dialog/bid-dialog.component';
+import { AdministrationService } from 'src/app/administrator/administration.service';
 
 @Component({
   selector: 'app-auction-list',
@@ -48,7 +49,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   constructor(public auctionsService: AuctionsService,
               public route: ActivatedRoute,
               public authenticationService: AuthenticationService,
-              public dialog: MatDialog) {}
+              public dialog: MatDialog,
+              private adminService: AdministrationService) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -193,5 +195,9 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       this.auctions = auctionData.auctions;
       this.totalAuctions = auctionData.auctionCount;
     });
+  }
+
+  onExtract(type: string, auctionId: string) {
+    this.adminService.extractAuction(type, auctionId);
   }
 }

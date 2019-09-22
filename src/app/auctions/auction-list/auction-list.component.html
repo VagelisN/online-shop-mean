@@ -85,7 +85,8 @@
               <button mat-button color="warn" (click)="onDelete(this.auction.id)">Delete auction</button>
             </div>
           </div>
-
+          <button mat-button (click)="onExtract('XML', auction.id)">Extract as XML</button>
+          <button mat-button (click)="onExtract('JSON', auction.id)">Extract as JSON</button>
       </div>
   </div>
 

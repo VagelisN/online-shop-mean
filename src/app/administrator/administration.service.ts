@@ -64,4 +64,8 @@ export class AdministrationService {
         this.router.navigate(['/admin']);
       });
   }
+
+  extractAuction(type: string,auctionId: string ) {
+
+  }
 }
