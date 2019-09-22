@@ -30,6 +30,7 @@
     "mongoose": "^5.6.11",
     "mongoose-unique-validator": "^2.0.3",
     "multer": "^1.4.2",
+    "ng-starrating": "^1.0.7",
     "ng2-search-filter": "^0.5.1",
     "ng5-slider": "^1.2.4",
     "node-cron": "^2.0.3",

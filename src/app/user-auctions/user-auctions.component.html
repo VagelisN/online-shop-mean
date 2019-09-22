@@ -1,5 +1,23 @@
-<mat-accordion>
-  <h3>Your auction's:</h3>
+<mat-spinner *ngIf="this.isLoading"></mat-spinner>
+
+<button mat-flat-button (click)="onClickButton('active')">Active auctions</button>
+<button mat-flat-button (click)="onClickButton('finished')">Finished auctions</button>
+
+<!-- If the button finished bids is pressed -->
+<mat-card *ngIf="this.mode === 'finished' && !this.isLoading">
+  <mat-card *ngFor="let auction of auctions">
+    <h4>{{auction.name}}</h4>
+    <p>Highest bid: {{auction.highestBid}}</p>
+    <star-rating value="5" checkedcolor="yellow" uncheckedcolor="gray" size="2rem" readonly="false"
+                 (rate)="onRateUser($event, 'seller')" *ngIf="checkIfSeller(auction)"></star-rating>
+    <star-rating value="5" checkedcolor="yellow" uncheckedcolor="gray" size="2rem" readonly="false"
+                 (rate)="onRateUser($event, 'bidder')" *ngIf="checkIfBidder(auction.bids)"></star-rating>
+  </mat-card>
+</mat-card>
+
+<!-- If the button active bids is pressed -->
+<mat-accordion *ngIf="this.mode === 'active' && !this.isLoading">
+  <h3>Your auctions:</h3>
   <mat-expansion-panel *ngFor="let auction of auctions">
     <mat-expansion-panel-header>
       <h4>{{auction.name}}</h4>

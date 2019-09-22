@@ -240,7 +240,9 @@ export class AuctionsService {
           latitude: parseFloat(auction.latitude),
           longitude: parseFloat(auction.longitude),
           address: auction.address,
-          sellerRating: auction.sellerRating
+          sellerRating: auction.sellerRating,
+          bids: auction.bids,
+          sellerId: auction.sellerId
         };
       })
     };
