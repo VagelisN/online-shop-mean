@@ -48,6 +48,7 @@ import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confir
 import { MaterialElevationDirective } from './elevation.directive';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { UserAuctionsComponent } from './user-auctions/user-auctions.component';
+import { BidDialogComponent } from './bid-dialog/bid-dialog.component';
 
 @NgModule({
   declarations: [
@@ -65,9 +66,10 @@ import { UserAuctionsComponent } from './user-auctions/user-auctions.component';
     MessagesComponent,
     DialogConfirmationComponent,
     MaterialElevationDirective,
-    UserAuctionsComponent
+    UserAuctionsComponent,
+    BidDialogComponent
   ],
-  entryComponents: [ DialogConfirmationComponent ],
+  entryComponents: [ DialogConfirmationComponent, BidDialogComponent ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

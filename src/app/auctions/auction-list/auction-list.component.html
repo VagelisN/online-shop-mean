@@ -53,6 +53,7 @@
           <p>Address: {{this.auction.address}}</p>
           <p>Highest bid: {{this.auction.highestBid}}</p>
           <p>Description: {{this.auction.description}}</p>
+          <button mat-button *ngIf="this.auction.bids" (click)="onBidList(this.auction)">Show bids...</button>
           <agm-map [latitude]="toNumber(this.auction.latitude)" [longitude]="toNumber(this.auction.longitude)">
               <agm-marker
                 [latitude]="this.auction.latitude"
@@ -82,18 +83,6 @@
                 [routerLink]="['/auction/edit', this.auction.id]"
                 *ngIf="this.auction.startDate === null">Edit auction</a>
               <button mat-button color="warn" (click)="onDelete(this.auction.id)">Delete auction</button>
-            </div>
-            <div class="bids" *ngIf="auction.bids !== null">
-              <h3>List of bids for {{auction.name}}.</h3>
-              <mat-accordion multi="true">
-                <mat-expansion-panel *ngFor="let bid of auction.bids">
-                  <mat-expansion-panel-header>
-                    <p>Bid amount:  {{bid.amount}}</p>
-                  </mat-expansion-panel-header>
-                  <p>Time: {{bid.time}}</p>
-                  <p>Bidder's id: {{bid.bidder.slice(0,10)}}</p>
-                </mat-expansion-panel>
-              </mat-accordion>
             </div>
           </div>
 
