@@ -177,10 +177,11 @@ export class AuctionsService {
   }
 
 
-  searchAuctions(tminPrice: number, tmaxPrice: number, tsearchValue: string, currentPage: number, pageSize: number) {
+  searchAuctions(tminPrice: number, tmaxPrice: number, tsearchValue: string, currentPage: number, pageSize: number, catId: string) {
     console.log('In searchAuctions in auctions.service.ts');
     const searchParams =
-      `?minPrice=${tminPrice}&maxPrice=${tmaxPrice}&searchValue=${tsearchValue}&currentPage=${currentPage}&pageSize=${pageSize}`;
+    // tslint:disable-next-line: max-line-length
+    `?minPrice=${tminPrice}&maxPrice=${tmaxPrice}&searchValue=${tsearchValue}&currentPage=${currentPage}&pageSize=${pageSize}&catId=${catId}`;
     this.http.get<{message: string, auctions: any, auctionCount: number}>
       ('http://localhost:3000/auctions/search' + searchParams)
       .pipe(
@@ -190,7 +191,8 @@ export class AuctionsService {
               name: auction.name,
               description: auction.description,
               country: auction.country,
-              category: auction.category,
+              categoriesId: auction.categoriesId,
+              categoryNames: auction.categoryNames,
               buyPrice: auction.buyPrice,
               id: auction._id,
               image: auction.image,

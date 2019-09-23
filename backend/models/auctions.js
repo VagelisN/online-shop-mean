@@ -17,7 +17,7 @@ const auctionSchema = mongoose.Schema({
   categoryNames: {type: [String], required: true},
   country: {type: String, required: true},
   buyPrice: {type: String},
-  firstBid: {bidSchema},
+  firstBid: {type: Number},
   highestBid: {type: String },
   numberOfBids: {type: Number},
   bids: [bidSchema],
