@@ -4,7 +4,8 @@ export interface Auctions {
   description: string;
   country: string;
   buyPrice: string;
-  category: string;
+  categoriesId: string;
+  categoryNames: string[];
   latitude: string;
   longitude: string;
   highestBid: string;

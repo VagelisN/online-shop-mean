@@ -48,7 +48,7 @@
             Instant buy price: {{ this.auction.buyPrice }}
           </p>
           <p>Auction deadline: {{this.auction.endDate }}</p>
-          <p>Item category: {{this.auction.category}}</p>
+          <p *ngIf="this.categoryNames">Item category: {{this.categoryNames}}</p>
           <p>Country: {{this.auction.country}}</p>
           <p>Address: {{this.auction.address}}</p>
           <p>Highest bid: {{this.auction.highestBid}}</p>

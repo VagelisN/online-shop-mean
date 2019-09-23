@@ -131,11 +131,18 @@ async function updateSingleRating(auction) {
 exports.createAuction =  (req, res, next) => {
   console.log("SellerId in backend: ",req.body.sellerId);
   const url = req.protocol + '://' + req.get('host');
+
+  // Change categoryNames from a single string to an array
+  let names = req.body.categoryNames;
+  console.log(names);
+  names = names.split('>');
+
   const auction = new Auction({
     name: req.body.name,
     description: req.body.description,
     country: req.body.country,
-    category: req.body.category,
+    categoriesId: req.body.categoriesId,
+    categoryNames: names,
     latitude: req.body.latitude,
     longitude:req.body.longitude,
     buyPrice: req.body.buyPrice,

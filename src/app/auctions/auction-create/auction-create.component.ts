@@ -50,6 +50,7 @@ export class AuctionCreateComponent implements OnInit {
     this.pathSub = this.auctionsService.getPathUpdateListener()
       .subscribe(path => {
         this.categoryPath = path;
+        // Maybe split them here
       });
 
 
@@ -71,8 +72,6 @@ export class AuctionCreateComponent implements OnInit {
         this.mode = 'edit';
         this.auctionId = paramMap.get('auctionId');
         this.isLoading = true;
-        // console.log('I\'m here nigga.');
-        // console.log(this.auctionId);
         this.auctionsService.getSingleAuction(this.auctionId).subscribe(auctionData => {
           // console.log('Already subbed.');
           this.auction = {
@@ -80,7 +79,8 @@ export class AuctionCreateComponent implements OnInit {
             name: auctionData.name,
             description: auctionData.description,
             country: auctionData.country,
-            category: auctionData.category,
+            categoriesId: auctionData.categoriesId,
+            categoryNames: auctionData.categoryNames,
             buyPrice: auctionData.buyPrice,
             startDate: auctionData.startDate,
             endDate: auctionData.endDate,
@@ -99,7 +99,6 @@ export class AuctionCreateComponent implements OnInit {
             description: this.auction.description,
             country: this.auction.country,
             buyPrice: this.auction.buyPrice,
-            category: this.auction.category,
             image: this.auction.image,
             endDate: this.auction.endDate
           });
@@ -173,19 +172,25 @@ export class AuctionCreateComponent implements OnInit {
     // Get the userId so we can insert it in the seller field.
     const sellerId = this.authenticationService.getLoggedUserId();
     console.log('SellerId: ', sellerId);
-    let path = '';
+    let idPath = '';
+    let catNameArray = '';
     for (let index = 0; index < this.categoryPath.length; index++) {
-      path += this.categoryPath[index];
+      idPath += this.categoryPath[index].id;
+      catNameArray += this.categoryPath[index].name;
       if (index < this.categoryPath.length - 1) {
-        path += '>';
+        idPath += '>';
+        catNameArray += '>';
       }
     }
+    console.log('idPath: ', idPath);
+    console.log('namePath: ', catNameArray);
+    console.log('catNameArray: ', catNameArray);
     if (this.mode === 'create') {
-      // console.log('In onSaveAuction/create method.');
       this.auctionsService.addAuction(this.form.value.name,
                                 this.form.value.description,
                                 this.form.value.country,
-                                path,
+                                idPath,
+                                catNameArray,
                                 this.form.value.buyPrice,
                                 this.latitude.toString(),
                                 this.longitude.toString(),
@@ -198,7 +203,8 @@ export class AuctionCreateComponent implements OnInit {
                                    this.form.value.name,
                                    this.form.value.description,
                                    this.form.value.country,
-                                   path,
+                                   idPath,
+                                   catNameArray,
                                    this.form.value.buyPrice,
                                    this.latitude.toString(),
                                    this.longitude.toString(),

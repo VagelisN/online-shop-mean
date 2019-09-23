@@ -10,7 +10,8 @@ const bidSchema = mongoose.Schema({
 const auctionSchema = mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true},
-  category: {type: String, required: true},
+  categoriesId: {type: String, required: true},
+  categoryNames: {type: [String], required: true},
   country: {type: String, required: true},
   buyPrice: {type: String},
   firstBid: {bidSchema},

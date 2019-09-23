@@ -28,7 +28,8 @@ export class AuctionsService {
           name: auction.name,
           description: auction.description,
           country: auction.country,
-          category: auction.category,
+          categoriesId: auction.categoriesId,
+          categoryNames: auction.catNameArray,
           buyPrice: auction.buyPrice,
           id: auction._id,
           image: auction.image,
@@ -70,7 +71,8 @@ export class AuctionsService {
       name: string,
       description: string,
       country: string,
-      category: string,
+      categoriesId: string,
+      categoryNames: string[],
       buyPrice: string,
       latitude: string,
       longitude: string,
@@ -90,14 +92,15 @@ export class AuctionsService {
   }
 
   addAuction(tname: string, tdescription: string, tcountry: string,
-             tcategory: string, tbuyPrice: string, tlat: string,
+             tcategoriesId: string, tcatNameArray: string, tbuyPrice: string, tlat: string,
              tlong: string, image: File, tends: string, taddress: string, tsellerId: string) {
-    const auctionData = new FormData();
+    const auctionData =   new FormData();
     auctionData.append('name', tname);
     auctionData.append('description', tdescription);
     auctionData.append('country', tcountry);
     auctionData.append('buyPrice', tbuyPrice);
-    auctionData.append('category', tcategory);
+    auctionData.append('categoriesId', tcategoriesId);
+    auctionData.append('categoryNames', tcatNameArray);
     auctionData.append('latitude', tlat);
     auctionData.append('longitude', tlong);
     auctionData.append('image', image, tname);
@@ -120,7 +123,7 @@ export class AuctionsService {
   }
 
   updateAuction(tid: string, tname: string, tdescription: string,
-                tcountry: string, tcategory: string, tbuyPrice: string,
+                tcountry: string, tcategoriesId: string, tcatNameArray: string, tbuyPrice: string,
                 tlat: string, tlong: string, timage: string, tends: string, taddress: string, tsellerId: string) {
     const auction: Auctions = {
       id: tid,
@@ -128,7 +131,8 @@ export class AuctionsService {
       description: tdescription,
       country: tcountry,
       buyPrice: tbuyPrice,
-      category: tcategory,
+      categoriesId: tcategoriesId,
+      categoryNames: [tcatNameArray],
       endDate: tends,
       latitude: tlat,
       longitude: tlong,

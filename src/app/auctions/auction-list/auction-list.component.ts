@@ -19,12 +19,12 @@ import { AdministrationService } from 'src/app/administrator/administration.serv
 export class AuctionListComponent implements OnInit, OnDestroy {
 
   // auctions is used to store all the auctions from the database
-  // tempAuctions is used to store only the auctions that the user will see.
   auctions: Auctions[] = [];
   isLoading = false;
   bidValue = null;
   searchValue = '';
   bidErrorMessage = null;
+  categoryNames = null;
 
   // Paginator related variables
   totalAuctions = 0;
@@ -69,7 +69,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
             name: auctionData.name,
             description: auctionData.description,
             country: auctionData.country,
-            category: auctionData.category,
+            categoriesId: auctionData.categoriesId,
+            categoryNames: auctionData.categoryNames,
             buyPrice: auctionData.buyPrice,
             startDate: auctionData.startDate,
             endDate: auctionData.endDate,
@@ -82,6 +83,13 @@ export class AuctionListComponent implements OnInit, OnDestroy {
             sellerRating: auctionData.sellerRating,
             bids: auctionData.bids
           };
+          this.categoryNames = '';
+          for (let index = 0; index < this.auction.categoryNames.length; index++) {
+            this.categoryNames += this.auction.categoryNames[index];
+            if (index < this.auction.categoryNames.length - 1) {
+              this.categoryNames += ' -> ';
+            }
+          }
           console.log(this.auction);
           this.isLoading = false;
         });
