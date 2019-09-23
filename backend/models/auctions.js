@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const bidSchema = mongoose.Schema({
   amount: Number,
   time: Date, //This will change to a date data type
-  bidder: String
+  bidder: String,
+  bidderRating: Number,
+  location: String,
+  country: String
 });
 
 

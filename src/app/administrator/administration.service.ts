@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { UserModel } from './../authentication/user.model';
 import { Router } from '@angular/router';
+import { saveAs } from 'file-saver';
 
 @Injectable({ providedIn: 'root' })
 
@@ -64,10 +64,18 @@ export class AdministrationService {
       });
   }
 
+
   extractAuction(type: string, auctionId: string ) {
-    this.http.post<{message: string}>('http://localhost:3000/admin/extract', {type, auctionId})
+    this.http.post<{message: string, extractedAuction: string}>('http://localhost:3000/admin/extract', {type, auctionId})
       .subscribe(res => {
         console.log(res);
+        const blob = new Blob([res.extractedAuction], { type: 'text/plain' });
+        if ( type === 'XML') {
+          saveAs(blob, 'auction.xml');
+        } else {
+          saveAs(blob, 'auction.json');
+        }
+
       });
   }
 }
