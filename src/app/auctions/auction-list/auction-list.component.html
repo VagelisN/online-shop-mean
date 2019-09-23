@@ -10,13 +10,13 @@
           search
         </i>
       </button>
-      <button mat-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">Shop By Category</button>
+      <button mat-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.categoryChosenName}}</button>
       <mat-menu #firstLevelCategories="matMenu">
 
         <button
         mat-menu-item
         *ngFor="let category of categories"
-        (click)="onCategoryChosen(category._id)">
+        (click)="onCategoryChosen(category._id, category.name)">
         <span style="font-size: 17px;">
           {{category.name}}
         </span>

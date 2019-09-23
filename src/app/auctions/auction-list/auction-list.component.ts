@@ -28,6 +28,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   categoryNames = null;
 
   categoryChosen = null;
+  categoryChosenName = 'Select a category';
   categories: Categories[] = [];
 
   // Paginator related variables
@@ -199,7 +200,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   onSearchSubmit() {
     // Call searchAuctions() from auction.service.ts
     console.log('onSearchSubmit in auction-list.component');
-    console.log(this.categoryChosen)
+    console.log(this.categoryChosen);
     this.auctionsService.searchAuctions(this.sliderMinValue, this.sliderMaxValue, this.searchValue,
                                         this.currentPage, this.auctionsPerPage, this.categoryChosen);
     this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
@@ -221,7 +222,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       });
   }
 
-  onCategoryChosen(id: string) {
+  onCategoryChosen(id: string, name: string) {
     this.categoryChosen = id;
+    this.categoryChosenName = name;
   }
 }
