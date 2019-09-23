@@ -34,7 +34,6 @@ exports.sendMessage = (req, res, next) => {
     toId: req.body.toId
   });
   message.save().then(sentMessage =>{
-    console.log("peh", sentMessage);
     res.status(200).json({
       message: 'message sent successfuly'
     });

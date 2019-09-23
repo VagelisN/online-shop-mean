@@ -10,7 +10,8 @@ const messageSchema = mongoose.Schema({
  isRead: {type: Boolean, default: false},
  timestamp: {type: Date, default: Date.now},
  senderDeleted: {type: Boolean, default: false},
- receiverDeleted: {type: Boolean, default: false}
+ receiverDeleted: {type: Boolean, default: false},
+ rating: {type: String, default: null }
 });
 
 module.exports = mongoose.model('Message',messageSchema);

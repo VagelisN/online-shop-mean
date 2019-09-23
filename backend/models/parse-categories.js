@@ -30,6 +30,8 @@ function parseFile(name, jsonCategories) {
     jsonItems = fs.readFile( name,function(err, data) {
       let json = parser.toJson(data);
       jsonItems = JSON.parse(json);
+      console.log(jsonItems);
+      console.log(jsonItems.Items.Item);
 
         for (let i=0; i < jsonItems.Items.Item.length; i++) {
           currCategory = jsonCategories["categories"];
@@ -50,9 +52,9 @@ async function run() {
     "categories": {
     }
   };
-  for(let m =0 ; m< 40; m++) {
+  for(let m =0 ; m< 1; m++) {
 
-    name = 'items-'+m+'.xml';
+    name = './ebay-data/items-'+m+'.xml';
 
     await parseFile(name,jsonCategories);
   }

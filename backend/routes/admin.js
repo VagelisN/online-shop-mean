@@ -12,4 +12,6 @@ router.get('/:username', verifyToken,controller.getUserInfo);
 
 router.post('', verifyToken, controller.verifyUser);
 
+router.post('/extract', verifyToken, controller.extractAuction);
+
 module.exports = router;

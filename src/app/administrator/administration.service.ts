@@ -60,12 +60,14 @@ export class AdministrationService {
   verifyUser(tusername: string) {
     this.http.post<{message: string}>('http://localhost:3000/admin/', {username: tusername})
       .subscribe(res => {
-        console.log('sadfasdfasdfasdf');
         this.router.navigate(['/admin']);
       });
   }
 
-  extractAuction(type: string,auctionId: string ) {
-
+  extractAuction(type: string, auctionId: string ) {
+    this.http.post<{message: string}>('http://localhost:3000/admin/extract', {type, auctionId})
+      .subscribe(res => {
+        console.log(res);
+      });
   }
 }

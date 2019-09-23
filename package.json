@@ -38,6 +38,7 @@
     "rxjs-compat": "^6.5.3",
     "tslib": "^1.10.0",
     "xml2json": "^0.11.2",
+    "xmlbuilder": "^13.0.2",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {

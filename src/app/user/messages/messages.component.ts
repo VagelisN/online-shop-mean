@@ -25,7 +25,9 @@ export class MessagesComponent implements OnInit {
     fromId: '5d7cd68787919120ff20a62d',
     to: "samus",
     toId: '5d7d08ff73f0be4094648f21',
-    isRead: true}
+    isRead: true,
+    rating:null
+  }
   ];
   sent: Message[] = [];
   username = '';
@@ -52,7 +54,8 @@ export class MessagesComponent implements OnInit {
                 fromId: message.fromId,
                 to: message.to,
                 toId: message.toId,
-                isRead: message.isRead
+                isRead: message.isRead,
+                rating: message.rating
               };
             })
           };
@@ -74,7 +77,8 @@ export class MessagesComponent implements OnInit {
               fromId: message.fromId,
               to: message.to,
               toId: message.toId,
-              isRead: message.isRead
+              isRead: message.isRead,
+              rating: null
             };
           })
         };
@@ -105,7 +109,8 @@ export class MessagesComponent implements OnInit {
       toId: this.openMessage.fromId,
       from: this.openMessage.to,
       fromId: this.openMessage.toId,
-      isRead: false
+      isRead: false,
+      rating: null
     };
     this.messageService.sendMessage(reply);
     this.messageOpen = false;

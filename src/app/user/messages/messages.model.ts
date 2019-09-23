@@ -7,4 +7,5 @@ export interface Message {
   to: string;
   toId: string;
   isRead: boolean;
+  rating: string;
 }

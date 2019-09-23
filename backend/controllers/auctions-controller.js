@@ -18,9 +18,10 @@ function sendAuctionMessages(auction, highestBidder) {
           title: 'Your auction with id: '+ auction.id +' has been completed.',
           content: 'You can now communicate with the winner of the auction.',
           fromId: highestBidder,
-          from: sellerUsername,
-          to: bidderUsername,
-          toId: highestBidder
+          from: bidderUsername,
+          to: sellerUsername,
+          toId: auction.sellerId,
+          rating: 'bidder'
         });
         // Save the message in the database
         sellerMessage.save().then(() => {
@@ -51,7 +52,8 @@ function sendAuctionMessages(auction, highestBidder) {
           from: sellerUsername,
           fromId: auction.sellerId,
           to: bidderUsername,
-          toId: highestBidder
+          toId: highestBidder,
+          rating: 'seller'
         });
         bidderMessage.save().then(() => {
           console.log('Auction with id: '+ auction.id+' has ended.');
