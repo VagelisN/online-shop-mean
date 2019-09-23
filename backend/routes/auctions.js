@@ -49,5 +49,7 @@ router.get('/categories/:parentId', controller.getCategories);
 
 router.get('/categories/path/:id', controller.getPath);
 
+router.patch('/rate/:id', controller.rateUser);
+
 
 module.exports = router;

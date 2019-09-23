@@ -23,7 +23,7 @@ const auctionSchema = mongoose.Schema({
   startDate: {type: Date},
   endDate: {type: String},
   sellerId: {type: String},
-  sellerRating: {type: String},
+  sellerRating: {type: Number},
   address: {type: String}
 });
 
