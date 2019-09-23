@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 export class AuctionsService {
   private auctions: Auctions[] = [];
   private auctionsUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
+  private pathSub = new Subject<[{id: string, name: string}]>();
   private auctionSearchUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
   private userAuctionsUpdated = new Subject<Auctions[]>();
 
@@ -50,7 +51,9 @@ export class AuctionsService {
     });
   }
 
-
+  getPathUpdateListener() {
+    return this.pathSub.asObservable();
+  }
 
   getAuctionUpdateListener() {
     return this.auctionsUpdated.asObservable();
@@ -213,9 +216,12 @@ export class AuctionsService {
   }
 
   findPath(id: string) {
-    return this.http.get<{message: string, path: string[]}>(
+    this.http.get<{message: string, path: [{id: string, name: string}]}>(
       'http://localhost:3000/auctions/categories/path/' + id
-    );
+    ).subscribe( res => {
+      const path = res.path;
+      this.pathSub.next(path);
+    });
   }
 
   // These functions are used for the path /user/auctions so a user can manage his auctions.
@@ -257,12 +263,11 @@ export class AuctionsService {
     return this.userAuctionsUpdated.asObservable();
   }
 
-  rateUser(trating, ttype, auctionId) {
-    this.http.patch<{message: string}>('http://localhost:3000/auctions/rate/' + auctionId,
+  rateUser(trating, ttype, userId) {
+    this.http.patch<{message: string}>('http://localhost:3000/auctions/rate/' + userId,
      {rating: trating,
       type: ttype})
     .subscribe((res) => {
-      console.log(res.message);
       this.router.navigate(['/user/auctions']);
     });
   }

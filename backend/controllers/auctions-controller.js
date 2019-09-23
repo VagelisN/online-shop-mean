@@ -432,7 +432,7 @@ function findPath(categoryId,path) {
         resolve();
         return
       }
-      path.unshift(item._id, item.name);
+      path.unshift({id: item._id, name: item.name});
       console.log(path);
       if(item.parentId != null) {
         await findPath(item.parentId, path);
@@ -455,20 +455,11 @@ exports.getPath = async (req, res, next) => {
 }
 
 exports.rateUser = (req, res, next) => {
-  const auctionId = req.params.id;
   const rating = req.body.rating;
   const type = req.body.type;
-  let userId = null;
+  let userId = req.params.id;
   // Find the auction
-  Auction.findById(auctionId).then(auction => {
-    // Depending on the type fetch the user
-    if (type === 'seller') {
-      userId = auction.sellerId;
-    } else {
-      // Rate the highest bidder
-      userId = auction.bids[auction.bids.length - 1].bidder;
-    }
-    Users.findById(userId).then(user => {
+  Users.findById(userId).then(user => {
       // Depending on the type, update the rating
       if (type === 'seller') {
         const totalVotes = user.sellerRatingVotes;
@@ -495,11 +486,10 @@ exports.rateUser = (req, res, next) => {
           message: 'Rating was updated succesfully.'
         });
       })
-    })
   })
   .catch(() => {
     res.status(500).json({
-      message: 'Auction was not found'
+      message: 'User was not found'
     })
   })
 }

@@ -11,7 +11,6 @@ import { AuctionsService } from '../auctions/auctions.service';
 })
 export class UserAuctionsComponent implements OnInit {
   isLoading = false;
-  mode = 'active';
   auctions: Auctions[] = [];
   userId = this.authenticationService.getLoggedUserId();
   private auctionsSub: Subscription;
@@ -46,36 +45,4 @@ export class UserAuctionsComponent implements OnInit {
     return parseFloat(str);
   }
 
-  onClickButton(mode) {
-    console.log(mode);
-    this.isLoading = true;
-    this.mode = mode;
-    // Maybe call the finished auctions ?
-    this.isLoading = false;
-  }
-
-  checkIfBidder(bids) {
-    if (bids) {
-      return (this.userId === bids[bids.length - 1].bidder);
-    } else {
-      return false;
-    }
-  }
-
-  checkIfSeller(auction) {
-    if (auction) {
-      // console.log(this.userId + '| | |' + auction.sellerId);
-      return (this.userId === auction.sellerId);
-    } else {
-      return false;
-    }
-  }
-
-  onRateUser(event, type, auctionId) {
-    console.log(auctionId);
-    console.log(event);
-    const rating = event.newValue;
-    console.log('New rating is: ', rating);
-    this.auctionsService.rateUser(rating, type, auctionId);
-  }
 }

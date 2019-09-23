@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/app/authentication/authentication.ser
 import { map } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
 import {  Subscription } from 'rxjs';
+import { AuctionsService } from 'src/app/auctions/auctions.service';
 
 @Component({
   selector: 'app-messages',
@@ -26,7 +27,7 @@ export class MessagesComponent implements OnInit {
     to: "samus",
     toId: '5d7d08ff73f0be4094648f21',
     isRead: true,
-    rating:null
+    rating: null
   }
   ];
   sent: Message[] = [];
@@ -36,7 +37,8 @@ export class MessagesComponent implements OnInit {
   openMessage: Message;
   openReply = false;
   whichFolder = 'inbox';
-  constructor(private messageService: MessageService, private authenticationService: AuthenticationService) { }
+  constructor(private messageService: MessageService, private authenticationService: AuthenticationService,
+              private auctionsService: AuctionsService) { }
 
   ngOnInit() {
     this.username = this.authenticationService.getUsername();
@@ -145,6 +147,11 @@ export class MessagesComponent implements OnInit {
     if (from === 'reply') {
       this.openReply = false;
     }
+  }
+
+  onRateUser(event, type, userId) {
+    const rating = event.newValue;
+    this.auctionsService.rateUser(rating, type, userId);
   }
 
 }

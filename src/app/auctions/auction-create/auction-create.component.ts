@@ -6,6 +6,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Auctions } from '../auction.model';
 import { mimeType } from './mime-type.validator';
 import { AuthenticationService } from './../../authentication/authentication.service';
+import { Subscription } from 'rxjs';
 
 @Component ({
   selector: 'app-auction-create',
@@ -19,6 +20,7 @@ export class AuctionCreateComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
+  categoryPath: [{id: string, name: string}];
 
   // Date related variables
   minDate = new Date();
@@ -30,6 +32,8 @@ export class AuctionCreateComponent implements OnInit {
   latitude = 0;
   longitude = 0;
   zoom: number;
+
+  pathSub: Subscription;
 
   constructor(public auctionsService: AuctionsService,
               public route: ActivatedRoute,
@@ -43,6 +47,10 @@ export class AuctionCreateComponent implements OnInit {
       this.setCurrentLocation();
     });
     // Finished setting up the map
+    this.pathSub = this.auctionsService.getPathUpdateListener()
+      .subscribe(path => {
+        this.categoryPath = path;
+      });
 
 
     this.form = new FormGroup({
@@ -53,7 +61,6 @@ export class AuctionCreateComponent implements OnInit {
       buyPrice : new FormControl(null, {validators: [Validators.min(0),
                                         Validators.max(100000),
                                         Validators.pattern('^[0-9]*$')]}),
-      category : new FormControl(null, {validators: [Validators.required]}),
       image : new FormControl(null, {
         validators: [],
         asyncValidators: [mimeType]
@@ -166,13 +173,19 @@ export class AuctionCreateComponent implements OnInit {
     // Get the userId so we can insert it in the seller field.
     const sellerId = this.authenticationService.getLoggedUserId();
     console.log('SellerId: ', sellerId);
-
+    let path = '';
+    for (let index = 0; index < this.categoryPath.length; index++) {
+      path += this.categoryPath[index];
+      if (index < this.categoryPath.length - 1) {
+        path += '>';
+      }
+    }
     if (this.mode === 'create') {
       // console.log('In onSaveAuction/create method.');
       this.auctionsService.addAuction(this.form.value.name,
                                 this.form.value.description,
                                 this.form.value.country,
-                                this.form.value.category,
+                                path,
                                 this.form.value.buyPrice,
                                 this.latitude.toString(),
                                 this.longitude.toString(),
@@ -185,7 +198,7 @@ export class AuctionCreateComponent implements OnInit {
                                    this.form.value.name,
                                    this.form.value.description,
                                    this.form.value.country,
-                                   this.form.value.category,
+                                   path,
                                    this.form.value.buyPrice,
                                    this.latitude.toString(),
                                    this.longitude.toString(),

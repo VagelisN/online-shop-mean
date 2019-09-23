@@ -24,13 +24,10 @@ export class CategoryPickerComponent {
   }
 
   onCategoryChosen(id: string) {
-    this.auctionsService.findPath(id).subscribe(res => {
-      console.log(res.path);
-    });
+    this.auctionsService.findPath(id);
   }
 
   onNextLevel(id: string) {
     this.trigger.openMenu();
-    console.log("asdfasdasd");
   }
 }

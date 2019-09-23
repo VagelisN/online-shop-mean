@@ -21,17 +21,12 @@
           placeholder="Country">
           <mat-error *ngIf="form.get('country').invalid">Please enter a country of origin.</mat-error>
       </mat-form-field>
+      <div fxLayout="row warp" fxLayoutAlign="start center">
+        <app-cat-picker fxFlex="100"></app-cat-picker>
+        <p  fxFlex="100" *ngIf="categoryPath">{{categoryPath}}</p>
+      </div>
       <mat-form-field>
-          <input
-          matInput
-          type="text"
-          formControlName="category"
-          minlength="3"
-          placeholder="Item category">
-          <mat-error *ngIf="form.get('category').invalid">Please enter a category for the item.</mat-error>
-      </mat-form-field>
-      <mat-form-field>
-          <input
+        <input
             matInput
             [min]="minDate"
             [max]="maxDate"
