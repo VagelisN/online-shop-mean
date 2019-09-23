@@ -214,11 +214,24 @@ exports.getAuctions = (req, res, next) => {
     });
 }
 
-function checkPrice(auction, sliderMinValue, sliderMaxValue) {
+function checkCategory(auction, catId) {
+  if (catId !== 'null') {
+    if (auction.categoriesId.includes(catId)) {
+      return true;
+    }
+    //console.log('Returning false');
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function checkPrice(auction, sliderMinValue, sliderMaxValue, catId) {
   if (auction.buyPrice !== null) {
     if (parseFloat(auction.buyPrice) > sliderMinValue
         && parseFloat(auction.buyPrice) < sliderMaxValue) {
-      return true;
+          console.log('Passed price check' );
+      return checkCategory(auction, catId);
     }
   } else {
     return true;
@@ -231,20 +244,19 @@ exports.searchAuctions = (req, res, next) => {
   const minValue = +req.query.minPrice;
   const maxValue = +req.query.maxPrice;
   const searchValue = req.query.searchValue.toLowerCase();
+  const catId = req.query.catId;
   console.log('Reached searchAuctions in the backend.',minValue, maxValue, searchValue);
   console.log('Pagesize: ', pageSize, 'currentPage: ', currentPage);
+  console.log('Category id: ', catId);
   let filteredAuctions = [];
   Auction.find().then(documents => {
-    console.log(documents);
-    console.log('Finished printing documents.');
     if (searchValue === '') {
       filteredAuctions = documents.filter(auction => {
-        return checkPrice(auction, minValue, maxValue);
+        return checkPrice(auction, minValue, maxValue, catId);
       })
     } else {
       filteredAuctions = documents.filter(auction => {
         // We have to check different fields.
-        console.log(auction);
         console.log('-------------');
         // Check if the searchValue is in the name field
         /*
@@ -255,15 +267,15 @@ exports.searchAuctions = (req, res, next) => {
         */
         if (auction.name.toLowerCase().includes(searchValue)) {
           console.log('Name was found. So its a price issue.');
-          return checkPrice(auction, minValue, maxValue);
+          return checkPrice(auction, minValue, maxValue, catId);
         }
         // Check if the searchValue is in the description field
         if (auction.description.toLowerCase().includes(searchValue)) {
-          return checkPrice(auction, minValue, maxValue);
+          return checkPrice(auction, minValue, maxValue, catId);
         }
         // Check if the searchValue is in the location field
         if (auction.address.toLowerCase().includes(searchValue)) {
-          return checkPrice(auction, minValue, maxValue);
+          return checkPrice(auction, minValue, maxValue, catId);
         }
       })
     }
@@ -372,7 +384,7 @@ exports.bidAuction = (req, res, next) => {
       }
       // Update the highest bid, the first bid and the number of bids.
       auction.highestBid = req.body.bid;
-      auction.firstBid = auction.bids[0];
+      auction.firstBid = req.body.bid;
       auction.numberOfBids = 1;
     } else {
       // Check if the bid is valid and update the bids in the schema

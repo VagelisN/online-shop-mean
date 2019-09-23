@@ -10,6 +10,7 @@ import { PageEvent } from '@angular/material';
 import { DialogConfirmationComponent } from 'src/app/dialog-confirmation/dialog-confirmation.component';
 import { BidDialogComponent } from './../../bid-dialog/bid-dialog.component';
 import { AdministrationService } from 'src/app/administrator/administration.service';
+import { Categories } from '../category.model';
 
 @Component({
   selector: 'app-auction-list',
@@ -25,6 +26,9 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   searchValue = '';
   bidErrorMessage = null;
   categoryNames = null;
+
+  categoryChosen = null;
+  categories: Categories[] = [];
 
   // Paginator related variables
   totalAuctions = 0;
@@ -195,8 +199,9 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   onSearchSubmit() {
     // Call searchAuctions() from auction.service.ts
     console.log('onSearchSubmit in auction-list.component');
+    console.log(this.categoryChosen)
     this.auctionsService.searchAuctions(this.sliderMinValue, this.sliderMaxValue, this.searchValue,
-                                        this.currentPage, this.auctionsPerPage);
+                                        this.currentPage, this.auctionsPerPage, this.categoryChosen);
     this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
     .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
       this.isLoading = false;
@@ -207,5 +212,16 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   onExtract(type: string, auctionId: string) {
     this.adminService.extractAuction(type, auctionId);
+  }
+
+  onPickCategory() {
+    this.auctionsService.getCategories(null)
+      .subscribe( res => {
+        this.categories = res.categories;
+      });
+  }
+
+  onCategoryChosen(id: string) {
+    this.categoryChosen = id;
   }
 }

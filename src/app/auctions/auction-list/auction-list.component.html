@@ -10,6 +10,18 @@
           search
         </i>
       </button>
+      <button mat-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">Shop By Category</button>
+      <mat-menu #firstLevelCategories="matMenu">
+
+        <button
+        mat-menu-item
+        *ngFor="let category of categories"
+        (click)="onCategoryChosen(category._id)">
+        <span style="font-size: 17px;">
+          {{category.name}}
+        </span>
+        </button>
+    </mat-menu>
   </div>
   <div *ngIf="getMode() && !isLoading">
     <mat-grid-list cols="4" rowHeight="2:1" >
