@@ -189,6 +189,7 @@ export class AuctionsService {
     const searchParams =
     // tslint:disable-next-line: max-line-length
     `?minPrice=${tminPrice}&maxPrice=${tmaxPrice}&searchValue=${tsearchValue}&currentPage=${currentPage}&pageSize=${pageSize}&catId=${catId}`;
+    console.log(tminPrice, tmaxPrice, tsearchValue, currentPage, pageSize, catId);
     this.http.get<{message: string, auctions: any, auctionCount: number}>
       ('http://localhost:3000/auctions/search' + searchParams)
       .pipe(
@@ -216,8 +217,10 @@ export class AuctionsService {
         };
       }))
       .subscribe((transformedAuctionData) => {
+        console.log('About to update this.auctions. ', this.auctions.length);
         this.auctions = transformedAuctionData.auctions;
-        this.auctionsUpdated.next({ auctions: [...this.auctions],
+        console.log('Updated: ', this.auctions.length);
+        this.auctionSearchUpdated.next({ auctions: [...this.auctions],
                                     auctionCount: transformedAuctionData.auctionCount});
       });
   }

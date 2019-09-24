@@ -101,6 +101,24 @@ cron.schedule("00 00 01 * *", () => {
   });
 })
 
+
+// This function updates the null image to a default image.
+cron.schedule("* * * * *", () => {
+  console.log('About to add the default image to all auctions that havent got one');
+  const url = 'http://localhost:3000';
+  Auction.find().then(documents => {
+    console.log('Documents size: ', documents.length);
+    for (let index = 0; index < documents.length; index++) {
+      if (documents[index].image === null) {
+        documents[index].image = url + '/images/default-image.jpg';
+        documents[index].save();
+        console.log('Auction %', index, ' saved.');
+      }
+    }
+  });
+  console.log('Finished updating null images.');
+})
+
 function updateRatings(documents) {
   return new Promise( async resolve =>  {
     for (let index = 0; index < documents.length; index++) {
@@ -217,9 +235,13 @@ exports.getAuctions = (req, res, next) => {
 function checkCategory(auction, catId) {
   if (catId !== 'null') {
     if (auction.categoriesId.includes(catId)) {
+      console.log('----------------');
+      console.log('Auction category: ', auction.categoriesId);
+      console.log('catId: ', catId);
+      console.log('---------------');
       return true;
     }
-    //console.log('Returning false');
+    console.log('Returning false');
     return false;
   } else {
     return true;
@@ -230,12 +252,12 @@ function checkPrice(auction, sliderMinValue, sliderMaxValue, catId) {
   if (auction.buyPrice !== null) {
     if (parseFloat(auction.buyPrice) > sliderMinValue
         && parseFloat(auction.buyPrice) < sliderMaxValue) {
-          console.log('Passed price check' );
+      //console.log('Passed price check' );
       return checkCategory(auction, catId);
     }
-  } else {
-    return true;
-  }
+    } else {
+      return checkCategory(auction, catId);
+    }
 }
 
 exports.searchAuctions = (req, res, next) => {
@@ -281,7 +303,7 @@ exports.searchAuctions = (req, res, next) => {
     }
     const tauctionCount = filteredAuctions.length;
     // Find the indexes we need to send back
-    console.log(filteredAuctions);
+    // console.log(filteredAuctions);
     filteredAuctions = filteredAuctions.slice(pageSize * (currentPage - 1) , (pageSize * currentPage)  );
     res.status(200).json({
       message: 'Search fetched auctions succesfully.',

@@ -24,7 +24,7 @@
           </i>
         </button>
     </div>
-    <div fxFlex="20" style="border-right: 1px solid black; border-bottom: 1px solid black">
+    <div fxFlex="20" *ngIf="!isLoading" style="border-right: 1px solid black; border-bottom: 1px solid black">
         <button
           mat-menu-item
           *ngFor="let category of this.categories"

@@ -36,8 +36,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   // Paginator related variables
   totalAuctions = 0;
-  auctionsPerPage = 4;
-  pageSizeOptions = [ 2, 4, 6, 10];
+  auctionsPerPage = 12;
+  pageSizeOptions = [ 4, 6, 12, 16, 20];
   currentPage = 1;
 
   // Variables used for the price slider
@@ -211,13 +211,14 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     // Call searchAuctions() from auction.service.ts
     console.log('onSearchSubmit in auction-list.component');
     console.log(this.categoryChosen);
+    this.isLoading = true;
     this.auctionsService.searchAuctions(this.sliderMinValue, this.sliderMaxValue, this.searchValue,
                                         this.currentPage, this.auctionsPerPage, this.categoryChosen);
     this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
     .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
-      this.isLoading = false;
       this.auctions = auctionData.auctions;
       this.totalAuctions = auctionData.auctionCount;
+      this.isLoading = false;
     });
   }
 
@@ -237,21 +238,25 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.categoryChosen = id;
     this.categoryChosenName = name;
+    console.log('About to search with these attributes.');
+    console.log(this.categoryChosen);
+    console.log(this.categoryChosenName);
+    console.log('--------------------');
     // When the user presses one category call the search
-    this.auctionsService.searchAuctions(0, 2500, '', this.currentPage, this.auctionsPerPage, this.categoryChosen);
+    this.auctionsService.searchAuctions(0, 15000, '', this.currentPage, this.auctionsPerPage, this.categoryChosen);
     console.log('Passed searchAuctions()');
     this.auctionsService.getCategories(this.categoryChosen)
           .subscribe( res => {
             console.log('getCategories just returned. 2.0');
             this.categories = res.categories;
             console.log(this.categories);
-            this.isLoading = false;
           });
     this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
     .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
       console.log('In subscribe');
       this.auctions = auctionData.auctions;
       this.totalAuctions = auctionData.auctionCount;
+      this.isLoading = false;
       // Update the categories shown in the left
     });
   }
