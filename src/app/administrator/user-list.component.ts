@@ -30,6 +30,10 @@ export class UserListComponent implements OnInit, OnDestroy {
       });
   }
 
+  onExtractAll(username: string, type: string) {
+    this.adminService.extractAllAuctions(username, type);
+  }
+
   ngOnDestroy() {
     this.adminSub.unsubscribe();
   }

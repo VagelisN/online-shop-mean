@@ -1,6 +1,7 @@
 const User = require('./../models/users');
 const Auction = require('./../models/auctions');
 const parser = require('xml2json');
+const builder = require('xmlbuilder');
 
 exports.getUsers =  (req, res, next) => {
   User.find().then( async documents => {
@@ -37,8 +38,6 @@ exports.verifyUser = (req, res, next) => {
     }
   });
 };
-
-var builder = require('xmlbuilder');
 
 exports.extractAuction = (req, res, next) => {
   type = req.body.type;
@@ -83,6 +82,59 @@ exports.extractAuction = (req, res, next) => {
       jsonAuction = String(jsonAuction);
       res.status(200).json({message: 'ok', extractedAuction: jsonAuction });
     }
-
   })
+};
+
+exports.extractAllAuctions = (req, res, next) => {
+  username = req.body.username;
+  type = req.body.type;
+  User.findOne({ username: username })
+    .then(user => {
+      if(user) {
+        Auction.find({sellerId: user._id})
+        .then(documents => {
+          var xml = builder.create('Items');
+          for (let i =0; i < documents.length; i++) {
+            auction = documents[i];
+            first = xml.ele('Item').att('ItemID', auction._id)
+              .ele('Name').txt(auction.name).up();
+
+            for ( let cat in auction.categoryNames) {
+              item = first.ele('Category');
+              item = item.txt(auction.categoryNames[cat]).up();
+            }
+
+            first
+            .ele('Currently').txt('$'+auction.highestBid).up()
+            .ele('First_Bid').txt('$'+ String(auction.firstBid)).up()
+            .ele('Number_of_Bids').txt(auction.numberOfBids).up();
+            item = first.ele('Bids');
+            if(auction.numberOfBids > 0) {
+              for(let i=0; i < auction.bids.length; i++){
+                item=item.
+                ele('Bid')
+                .ele('Bidder',{'Rating': '22', 'UserId': auction.bids[i].bidder})
+                .ele('Location').txt('location').up()
+                .ele('Country').txt('USA').up().up();
+              }
+            }
+            first
+            .ele('Location',{'Latitude': String(auction.latitude), 'Longtitude': String(auction.longitude) }).up()
+            .ele('Country').txt(auction.country).up()
+            .ele('Started').txt(String(auction.startDate)).up()
+            .ele('Ends').txt(String(auction.endDate)).up()
+            .ele('Seler',{'Rating': auction.sellerRating, 'UserID': auction.sellerId}).up()
+            .ele('Description',auction.description);
+          }
+          if(type=='XML') {
+            res.status(200).json({message: 'ok', extractedAuctions: xml.toString({pretty: true}) });
+          }
+          else {
+            jsonAuctions = parser.toJson(xml.toString({pretty: true}));
+            jsonAuctions = String(jsonAuctions);
+            res.status(200).json({message: 'ok', extractedAuctions: jsonAuctions });
+          }
+        });
+      }
+    });
 }

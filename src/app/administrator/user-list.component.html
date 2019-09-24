@@ -20,8 +20,10 @@
               <div fxFlex="15" fxLayout="row" fxLayoutAlign="start center">
                 {{user.username}}
               </div>
-              <div>
-                  <a mat-raised-button color="accent" [routerLink] = "['/userinfo',user.username]">See details</a>
+              <div fxFlex="85"fxLayout="row" fxLayoutAlign = "space-around center">
+                  <a fxFlex="10" mat-raised-button color="accent" [routerLink] = "['/userinfo',user.username]">See details</a>
+                  <button fxFlex="20" type="button" mat-raised-button color="accent" (click)="onExtractAll(user.username, 'XML')">Exctract Auctions as XML</button>
+                  <button fxFlex="20" type="button" mat-raised-button color="accent" (click)="onExtractAll(user.username, 'JSON')">Exctract Auctions as JSON</button>
               </div>
 
             </mat-card>

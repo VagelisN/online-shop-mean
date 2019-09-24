@@ -75,7 +75,19 @@ export class AdministrationService {
         } else {
           saveAs(blob, 'auction.json');
         }
+      });
+  }
 
+  extractAllAuctions(username: string, type: string) {
+    this.http.post<{message: string, extractedAuctions: string}>('http://localhost:3000/admin/extract-all', {type, username})
+      .subscribe(res => {
+        console.log(res);
+        const blob = new Blob([res.extractedAuctions], { type: 'text/plain' });
+        if ( type === 'XML') {
+          saveAs(blob, 'auction.xml');
+        } else {
+          saveAs(blob, 'auction.json');
+        }
       });
   }
 }

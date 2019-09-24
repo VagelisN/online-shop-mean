@@ -14,4 +14,8 @@ router.post('', verifyToken, controller.verifyUser);
 
 router.post('/extract', verifyToken, controller.extractAuction);
 
+router.post('/extract-all', verifyToken, controller.extractAllAuctions);
+
+
+
 module.exports = router;
