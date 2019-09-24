@@ -6,7 +6,9 @@
           <p>Bid amount:  {{bid.amount}}</p>
         </mat-expansion-panel-header>
         <p>Time: {{bid.time}}</p>
-        <p>Bidder's id: {{bid.bidder.slice(0,10)}}</p>
+        <p>Bidder's username: {{bid.bidderUsername}}</p>
+        <p>Bidder's id: {{bid.bidderId.slice(0,10)}}</p>
+        <star-rating value="{{bid.bidderRating}}" checkedcolor="red" uncheckedcolor="gray" size="20px" readonly="true"></star-rating>
       </mat-expansion-panel>
   </mat-accordion>
 </mat-dialog-content>

@@ -86,7 +86,11 @@ export class AuctionsService {
       bids: [{
         amount: number,
         time: Date, // This will change to a date data type
-        bidder: string
+        bidderId: string,
+        bidderUsername: string,
+        bidderRating: number,
+        location: string,
+        country: string
       }]
     }>('http://localhost:3000/auctions/get/' + id);
   }
@@ -160,7 +164,10 @@ export class AuctionsService {
     this.http.patch<{message: string}>('http://localhost:3000/auctions/start/' + auctionId, '')
     .subscribe((res) => {
       console.log(res.message);
-      this.router.navigate(['/auction/' + auctionId]);
+      this.router.navigate(['/auction/' + auctionId])
+      .then(() => {
+        window.location.reload();
+      });
     });
   }
 

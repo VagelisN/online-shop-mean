@@ -18,6 +18,10 @@ export interface Auctions {
   bids: [{
     amount: number,
     time: Date, // This will change to a date data type
-    bidder: string
+    bidderId: string,
+    bidderUsername: string,
+    bidderRating: number,
+    location: string,
+    country: string
   }];
  }

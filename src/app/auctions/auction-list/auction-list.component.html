@@ -3,7 +3,7 @@
 
 
 
-  <div fxLayout="row warp" fxLayoutAlign="center start">
+  <div fxLayout="row warp" fxLayoutAlign="center stretch">
     <div class="search-bar" *ngIf="!isLoading && getMode()" fxFlex="100" style="padding-bottom: 1rem;">
         <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
         <input mat-input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
@@ -68,12 +68,13 @@
 
 
   <!-- If we need to show just one auction. -->
-  <div class="single-auction" *ngIf="!getMode() && !isLoading">
-      <h2>{{ auction.name }}</h2>
-      <div class="auction-image-single">
+  <div fxLayout="row warp" *ngIf="!getMode() && !isLoading">
+      <h2 style="text-align: center;"fxFlex="100">{{ auction.name }}</h2>
+      <div fxFlex="35">
           <img [src]="this.auction.image" [alt]="this.auction.name">
       </div>
-      <div class="grid-info">
+      <div fxFlex="65" style="text-align: center; ">
+          <h3>Item's information</h3>
           <p *ngIf="checkBuyPrice(this.auction.buyPrice)">
             Instant buy price: {{ this.auction.buyPrice }}
           </p>
@@ -83,23 +84,33 @@
           <p>Address: {{this.auction.address}}</p>
           <p>Highest bid: {{this.auction.highestBid}}</p>
           <p>Description: {{this.auction.description}}</p>
-          <button mat-button *ngIf="this.auction.bids" (click)="onBidList(this.auction)">Show bids...</button>
-          <agm-map [latitude]="toNumber(this.auction.latitude)" [longitude]="toNumber(this.auction.longitude)">
-              <agm-marker
-                [latitude]="this.auction.latitude"
-                [longitude]="this.auction.longitude">
-              </agm-marker>
+      </div>
+      <div fxFlex="100" fxLayout="row warp" fxLayoutAlign="center center" style="text-align: center;">
+        <div fxFlex="40">
+            <h4>Item's location</h4>
+            <agm-map [latitude]="toNumber(this.auction.latitude)" [longitude]="toNumber(this.auction.longitude)">
+                  <agm-marker
+                    [latitude]="this.auction.latitude"
+                    [longitude]="this.auction.longitude">
+                  </agm-marker>
           </agm-map>
-          <div class="bid" *ngIf="this.auction.startDate !== null && this.authenticationService.getLoggedUserId()">
-              <input type="number" [(ngModel)]="bidValue" placeholder="Bid amount">
-              <button
-                mat-raised-button
-                color="warn"
-                (click)="onBidSubmit()">Submit Bid!
-              </button>
-              <mat-error *ngIf="bidErrorMessage">{{bidErrorMessage}}</mat-error>
-          </div>
+        </div>
+        <div fxFlex="60">
+            <h4>Bid information</h4>
+            <button mat-button *ngIf="this.auction.bids" (click)="onBidList(this.auction)">Show detailed bid information...</button>
+            <div class="bid" *ngIf="this.auction.startDate !== null && this.authenticationService.getLoggedUserId()">
+                <input type="number" [(ngModel)]="bidValue" placeholder="Bid amount">
+                <button
+                  mat-raised-button
+                  color="warn"
+                  (click)="onBidSubmit()">Submit Bid!
+                </button>
+                <mat-error *ngIf="bidErrorMessage">{{bidErrorMessage}}</mat-error>
+            </div>
+        </div>
+      </div>
 
+      <div fxFlex="100">
           <div class="seller" *ngIf="checkOwnership(this.auction.sellerId)">
             <div class="buttons">
               <button
