@@ -1,5 +1,5 @@
-fs = require('fs');
 var parser = require('xml2json');
+fs = require('fs');
 const mongoose = require('mongoose');
 Category = require('./categories');
 
