@@ -1,52 +1,70 @@
 
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
-  <!-- List all auctions. -->
-  <div class="search-bar" *ngIf="!isLoading && getMode()">
-      <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
-      <input mat-input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
-      <button mat-button (click)="onSearchSubmit()">
-        <i class="material-icons">
-          search
-        </i>
-      </button>
-      <button mat-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.categoryChosenName}}</button>
-      <mat-menu #firstLevelCategories="matMenu">
 
+
+  <div fxLayout="row warp" fxLayoutAlign="center start">
+    <div class="search-bar" *ngIf="!isLoading && getMode()" fxFlex="100" style="padding-bottom: 1rem;">
+        <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
+        <input mat-input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
+        <button mat-stroked-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.searchCategoryName}}</button>
+        <mat-menu #firstLevelCategories="matMenu">
         <button
-        mat-menu-item
-        *ngFor="let category of categories"
-        (click)="onCategoryChosen(category._id, category.name)">
-        <span style="font-size: 17px;">
-          {{category.name}}
-        </span>
+          mat-menu-item
+          *ngFor="let category of categories"
+          (click)="onSearchCategoryChosen(category._id, category.name)">
+          <span style="font-size: 17px;">
+            {{category.name}}
+          </span>
+          </button>
+        </mat-menu>
+        <button mat-raised-button (click)="onSearchSubmit()" style="margin-left: 5px;">
+          <i class="material-icons">
+            search
+          </i>
         </button>
-    </mat-menu>
+    </div>
+    <div fxFlex="20" style="border-right: 1px solid black; border-bottom: 1px solid black">
+        <button
+          mat-menu-item
+          *ngFor="let category of this.categories"
+          (click)="onCategoryChosen(category._id, category.name)">
+          <span style="font-size: 18px;">
+            {{category.name}}
+          </span>
+        </button>
+    </div>
+    <!-- List all auctions. -->
+    <div *ngIf="getMode() && !isLoading && auctions.length > 0" fxFlex="80">
+      <mat-grid-list cols="4" rowHeight="1:1" >
+        <mat-grid-tile *ngFor="let auction of auctions">
+            <a
+            mat-button color="primary"
+            [routerLink]="['/auction/', auction.id]">
+          <div class="grid">
+              <div class="auction-image-all">
+                  <img [title]="auction.name"[src]="auction.image" [alt]="auction.name">
+                  <div class="auction-description">
+                    <h4>{{auction.name}}</h4>
+                    <p>{{auction.buyPrice}} $</p>
+                  </div>
+              </div>
+          </div>
+        </a>
+        </mat-grid-tile>
+      </mat-grid-list>
+      <mat-paginator [length]="totalAuctions"
+                     [pageSize]="auctionsPerPage"
+                     [pageSizeOptions]="pageSizeOptions"
+                     (page)="onChangePage($event)">
+      </mat-paginator>
+    </div>
+    <p fxFlex="80" class="info-text mat-body-1" *ngIf="getMode() && auctions.length <= 0 && !isLoading">No auctions found!</p>
+
   </div>
-  <div *ngIf="getMode() && !isLoading">
-    <mat-grid-list cols="4" rowHeight="2:1" >
-      <mat-grid-tile *ngFor="let auction of auctions">
-          <a
-          mat-button color="primary"
-          [routerLink]="['/auction/', auction.id]">
-        <div class="grid">
-            <div class="auction-image-all">
-                <img [title]="auction.name"[src]="auction.image" [alt]="auction.name">
-                <div class="auction-description">
-                  <h4>{{auction.name}}</h4>
-                  <p>{{auction.buyPrice}} $</p>
-                </div>
-            </div>
-        </div>
-      </a>
-      </mat-grid-tile>
-    </mat-grid-list>
-    <mat-paginator [length]="totalAuctions"
-                   [pageSize]="auctionsPerPage"
-                   [pageSizeOptions]="pageSizeOptions"
-                   (page)="onChangePage($event)">
-    </mat-paginator>
-  </div>
+
+
+
 
 
   <!-- If we need to show just one auction. -->
@@ -102,4 +120,4 @@
       </div>
   </div>
 
-<p class="info-text mat-body-1" *ngIf="getMode() && auctions.length <= 0 && !isLoading">No auctions added yet!</p>
+

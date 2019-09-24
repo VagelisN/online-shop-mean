@@ -118,7 +118,7 @@ export class AuctionsService {
                      sellerRating: string}>
                      ('http://localhost:3000/auctions/create', auctionData )
      .subscribe( (responseData) => {
-        this.router.navigate(['/auction']);
+        this.router.navigate(['/']);
      });
   }
 
@@ -146,13 +146,13 @@ export class AuctionsService {
     };
     this.http.put('http://localhost:3000/auctions/' + tid, auction)
     .subscribe(response => {
-      this.router.navigate(['/auction']);
+      this.router.navigate(['/']);
     });
   }
 
   deleteAuction(auctionId: string) {
     this.http.delete('http://localhost:3000/auctions/' + auctionId).subscribe( res => {
-      this.router.navigate(['/auction']);
+      this.router.navigate(['/']);
     });
   }
 
@@ -160,7 +160,7 @@ export class AuctionsService {
     this.http.patch<{message: string}>('http://localhost:3000/auctions/start/' + auctionId, '')
     .subscribe((res) => {
       console.log(res.message);
-      this.router.navigate(['/auction']);
+      this.router.navigate(['/auction/' + auctionId]);
     });
   }
 

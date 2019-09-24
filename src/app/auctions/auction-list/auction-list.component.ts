@@ -28,8 +28,11 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   categoryNames = null;
 
   categoryChosen = null;
-  categoryChosenName = 'Select a category';
+  categoryChosenName = null;
   categories: Categories[] = [];
+
+  searchCategoryChosen = null;
+  searchCategoryName = 'Select a category';
 
   // Paginator related variables
   totalAuctions = 0;
@@ -101,6 +104,13 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       } else {
         // If there is not an id in the url we will list all auctions
         // getAuctions() params are from the paginator ( requesting page 1 )
+          console.log('About to call getCategories.');
+          this.auctionsService.getCategories(null)
+          .subscribe( res => {
+            console.log('getCategories just returned.');
+            this.categories = res.categories;
+            console.log(this.categories);
+          });
           this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
           this.auctionsSub = this.auctionsService.getAuctionUpdateListener()
           .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
@@ -223,7 +233,31 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   }
 
   onCategoryChosen(id: string, name: string) {
+    console.log('onCategoryChosen()');
+    this.isLoading = true;
     this.categoryChosen = id;
     this.categoryChosenName = name;
+    // When the user presses one category call the search
+    this.auctionsService.searchAuctions(0, 2500, '', this.currentPage, this.auctionsPerPage, this.categoryChosen);
+    console.log('Passed searchAuctions()');
+    this.auctionsService.getCategories(this.categoryChosen)
+          .subscribe( res => {
+            console.log('getCategories just returned. 2.0');
+            this.categories = res.categories;
+            console.log(this.categories);
+            this.isLoading = false;
+          });
+    this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
+    .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
+      console.log('In subscribe');
+      this.auctions = auctionData.auctions;
+      this.totalAuctions = auctionData.auctionCount;
+      // Update the categories shown in the left
+    });
+  }
+
+  onSearchCategoryChosen(id: string, name: string) {
+    this.searchCategoryChosen = id;
+    this.searchCategoryName = name;
   }
 }

@@ -6,6 +6,7 @@ import { AuthenticationService } from '../authentication/authentication.service'
 import { AuctionsService } from '../auctions/auctions.service';
 import { Categories } from './../auctions/category.model';
 import { MessageService } from '../user/messages/message.service';
+import { Options } from 'ng5-slider';
 
 @Component({
   selector: 'app-navigation',
