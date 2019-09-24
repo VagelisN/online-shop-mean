@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const bidSchema = mongoose.Schema({
   amount: Number,
   time: Date, //This will change to a date data type
-  bidder: String,
+  bidderId: String,
+  bidderUsername: String,
   bidderRating: Number,
   location: String,
   country: String
@@ -27,6 +28,7 @@ const auctionSchema = mongoose.Schema({
   startDate: {type: Date},
   endDate: {type: String},
   sellerId: {type: String},
+  sellerUsername: {type: String},
   sellerRating: {type: Number},
   address: {type: String}
 });

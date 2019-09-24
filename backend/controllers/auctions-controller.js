@@ -136,7 +136,7 @@ exports.createAuction =  (req, res, next) => {
   let names = req.body.categoryNames;
   console.log(names);
   names = names.split('>');
-
+  // We need to find the username of the sellerId
   const auction = new Auction({
     name: req.body.name,
     description: req.body.description,
@@ -360,6 +360,13 @@ exports.startAuction = (req, res, next) => {
   })
 };
 
+
+function takeLastWord(address) {
+  var n = address.trim().split(' ');
+  return n[n.length - 1];
+}
+
+
 exports.bidAuction = (req, res, next) => {
 
   // First of all, get the auction from the database.
@@ -373,50 +380,56 @@ exports.bidAuction = (req, res, next) => {
         message: 'Cannot bid, because the auction has ended.'
       });
     }
-
-    // Check if there are any bids
-    if (auction.bids === null) {
-      // Create a bid schema and push the new bid
-      auction.bids = {
+    // Create a bid schema and add it
+    Users.findById(req.body.id).then(user => {
+      const tcountry = takeLastWord(user.address);
+      console.log(tcountry);
+      console.log(user.address);
+      const bid = {
         amount: req.body.bid,
         time: new Date(),
-        bidder: req.body.id
-      }
-      // Update the highest bid, the first bid and the number of bids.
-      auction.highestBid = req.body.bid;
-      auction.firstBid = req.body.bid;
-      auction.numberOfBids = 1;
-    } else {
-      // Check if the bid is valid and update the bids in the schema
-      if (req.body.bid > auction.highestBid) {
-        auction.bids.push({
-          amount: req.body.bid,
-          time: new Date(),
-          bidder: req.body.id
-        });
-        // Then update the number of bids and the highestBid
+        bidderId: req.body.id,
+        bidderUsername: user.username,
+        bidderRating: user.buyerRating,
+        location: user.address,
+        country: tcountry
+      };
+      // Check if there are any bids
+      if (auction.bids === null) {
+        // Create a bid schema and push the new bid
+        auction.bids = bid;
+        // Update the highest bid, the first bid and the number of bids.
         auction.highestBid = req.body.bid;
-        auction.numberOfBids ++;
-
-        // Check if the bid is higher than the buyPrice
-        if (auction.buyPrice) {
-          if (parseFloat(req.body.bid) >= parseFloat(auction.buyPrice)) {
-            sendAuctionMessages(auction, req.body.id);
-            res.status(200).json({
-              message: 'Your bid has been submitted succesfully. It\'s higher than the buyPrice so you win!'
-            })
-          }
-        }
+        auction.firstBid = req.body.bid;
+        auction.numberOfBids = 1;
       } else {
-        res.status(500).json({
-          message: 'Bid is lower than the current highest.'
-        });
+        // Check if the bid is valid and update the bids in the schema
+        if (req.body.bid > auction.highestBid) {
+          auction.bids.push(bid);
+          // Then update the number of bids and the highestBid
+          auction.highestBid = req.body.bid;
+          auction.numberOfBids ++;
+
+          // Check if the bid is higher than the buyPrice
+          if (auction.buyPrice) {
+            if (parseFloat(req.body.bid) >= parseFloat(auction.buyPrice)) {
+              sendAuctionMessages(auction, req.body.id);
+              res.status(200).json({
+                message: 'Your bid has been submitted succesfully. It\'s higher than the buyPrice so you win!'
+              })
+            }
+          }
+        } else {
+          res.status(500).json({
+            message: 'Bid is lower than the current highest.'
+          });
+        }
       }
-    }
-    auction.save().then(() => {
-      res.status(200).json({
-        message: 'Bid submitted succesfully'
-      });
+      auction.save().then(() => {
+        res.status(200).json({
+          message: 'Bid submitted succesfully'
+        });
+      })
     })
   })
   .catch(() => {
