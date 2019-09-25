@@ -27,6 +27,20 @@ function sendAuctionMessages(auction, highestBidder) {
         sellerMessage.save().then(() => {
           console.log('Auction with id: '+ auction.id+' has ended.');
         })
+        // Send a message to the winner too
+        const bidderMessage = new Message ({
+          title: 'You have won the auction with id: '+ auction.id +'.',
+          content: 'You can now communicate with the seller.',
+          from: sellerUsername,
+          fromId: auction.sellerId,
+          to: bidderUsername,
+          toId: highestBidder,
+          rating: 'seller'
+        });
+        bidderMessage.save().then(() => {
+          console.log('Auction with id: '+ auction.id+' has ended.');
+        })
+
       });
     } else {
       const sellerMessage = new Message ({
@@ -41,24 +55,6 @@ function sendAuctionMessages(auction, highestBidder) {
       sellerMessage.save().then(() => {
         console.log('Auction with id: '+ auction.id+' has ended.');
       })
-    }
-    // Send a message to the highest bidder with information about the seller.
-    if (highestBidder) {
-      Users.findById(highestBidder).then(user => {
-        bidderUsername = user.username;
-        const bidderMessage = new Message ({
-          title: 'You have won the auction with id: '+ auction.id +'.',
-          content: 'You can now communicate with the seller.',
-          from: sellerUsername,
-          fromId: auction.sellerId,
-          to: bidderUsername,
-          toId: highestBidder,
-          rating: 'seller'
-        });
-        bidderMessage.save().then(() => {
-          console.log('Auction with id: '+ auction.id+' has ended.');
-        })
-      });
     }
   });
   return true;
@@ -101,7 +97,7 @@ cron.schedule("00 00 01 * *", () => {
   });
 })
 
-
+/*
 // This function updates the null image to a default image.
 cron.schedule("* * * * *", () => {
   console.log('About to add the default image to all auctions that havent got one');
@@ -118,6 +114,7 @@ cron.schedule("* * * * *", () => {
   });
   console.log('Finished updating null images.');
 })
+*/
 
 function updateRatings(documents) {
   return new Promise( async resolve =>  {
@@ -270,50 +267,114 @@ exports.searchAuctions = (req, res, next) => {
   console.log('Reached searchAuctions in the backend.',minValue, maxValue, searchValue);
   console.log('Pagesize: ', pageSize, 'currentPage: ', currentPage);
   console.log('Category id: ', catId);
-  let filteredAuctions = [];
-  Auction.find().then(documents => {
+  console.log('Slider values:', minValue, maxValue);
+  let auctionQuery = Auction.find();
+  if (isNaN(minValue) && isNaN(maxValue)) {
+    // Case where price range is max
     if (searchValue === '') {
-      filteredAuctions = documents.filter(auction => {
-        return checkPrice(auction, minValue, maxValue, catId);
-      })
+      if (catId === 'null') {
+        // Create a query with only price check
+        auctionQuery = Auction.find();
+      } else {
+        // Create a create with price check and category check
+        console.log('Category only check');
+        auctionQuery = Auction.find({
+          categoriesId: {$regex: catId },
+        });
+      }
     } else {
-      filteredAuctions = documents.filter(auction => {
-        // We have to check different fields.
-        console.log('-------------');
-        // Check if the searchValue is in the name field
-        /*
-        console.log(String(auction.name).toLowerCase(),'|apoedwkaiperatipota');
-        console.log(searchValue,'|apoedwkaiperatipota');
-        const result = (auction.name == searchValue);
-        console.log('Includes result: ', result);
-        */
-        if (auction.name.toLowerCase().includes(searchValue)) {
-          console.log('Name was found. So its a price issue.');
-          return checkPrice(auction, minValue, maxValue, catId);
-        }
-        // Check if the searchValue is in the description field
-        if (auction.description.toLowerCase().includes(searchValue)) {
-          return checkPrice(auction, minValue, maxValue, catId);
-        }
-        // Check if the searchValue is in the location field
-        if (auction.address.toLowerCase().includes(searchValue)) {
-          return checkPrice(auction, minValue, maxValue, catId);
-        }
-      })
+      if (catId === 'null') {
+        // Create a query with searchValue and price check
+        auctionQuery = Auction.find({
+          $or: [{ name: searchValue , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}]
+        });
+      } else {
+        // Create a query with all checks
+        auctionQuery = Auction.find({
+          categoriesId: {$regex: catId },
+          $or: [{ name: searchValue , description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}]
+        });
+      }
     }
-    const tauctionCount = filteredAuctions.length;
-    // Find the indexes we need to send back
-    // console.log(filteredAuctions);
-    filteredAuctions = filteredAuctions.slice(pageSize * (currentPage - 1) , (pageSize * currentPage)  );
+  } else if (isNaN(minValue)) {
+    // Case where the minValue is 0
+    if (searchValue === '') {
+      if (catId === 'null') {
+        // Create a query with only price check
+        auctionQuery = Auction.find({
+          $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
+        });
+      } else {
+        // Create a create with price check and category check
+        auctionQuery = Auction.find({
+          categoriesId: {$regex: catId },
+          $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
+        });
+      }
+    } else {
+      if (catId === 'null') {
+        // Create a query with searchValue and price check
+        auctionQuery = Auction.find({
+          $or: [{ name: searchValue , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}],
+          $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
+        });
+      } else {
+        // Create a query with all checks
+        auctionQuery = Auction.find({
+          categoriesId: {$regex: catId },
+          $or: [{ name: searchValue , description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}],
+          $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
+        });
+      }
+    }
+  } else {
+    // Case where maxValue is max
+    if (searchValue === '') {
+      if (catId === 'null') {
+        // Create a query with only price check
+        auctionQuery = Auction.find({
+          $or: [{buyPrice: { $gt: minValue }}, {buyPrice: null}]
+        });
+      } else {
+        // Create a create with price check and category check
+        auctionQuery = Auction.find({
+          categoriesId: {$regex: catId },
+          $or: [{buyPrice: { $gt: minValue }}, {buyPrice: null}]
+        });
+      }
+    } else {
+      if (catId === 'null') {
+        // Create a query with searchValue and price check
+        auctionQuery = Auction.find({
+          $or: [{ name: searchValue , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}],
+          $or: [{ buyPrice: { $gt: minValue }}, {buyPrice: null}]
+        });
+      } else {
+        // Create a query with all checks
+        auctionQuery = Auction.find({
+          categoriesId: {$regex: catId },
+          $or: [{ name: searchValue , description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}],
+          $or: [{ buyPrice: { $gt: minValue }}, {buyPrice: null}]
+        });
+      }
+    }
+  }
+  console.log('About to run the query.');
+  console.log(auctionQuery);
+  console.log('--------------------------------------');
+  auctionQuery.then(documents => {
+    console.log('Query was completed. About to slice it.');
+    console.log(documents[0]);
+    const count = documents.length;
+    const filteredAuctions = documents.slice(pageSize * (currentPage - 1), (pageSize * currentPage));
+    console.log('Slicing is completed.');
+    console.log(filteredAuctions);
     res.status(200).json({
-      message: 'Search fetched auctions succesfully.',
+      message: 'Search fetched auctions succesfully',
       auctions: filteredAuctions,
-      auctionCount: tauctionCount
+      auctionCount: count
     });
-  })
-
-
-
+  });
 }
 
 

@@ -217,7 +217,15 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     console.log('onSearchSubmit in auction-list.component');
     console.log(this.categoryChosen);
     this.isLoading = true;
-    this.auctionsService.searchAuctions(this.sliderMinValue, this.sliderMaxValue, this.searchValue,
+    let ceiling = this.sliderMaxValue;
+    let floor = this.sliderMinValue;
+    if (ceiling === this.sliderOptions.ceil) {
+      ceiling = null;
+    }
+    if (floor === this.sliderOptions.floor) {
+      floor = null;
+    }
+    this.auctionsService.searchAuctions(floor, ceiling, this.searchValue,
                                         this.currentPage, this.auctionsPerPage, this.categoryChosen);
     this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
     .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
@@ -248,7 +256,16 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     console.log(this.categoryChosenName);
     console.log('--------------------');
     // When the user presses one category call the search
-    this.auctionsService.searchAuctions(0, 15000, '', this.currentPage, this.auctionsPerPage, this.categoryChosen);
+    let ceiling = this.sliderMaxValue;
+    let floor = this.sliderMinValue;
+    if (ceiling === this.sliderOptions.ceil) {
+      ceiling = null;
+    }
+    if (floor === this.sliderOptions.floor) {
+      floor = null;
+    }
+    this.auctionsService.searchAuctions(floor, ceiling, '', this.currentPage,
+                                        this.auctionsPerPage, this.categoryChosen);
     console.log('Passed searchAuctions()');
     this.auctionsService.getCategories(this.categoryChosen)
           .subscribe( res => {
