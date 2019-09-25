@@ -68,7 +68,7 @@ function parseFile(name) {
       categoryIds = '';
       description = '';
         for (let i=0; i < jsonItems.Items.Item.length; i++) {
-          console.log(i);
+          //console.log(i);
           parentId = undefined;
           for (let j = 0; j < jsonItems.Items.Item[i].Category.length; j++ ) {
             category = await findinDb(jsonItems.Items.Item[i].Category[j], parentId);
@@ -106,6 +106,7 @@ function parseFile(name) {
           await saveinDb(auction);
           counter ++;
           categoryNames = [];
+          categoryIds = '';
         }
         resolve();
     });

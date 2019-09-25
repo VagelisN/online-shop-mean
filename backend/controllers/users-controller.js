@@ -90,3 +90,29 @@ exports.newUser =  (req, res, next) => {
       });
     });
 }
+
+exports.userVisited = (req, res, next) => {
+  console.log(req.body);
+  const userId = req.params.userId;
+  let textToAdd = req.body.textToAdd;
+  Users.findOne({_id: userId})
+    .then(user => {
+      if(user) {
+        let userVisited = user.lastVisited;
+        if(userVisited.length > 10000) {
+          let cutAt = userVisited.indexOf('^e^');
+          userVisited = userVisited.slice(cutAt + 3);
+          console.log('ekopsa erapsa')
+        }
+        textToAdd = userVisited + textToAdd;
+        console.log(textToAdd);
+        Users.findOneAndUpdate({_id: userId}, {lastVisited: textToAdd})
+          .then(result => {
+            // console.log(result);
+            res.status(200).json({
+              message: 'updated userVisited: ' + textToAdd
+            });
+          })
+      }
+    })
+}

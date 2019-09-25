@@ -99,6 +99,11 @@ export class AuctionListComponent implements OnInit, OnDestroy {
             }
           }
           console.log(this.auction);
+          const userId = this.authenticationService.getLoggedUserId();
+          if (userId) {
+            this.authenticationService.addToVisited(userId, this.auction);
+          }
+
           this.isLoading = false;
         });
       } else {
@@ -265,4 +270,5 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     this.searchCategoryChosen = id;
     this.searchCategoryName = name;
   }
+
 }

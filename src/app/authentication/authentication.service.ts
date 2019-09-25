@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserModel } from './user.model';
 import { Router } from '@angular/router';
+import { Auctions } from './../auctions/auction.model';
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -84,6 +85,23 @@ export class AuthenticationService {
     this.userId = localStorage.getItem('userId');
     this.username = localStorage.getItem('username');
     this.userAuthenticated = true;
+  }
+
+  addToVisited(userId: string, auction: Auctions) {
+    let textToAdd = '';
+    textToAdd += auction.name + ' ' + auction.description + ' ';
+    for (let i = 0; i < auction.categoryNames.length; i ++) {
+      if ( i < auction.categoryNames.length - 1) {
+        textToAdd += auction.categoryNames[i] + ' ';
+      } else {
+        textToAdd += auction.categoryNames[i] + '^e^';
+      }
+    }
+    console.log(textToAdd);
+    this.http.post('http://localhost:3000/users/visited/' + userId, {textToAdd})
+        .subscribe(res => {
+          console.log(res);
+        });
   }
 
   handleError(error) {
