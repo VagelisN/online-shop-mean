@@ -101,6 +101,7 @@ cron.schedule("00 00 01 * *", () => {
 /*
 // This function updates the null image to a default image.
 cron.schedule("* * * * *", () => {
+  shicabalas = 15;
   console.log('About to add the default image to all auctions that havent got one');
   const url = 'http://localhost:3000';
   Auction.find().then(documents => {
@@ -116,6 +117,50 @@ cron.schedule("* * * * *", () => {
   console.log('Finished updating null images.');
 })
 */
+
+// Training lsh
+let lsh;
+cron.schedule("56 * * * *", () => {
+  console.log("Geia sou")
+  Auction.find().then(results => {
+    console.log('fiou', results.length);
+    for ( let i = 0; i < results.length; i++) {
+      ids.push(results[i]._id);
+      text = '';
+      text += results[i].name += results[i].description;
+      documents.push(text);
+    }
+
+    const config = {
+      storage: 'memory',
+      shingleSize: 5,
+      numberOfHashFunctions: 120
+    }
+    lsh = Lsh.getInstance(config)
+
+    const numberOfDocuments = results.length;
+
+    for (let i = 0; i < numberOfDocuments; i += 1) {
+      lsh.addDocument(i, documents[i])
+    }
+    console.log('fortwsa');
+
+  // search for a specific document with its id and custom bicketSize
+  // you can also perform a query using a string by passing text instead of id
+  // bucket size are dynamic. feel free to change it to find proper one
+  const q = {
+    //id: 1,
+     text: "Wedding Bridal Gown Dress  VICTORIA'S SECRET Great silicone bra  Koret Green/Navy Plaid Casual Top  CLARKS TRAVELLER SHOES MEN BRN  NR NIKE ACG Mens Tennis Shoes BLACK BRWN ",
+    bucketSize: 10
+  }
+  const result = lsh.query(q)
+
+  // this will print out documents which are candidates to be similar to the one we are looking for
+  console.log(result)
+  console.log(documents[result[0]]);
+});
+})
+
 
 function updateRatings(documents) {
   return new Promise( async resolve =>  {
@@ -306,6 +351,7 @@ function checkPrice(auction, sliderMinValue, sliderMaxValue, catId) {
 
 exports.searchAuctions = (req, res, next) => {
   console.log('Lege re');
+  console.log(shicabalas);
   const pageSize = +req.query.pageSize;
   const currentPage = +req.query.currentPage;
   const minValue = +req.query.minPrice;
@@ -333,14 +379,15 @@ exports.searchAuctions = (req, res, next) => {
     } else {
       if (catId === 'null') {
         // Create a query with searchValue and price check
+        console.log('Kalispera sas.');
         auctionQuery = Auction.find({
-          $or: [{ name: searchValue , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}]
+          $or: [{ name: {$regex: searchValue, $options: 'i'} , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}]
         });
       } else {
         // Create a query with all checks
         auctionQuery = Auction.find({
           categoriesId: {$regex: catId },
-          $or: [{ name: searchValue , description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}]
+          $or: [{ name: {$regex: searchValue, $options: 'i'} , description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}]
         });
       }
     }
@@ -363,14 +410,14 @@ exports.searchAuctions = (req, res, next) => {
       if (catId === 'null') {
         // Create a query with searchValue and price check
         auctionQuery = Auction.find({
-          $or: [{ name: searchValue , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}],
+          $or: [{ name: {$regex: searchValue, $options: 'i'} , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}],
           $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
         });
       } else {
         // Create a query with all checks
         auctionQuery = Auction.find({
           categoriesId: {$regex: catId },
-          $or: [{ name: searchValue , description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}],
+          $or: [{ name: {$regex: searchValue, $options: 'i'}, description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}],
           $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
         });
       }
@@ -394,29 +441,29 @@ exports.searchAuctions = (req, res, next) => {
       if (catId === 'null') {
         // Create a query with searchValue and price check
         auctionQuery = Auction.find({
-          $or: [{ name: searchValue , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}],
+          $or: [{ name: {$regex: searchValue, $options: 'i'} , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}],
           $or: [{ buyPrice: { $gt: minValue }}, {buyPrice: null}]
         });
       } else {
         // Create a query with all checks
         auctionQuery = Auction.find({
           categoriesId: {$regex: catId },
-          $or: [{ name: searchValue , description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}],
+          $or: [{ name: {$regex: searchValue, $options: 'i'} , description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}],
           $or: [{ buyPrice: { $gt: minValue }}, {buyPrice: null}]
         });
       }
     }
   }
   console.log('About to run the query.');
-  console.log(auctionQuery);
+  //console.log(auctionQuery);
   console.log('--------------------------------------');
   auctionQuery.then(documents => {
     console.log('Query was completed. About to slice it.');
-    console.log(documents[0]);
+    //console.log(documents[0]);
     const count = documents.length;
     const filteredAuctions = documents.slice(pageSize * (currentPage - 1), (pageSize * currentPage));
     console.log('Slicing is completed.');
-    console.log(filteredAuctions);
+    //console.log(filteredAuctions);
     res.status(200).json({
       message: 'Search fetched auctions succesfully',
       auctions: filteredAuctions,

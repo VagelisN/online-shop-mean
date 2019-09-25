@@ -34,7 +34,7 @@ function getAuctions(ids, documents) {
         for ( let i=0; i< results.length; i++) {
           ids.push(results[i]._id);
           text = '';
-          text += results[i].name + results[i].description;
+          text += results[i].name + ' ' + results[i].categoriesId;
           documents.push(text);
         }
         resolve();
@@ -54,8 +54,8 @@ async function run() {
   await connectToDb();
   const config = {
     storage: 'memory',
-    shingleSize: 5,
-    numberOfHashFunctions: 120
+    shingleSize: 6,
+    numberOfHashFunctions: 30
   }
   const lsh = Lsh.getInstance(config)
 
@@ -71,10 +71,9 @@ async function run() {
   await getAuctions(ids, documents);
    console.log('ta phra');
 
-
   // add documents just created to LSH with their id
   for (let i = 0; i < numberOfDocuments; i += 1) {
-    lsh.addDocument(i, documents[i])
+    lsh.addDocument(i, documents[i]);
   }
   console.log('fortwsa');
 
@@ -84,7 +83,7 @@ async function run() {
   const q = {
     //id: 1,
      text: "Wedding Bridal Gown Dress  VICTORIA'S SECRET Great silicone bra  Koret Green/Navy Plaid Casual Top  CLARKS TRAVELLER SHOES MEN BRN  NR NIKE ACG Mens Tennis Shoes BLACK BRWN ",
-    bucketSize: 6
+    bucketSize: 10
   }
   const result = lsh.query(q)
 
