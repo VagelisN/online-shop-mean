@@ -8,7 +8,9 @@ import { Router } from '@angular/router';
 @Injectable({providedIn: 'root'})
 export class AuctionsService {
   private auctions: Auctions[] = [];
+  private recommendations: Auctions[] = [];
   private auctionsUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
+  private recommendationsUpdated = new Subject<{auctions: Auctions[]}>();
   private pathSub = new Subject<[{id: string, name: string}]>();
   private auctionSearchUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
   private userAuctionsUpdated = new Subject<Auctions[]>();
@@ -50,6 +52,38 @@ export class AuctionsService {
       this.auctionsUpdated.next({ auctions: [...this.auctions],
                                   auctionCount: transformedAuctionData.maxAuctions});
     });
+  }
+
+  getRecommendations(userId: string) {
+    // this.http.get<{message: string, auctions: any}>(
+    //   'http://localhost:3000/auctions/' + userId
+    // )
+    // .pipe(
+    //   map(auctionData => {
+    //   return { auctions: auctionData.auctions.map(auction => {
+    //     return {
+    //       name: auction.name,
+    //       description: auction.description,
+    //       country: auction.country,
+    //       categoriesId: auction.categoriesId,
+    //       categoryNames: auction.catNameArray,
+    //       buyPrice: auction.buyPrice,
+    //       id: auction._id,
+    //       image: auction.image,
+    //       highestBid: auction.highestBid,
+    //       startDate: auction.startDate,
+    //       endDate: auction.endDate,
+    //       latitude: parseFloat(auction.latitude),
+    //       longitude: parseFloat(auction.longitude),
+    //       address: auction.address,
+    //       sellerRating: auction.sellerRating
+    //     };
+    //   })};
+    // }))
+    // .subscribe((transformedAuctionData) => {
+    //   this.auctions = transformedAuctionData.auctions;
+    //   this.recommendationsUpdated.next({ auctions: [...this.recommendations] });
+    // });
   }
 
   getPathUpdateListener() {

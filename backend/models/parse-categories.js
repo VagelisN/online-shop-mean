@@ -27,7 +27,7 @@ function connectToDb () {
 
 function parseFile(name, jsonCategories) {
   return new Promise(resolve => {
-    jsonItems = fs.readFile( name,function(err, data) {
+    jsonItems = fs.readFile(name ,function(err, data) {
       let json = parser.toJson(data);
       jsonItems = JSON.parse(json);
       console.log(jsonItems);
@@ -52,7 +52,7 @@ async function run() {
     "categories": {
     }
   };
-  for(let m =0 ; m< 1; m++) {
+  for(let m =0 ; m< 40; m++) {
 
     name = './ebay-data/items-'+m+'.xml';
 

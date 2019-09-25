@@ -64,7 +64,7 @@
           <mat-card fxLayout="row warp" fxLayoutAlign=" center center" class ="mat-body-1" style= "font-size: 15px; margin-top: 20px;" >
             <div fxFlex="100">{{openMessage.content}}</div>
             <div fxFlex="100">
-              <p>Please rate your experience: </p>
+              <p>It would be really helpful to Rate the seller. Use the bar below to rate your communication experience with a scale from 0 to 5</p>
               <star-rating value="5" checkedcolor="red" uncheckedcolor="gray" size="20px" readonly="false"
                  (rate)="onRateUser($event, openMessage.rating , openMessage.fromId)" *ngIf="openMessage.rating"></star-rating>
             </div>

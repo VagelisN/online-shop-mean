@@ -24,6 +24,7 @@
           </i>
         </button>
     </div>
+
     <div fxFlex="20" *ngIf="!isLoading" style="border-right: 1px solid black; border-bottom: 1px solid black">
         <button
           mat-menu-item
@@ -35,6 +36,24 @@
         </button>
     </div>
     <!-- List all auctions. -->
+    <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="center" *ngIf="getMode() && !isLoading && recommendations.length > 0">
+        <mat-card *ngFor="let auction of recommendations" fxFlex="20">
+            <a
+            mat-button color="primary"
+            [routerLink]="['/auction/', auction.id]">
+          <div class="grid">
+              <div class="auction-image-all">
+                  <img [title]="auction.name"[src]="auction.image" [alt]="auction.name">
+                  <div class="auction-description">
+                    <h4>{{auction.name}}</h4>
+                    <p>{{auction.buyPrice}} $</p>
+                  </div>
+              </div>
+          </div>
+        </a>
+        </mat-card>
+
+      </div>
     <div *ngIf="getMode() && !isLoading && auctions.length > 0" fxFlex="80">
       <mat-grid-list cols="4" rowHeight="1:1" >
         <mat-grid-tile *ngFor="let auction of auctions">

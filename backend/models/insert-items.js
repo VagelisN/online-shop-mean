@@ -8,7 +8,7 @@ function connectToDb () {
   return new Promise(resolve => {
     mongoose
     .connect(
-      "mongodb+srv://VitaNi:VtjxLdYLy39okzgc@cluster0-3lmzb.mongodb.net/online-shop?w=majority",
+      "mongodb://127.0.0.1:27017/online-shop",
       {useNewUrlParser: true})
     .then(() =>{
       console.log('Connected to database');

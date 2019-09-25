@@ -3,6 +3,7 @@ const Category = require('./../models/categories');
 const Users = require('./../models/users');
 const Message = require('./../models/messages');
 const ObjectID = require('mongodb').ObjectID;
+const Lsh = require('@agtabesh/lsh')
 
 const cron = require('node-cron');
 
@@ -229,6 +230,52 @@ exports.getAuctions = (req, res, next) => {
     });
 }
 
+/*exports.getRecommendations = (req, res, next) => {
+  console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+  const ids = []
+  const documents = []
+  const userId = req.params.userId;
+  Auction.find().then(results => {
+    console.log('fiou', results.length);
+    for ( let i = 0; i < results.length; i++) {
+      ids.push(results[i]._id);
+      text = '';
+      text += results[i].name += results[i].description;
+      documents.push(text);
+    }
+
+    const config = {
+      storage: 'memory',
+      shingleSize: 5,
+      numberOfHashFunctions: 120
+    }
+    const lsh = Lsh.getInstance(config)
+
+    const numberOfDocuments = results.length;
+
+    for (let i = 0; i < numberOfDocuments; i += 1) {
+      lsh.addDocument(i, documents[i])
+    }
+    console.log('fortwsa');
+
+    Users.findOne({_id: userId}). then( user => {
+      const q = {
+        //id: 1,
+        text: user.lastVisited,
+        bucketSize: 6
+      }
+      const result = lsh.query(q)
+
+      // this will print out documents which are candidates to be similar to the one we are looking for
+      console.log(result)
+      console.log(documents[result[0]]);
+
+    })
+
+
+  })
+}*/
+
 function checkCategory(auction, catId) {
   if (catId !== 'null') {
     if (auction.categoriesId.includes(catId)) {
@@ -258,6 +305,7 @@ function checkPrice(auction, sliderMinValue, sliderMaxValue, catId) {
 }
 
 exports.searchAuctions = (req, res, next) => {
+  console.log('Lege re');
   const pageSize = +req.query.pageSize;
   const currentPage = +req.query.currentPage;
   const minValue = +req.query.minPrice;

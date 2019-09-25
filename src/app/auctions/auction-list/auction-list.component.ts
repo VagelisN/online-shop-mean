@@ -21,6 +21,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   // auctions is used to store all the auctions from the database
   auctions: Auctions[] = [];
+  recommendations: Auctions[] = [];
   isLoading = false;
   bidValue = null;
   searchValue = '';
@@ -123,6 +124,11 @@ export class AuctionListComponent implements OnInit, OnDestroy {
             this.auctions = auctionData.auctions;
             this.totalAuctions = auctionData.auctionCount;
           });
+          const userId = this.authenticationService.getLoggedUserId();
+          if (userId) {
+            console.log('egineeeeeeee');
+            this.auctionsService.getRecommendations(userId);
+          }
         }
     });
   }
