@@ -50,6 +50,7 @@ import { MaterialElevationDirective } from './elevation.directive';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { UserAuctionsComponent } from './user-auctions/user-auctions.component';
 import { BidDialogComponent } from './bid-dialog/bid-dialog.component';
+import { SearchListComponent } from './search-list/search-list.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { BidDialogComponent } from './bid-dialog/bid-dialog.component';
     DialogConfirmationComponent,
     MaterialElevationDirective,
     UserAuctionsComponent,
-    BidDialogComponent
+    BidDialogComponent,
+    SearchListComponent
   ],
   entryComponents: [ DialogConfirmationComponent, BidDialogComponent ],
   imports: [

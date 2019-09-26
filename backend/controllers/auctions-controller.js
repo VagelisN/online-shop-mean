@@ -282,7 +282,7 @@ exports.getAuctions = (req, res, next) => {
 exports.getRecommendations = (req, res, next) => {
   console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   const userId = req.params.userId;
-
+  console.log(userId,' ti egine edw re');
   Users.findOne({_id: userId}). then( user => {
     const q = {
       //id: 1,
@@ -346,8 +346,6 @@ function checkPrice(auction, sliderMinValue, sliderMaxValue, catId) {
 }
 
 exports.searchAuctions = (req, res, next) => {
-  console.log('Lege re');
-  console.log(shicabalas);
   const pageSize = +req.query.pageSize;
   const currentPage = +req.query.currentPage;
   const minValue = +req.query.minPrice;
@@ -376,14 +374,15 @@ exports.searchAuctions = (req, res, next) => {
       if (catId === 'null') {
         // Create a query with searchValue and price check
         console.log('Kalispera sas.');
+        console.log(searchValue);
         auctionQuery = Auction.find({
-          $or: [{ name: {$regex: searchValue, $options: 'i'} , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}]
+          $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}]
         });
       } else {
         // Create a query with all checks
         auctionQuery = Auction.find({
           categoriesId: {$regex: catId },
-          $or: [{ name: {$regex: searchValue, $options: 'i'} , description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}]
+          $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}]
         });
       }
     }
@@ -406,14 +405,14 @@ exports.searchAuctions = (req, res, next) => {
       if (catId === 'null') {
         // Create a query with searchValue and price check
         auctionQuery = Auction.find({
-          $or: [{ name: {$regex: searchValue, $options: 'i'} , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}],
+          $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}],
           $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
         });
       } else {
         // Create a query with all checks
         auctionQuery = Auction.find({
           categoriesId: {$regex: catId },
-          $or: [{ name: {$regex: searchValue, $options: 'i'}, description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}],
+          $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}],
           $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
         });
       }
@@ -437,14 +436,14 @@ exports.searchAuctions = (req, res, next) => {
       if (catId === 'null') {
         // Create a query with searchValue and price check
         auctionQuery = Auction.find({
-          $or: [{ name: {$regex: searchValue, $options: 'i'} , description: {$regex: searchValue, $options: 'i'}, address: {$regex: searchValue, $options: 'i'}}],
+          $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}],
           $or: [{ buyPrice: { $gt: minValue }}, {buyPrice: null}]
         });
       } else {
         // Create a query with all checks
         auctionQuery = Auction.find({
           categoriesId: {$regex: catId },
-          $or: [{ name: {$regex: searchValue, $options: 'i'} , description: {$regex: searchValue, $options: i}, address: {$regex: searchValue, $options: i}}],
+          $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}],
           $or: [{ buyPrice: { $gt: minValue }}, {buyPrice: null}]
         });
       }
@@ -459,11 +458,13 @@ exports.searchAuctions = (req, res, next) => {
     const count = documents.length;
     const filteredAuctions = documents.slice(pageSize * (currentPage - 1), (pageSize * currentPage));
     console.log('Slicing is completed.');
+    console.log(filteredAuctions);
     //console.log(filteredAuctions);
     res.status(200).json({
       message: 'Search fetched auctions succesfully',
       auctions: filteredAuctions,
-      auctionCount: count
+      auctionCount: count,
+      category: catId
     });
   });
 }

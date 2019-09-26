@@ -56,7 +56,7 @@ export class AuctionsService {
 
   getRecommendations(userId: string) {
     this.http.get<{message: string, recommendations: any}>(
-      'http://localhost:3000/auctions/' + userId
+      'http://localhost:3000/auctions/rec/' + userId
     )
     .pipe(
       map(auctionData => {
@@ -229,7 +229,7 @@ export class AuctionsService {
     `?minPrice=${tminPrice}&maxPrice=${tmaxPrice}&searchValue=${tsearchValue}&currentPage=${currentPage}&pageSize=${pageSize}&catId=${catId}`;
     console.log(tminPrice, tmaxPrice, tsearchValue, currentPage, pageSize, catId);
     console.log('Sending the request to the backend');
-    this.http.get<{message: string, auctions: any, auctionCount: number}>
+    this.http.get<{message: string, auctions: any, auctionCount: number, category: string}>
       ('http://localhost:3000/auctions/search' + searchParams)
       .pipe(
         map(auctionData => {
@@ -251,8 +251,9 @@ export class AuctionsService {
               address: auction.address,
               sellerRating: auction.sellerRating
             };
-          })
-          , auctionCount: auctionData.auctionCount
+          }),
+          auctionCount: auctionData.auctionCount,
+          categoryId: auctionData.category
         };
       }))
       .subscribe((transformedAuctionData) => {
@@ -261,6 +262,7 @@ export class AuctionsService {
         console.log('Updated: ', this.auctions.length);
         this.auctionSearchUpdated.next({ auctions: [...this.auctions],
                                     auctionCount: transformedAuctionData.auctionCount});
+        this.router.navigate(['/search']);
       });
   }
 
