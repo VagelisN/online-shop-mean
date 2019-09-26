@@ -389,8 +389,8 @@ exports.searchAuctions = (req, res, next) => {
     }
   } else if (isNaN(minValue) || minValue == null) {
     // Case where the minValue is 0
-    if (searchValue === '') {
-      if (catId === 'null') {
+    if (searchValue === '' || searchValue == null) {
+      if (catId === 'null' || catId == null) {
         // Create a query with only price check
         auctionQuery = Auction.find({
           $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
@@ -461,6 +461,7 @@ exports.searchAuctions = (req, res, next) => {
     console.log('Slicing is completed.');
     console.log(filteredAuctions);
     //console.log(filteredAuctions);
+    console.log('Sending response.');
     res.status(200).json({
       message: 'Search fetched auctions succesfully',
       auctions: filteredAuctions,

@@ -8,6 +8,7 @@ import { Router, NavigationExtras } from '@angular/router';
 @Injectable({providedIn: 'root'})
 export class AuctionsService {
   private auctions: Auctions[] = [];
+  private searchCount: number = null;
   private recommendations: Auctions[] = [];
   private auctionsUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
   private recommendationsUpdated = new Subject<{recommendations: Auctions[]}>();
@@ -105,6 +106,14 @@ export class AuctionsService {
 
   getAuctionSearchUpdateListener() {
     return this.auctionSearchUpdated.asObservable();
+  }
+
+  getSearchAuctions() {
+    return [...this.auctions];
+  }
+
+  getSearchAuctionsCount() {
+    return this.searchCount;
   }
 
   getSingleAuction(id: string) {
@@ -233,7 +242,7 @@ export class AuctionsService {
     `?minPrice=${tminPrice}&maxPrice=${tmaxPrice}&searchValue=${tsearchValue}&currentPage=${currentPage}&pageSize=${pageSize}&catId=${catId}`;
     console.log(tminPrice, tmaxPrice, tsearchValue, currentPage, pageSize, catId);
     console.log('Sending the request to the backend');
-    this.http.get<{message: string, auctions: any, auctionCount: number, category: string}>
+    this.http.get<{message: string, auctions: any, auctionCount: number}>
       ('http://localhost:3000/auctions/search' + searchParams)
       .pipe(
         map(auctionData => {
@@ -256,28 +265,26 @@ export class AuctionsService {
               sellerRating: auction.sellerRating
             };
           }),
-          auctionCount: auctionData.auctionCount,
-          categoryId: auctionData.category
+          auctionCount: auctionData.auctionCount
         };
       }))
       .subscribe((transformedAuctionData) => {
         console.log('About to update this.auctions. ', this.auctions.length);
         this.auctions = transformedAuctionData.auctions;
         console.log('Updated: ', this.auctions.length);
+        this.searchCount = transformedAuctionData.auctionCount;
         this.auctionSearchUpdated.next({ auctions: [...this.auctions],
                                     auctionCount: transformedAuctionData.auctionCount});
-        const url = '/' + searchParams;
-        console.log(url);
         const queryParams = { searchValue : tsearchValue,
-                         minPrice: tminPrice,
-                         maxPrice: tmaxPrice,
-                         catId,
-                         currentPage,
-                         pageSize };
-        this.router.navigate(['/'], { queryParams })
-        .then(() => {
+                                      minPrice: tminPrice,
+                                      maxPrice: tmaxPrice,
+                                      catId,
+                                      currentPage,
+                                      pageSize };
+        this.router.navigate(['/'], { queryParams });
+        /*.then(() => {
           window.location.reload();
-        });
+        });*/
       });
   }
 
