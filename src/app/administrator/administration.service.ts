@@ -71,9 +71,9 @@ export class AdministrationService {
         console.log(res);
         const blob = new Blob([res.extractedAuction], { type: 'text/plain' });
         if ( type === 'XML') {
-          saveAs(blob, 'auction.xml');
+          saveAs(blob, auctionId + '.xml');
         } else {
-          saveAs(blob, 'auction.json');
+          saveAs(blob,  auctionId + '.json');
         }
       });
   }
@@ -84,9 +84,9 @@ export class AdministrationService {
         console.log(res);
         const blob = new Blob([res.extractedAuctions], { type: 'text/plain' });
         if ( type === 'XML') {
-          saveAs(blob, 'auction.xml');
+          saveAs(blob, username + '_auctions.xml');
         } else {
-          saveAs(blob, 'auction.json');
+          saveAs(blob, username + '_auctions.json');
         }
       });
   }

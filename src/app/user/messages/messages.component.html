@@ -13,6 +13,7 @@
 
         <!-- Inbox Page -->
         <span *ngIf="whichFolder==='inbox' && !messageOpen">
+            <div style="text-align: center" *ngIf="inbox.length === 0"> Your Inbox is empty</div>
             <mat-card class="hiddenDelete" (click) ="messageOpened(message)" *ngFor="let message of inbox" style="margin-bottom: 5px; cursor: pointer;"
             appMaterialElevation [defaultElevation]="0" raisedElevation="6">
             <div fxLayout="row">
@@ -34,6 +35,7 @@
 
         <!-- Sent Page -->
         <span *ngIf="whichFolder==='sent' && !messageOpen">
+            <div style="text-align: center" *ngIf="sent.length === 0"> You have no Sent Messages</div>
             <mat-card class="hiddenDelete" (click) ="messageOpened(message)" *ngFor="let message of sent" style="margin-bottom: 5px; cursor: pointer;"
             appMaterialElevation [defaultElevation]="0" raisedElevation="6">
             <div fxLayout="row">

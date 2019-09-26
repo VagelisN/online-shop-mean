@@ -58,12 +58,14 @@ exports.extractAuction = (req, res, next) => {
     .ele('First_Bid').txt('$'+ String(auction.firstBid)).up()
     .ele('Number_of_Bids').txt(auction.numberOfBids).up();
     item = xml.ele('Bids');
-      for(let i=0; i < auction.bids.length; i++){
-        item=item.
-        ele('Bid')
-        .ele('Bidder',{'Rating': '22', 'UserId': auction.bids[i].bidder})
-        .ele('Location').txt('location').up()
-        .ele('Country').txt('USA').up().up();
+      if(auction.numberOfBids > 0) {
+        for(let i=0; i < auction.bids.length; i++){
+          item=item.
+          ele('Bid')
+          .ele('Bidder',{'Rating': '22', 'UserId': auction.bids[i].bidder})
+          .ele('Location').txt('location').up()
+          .ele('Country').txt('USA').up().up();
+        }
       }
     xml
     .ele('Location',{'Latitude': String(auction.latitude), 'Longtitude': String(auction.longitude) }).up()
