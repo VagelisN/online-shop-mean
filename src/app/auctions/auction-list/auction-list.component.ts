@@ -126,6 +126,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
               this.minPrice = params.minPrice;
               this.maxPrice = params.maxPrice;
               // Fetch the results from the auctionService
+              console.log('About to subscribe to auctionSearch');
               this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
               .subscribe((auctionData: {auctions: Auctions[], auctionCount: number, categoryId: string}) => {
                 console.log('In subscribe');
