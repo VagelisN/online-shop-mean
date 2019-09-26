@@ -94,11 +94,11 @@ export class AuthenticationService {
       if ( i < auction.categoryNames.length - 1) {
         textToAdd += auction.categoryNames[i] + ' ';
       } else {
-        textToAdd += auction.categoryNames[i] + '^e^';
+        textToAdd += auction.categoryNames[i] + ' ^e^';
       }
     }
     console.log(textToAdd);
-    this.http.post('http://localhost:3000/users/visited/' + userId, {textToAdd})
+    this.http.post('http://localhost:3000/users/visited/' + userId, {textToAdd, auctionId: auction.id})
         .subscribe(res => {
           console.log(res);
         });

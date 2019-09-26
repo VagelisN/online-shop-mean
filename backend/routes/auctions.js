@@ -33,7 +33,7 @@ router.post('/create', verifyToken, multer({storage: storage}).single('image'), 
 
 router.get('', controller.getAuctions);
 
-//router.get('/:userId', controller.getRecommendations);
+router.get('/:userId', controller.getRecommendations);
 
 router.get('/user/:id', controller.getUserAuctions);
 

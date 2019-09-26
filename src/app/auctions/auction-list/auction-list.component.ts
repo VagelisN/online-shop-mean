@@ -55,6 +55,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   private mode = 'all';
   private auctionsSub: Subscription;
   private auctionSearchSub: Subscription;
+  private recommendationsSub: Subscription;
   constructor(public auctionsService: AuctionsService,
               public route: ActivatedRoute,
               public authenticationService: AuthenticationService,
@@ -128,6 +129,11 @@ export class AuctionListComponent implements OnInit, OnDestroy {
           if (userId) {
             console.log('egineeeeeeee');
             this.auctionsService.getRecommendations(userId);
+            this.recommendationsSub = this.auctionsService.getRecommendationUpdateListener()
+              .subscribe((recom: {recommendations: Auctions[]}) => {
+                this.recommendations = recom.recommendations;
+                console.log(this.recommendations, 'GAMHSE MAS RE ');
+              });
           }
         }
     });

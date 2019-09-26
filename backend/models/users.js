@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema({
   buyerRating: {type: Number, default: 0},
   buyerRatingVotes: {type: Number, default: 0},
   verified: {type: Boolean, required: true},
+  lastVisitedIds: {type: String, default: ''},
   lastVisited: {type: String, default: ''}
 });
 

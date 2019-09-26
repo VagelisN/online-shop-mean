@@ -118,46 +118,50 @@ cron.schedule("* * * * *", () => {
 })
 */
 
+stopwords = ['amount','bid','Paypal','seller','information','contact','ebay','Ebay','i','me','my','myself','we','our','ours','ourselves','you','your','yours','yourself','yourselves','he','him','his','himself','she','her','hers','herself','it','its','itself','they','them','their','theirs','themselves','what','which','who','whom','this','that','these','those','am','is','are','was','were','be','been','being','have','has','had','having','do','does','did','doing','a','an','the','and','but','if','or','because','as','until','while','of','at','by','for','with','about','against','between','into','through','during','before','after','above','below','to','from','up','down','in','out','on','off','over','under','again','further','then','once','here','there','when','where','why','how','all','any','both','each','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','s','t','can','will','just','don','should','now']
+function remove_stopwords(str) {
+  res = []
+  words = str.split(' ')
+  for(i=0;i<words.length;i++) {
+      if(!stopwords.includes(words[i])) {
+          res.push(words[i])
+      }
+  }
+  return(res.join(' '))
+}
+
 // Training lsh
 let lsh;
-cron.schedule("56 * * * *", () => {
+documents= [];
+auctions = [];
+cron.schedule("23 * * * *", () => {
   console.log("Geia sou")
+
   Auction.find().then(results => {
-    console.log('fiou', results.length);
-    for ( let i = 0; i < results.length; i++) {
-      ids.push(results[i]._id);
+    for ( let i = 0; i < results.length/3; i++) {
+      auctions.push(results[i]);
       text = '';
-      text += results[i].name += results[i].description;
+      text += results[i].name + ' '+ results[i].description + ' ';
+      for (let j =0; j <results[i].categoryNames.length; j ++) {
+        text += results[i].categoryNames[j] + ' ';
+      }
+      text = remove_stopwords(text);
       documents.push(text);
     }
 
     const config = {
       storage: 'memory',
-      shingleSize: 5,
-      numberOfHashFunctions: 120
+      shingleSize: 7,
+      numberOfHashFunctions: 30
     }
     lsh = Lsh.getInstance(config)
 
-    const numberOfDocuments = results.length;
+    const numberOfDocuments = results.length/3;
 
     for (let i = 0; i < numberOfDocuments; i += 1) {
       lsh.addDocument(i, documents[i])
     }
-    console.log('fortwsa');
-
-  // search for a specific document with its id and custom bicketSize
-  // you can also perform a query using a string by passing text instead of id
-  // bucket size are dynamic. feel free to change it to find proper one
-  const q = {
-    //id: 1,
-     text: "Wedding Bridal Gown Dress  VICTORIA'S SECRET Great silicone bra  Koret Green/Navy Plaid Casual Top  CLARKS TRAVELLER SHOES MEN BRN  NR NIKE ACG Mens Tennis Shoes BLACK BRWN ",
-    bucketSize: 10
-  }
-  const result = lsh.query(q)
-
-  // this will print out documents which are candidates to be similar to the one we are looking for
-  console.log(result)
-  console.log(documents[result[0]]);
+    console.log('scheduler re-trained lsh model');
 });
 })
 
@@ -275,51 +279,43 @@ exports.getAuctions = (req, res, next) => {
     });
 }
 
-/*exports.getRecommendations = (req, res, next) => {
+exports.getRecommendations = (req, res, next) => {
   console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-  const ids = []
-  const documents = []
   const userId = req.params.userId;
-  Auction.find().then(results => {
-    console.log('fiou', results.length);
-    for ( let i = 0; i < results.length; i++) {
-      ids.push(results[i]._id);
-      text = '';
-      text += results[i].name += results[i].description;
-      documents.push(text);
+
+  Users.findOne({_id: userId}). then( user => {
+    const q = {
+      //id: 1,
+      text: user.lastVisited,
+      bucketSize: 6
     }
-
-    const config = {
-      storage: 'memory',
-      shingleSize: 5,
-      numberOfHashFunctions: 120
-    }
-    const lsh = Lsh.getInstance(config)
-
-    const numberOfDocuments = results.length;
-
-    for (let i = 0; i < numberOfDocuments; i += 1) {
-      lsh.addDocument(i, documents[i])
-    }
-    console.log('fortwsa');
-
-    Users.findOne({_id: userId}). then( user => {
-      const q = {
-        //id: 1,
-        text: user.lastVisited,
-        bucketSize: 6
-      }
+    console.log(user);
+    if(user.lastVisited !== '') {
       const result = lsh.query(q)
 
       // this will print out documents which are candidates to be similar to the one we are looking for
-      console.log(result)
-      console.log(documents[result[0]]);
+      recommendations = [];
+      let s = 0;
+      for( let i = 0; i < result.length; i++) {
+        if (s == 4) {break;}
+        if(!user.lastVisitedIds.includes(auctions[result[i]]._id)) {
+          recommendations.push(auctions[result[i]]);
+          s++;
+        }
+      }
+      console.log('eeeegw gamhthika gia sena');
+     return res.status(200).json({
+        message: 'got recommendations',
+        recommendations: recommendations
+      });
+    }
 
+    res.status(200).json({
+      message: 'no recomendations'
     })
 
-
-  })
-}*/
+    })
+}
 
 function checkCategory(auction, catId) {
   if (catId !== 'null') {

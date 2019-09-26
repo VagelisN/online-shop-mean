@@ -10,7 +10,7 @@ export class AuctionsService {
   private auctions: Auctions[] = [];
   private recommendations: Auctions[] = [];
   private auctionsUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
-  private recommendationsUpdated = new Subject<{auctions: Auctions[]}>();
+  private recommendationsUpdated = new Subject<{recommendations: Auctions[]}>();
   private pathSub = new Subject<[{id: string, name: string}]>();
   private auctionSearchUpdated = new Subject<{auctions: Auctions[], auctionCount: number}>();
   private userAuctionsUpdated = new Subject<Auctions[]>();
@@ -55,35 +55,36 @@ export class AuctionsService {
   }
 
   getRecommendations(userId: string) {
-    // this.http.get<{message: string, auctions: any}>(
-    //   'http://localhost:3000/auctions/' + userId
-    // )
-    // .pipe(
-    //   map(auctionData => {
-    //   return { auctions: auctionData.auctions.map(auction => {
-    //     return {
-    //       name: auction.name,
-    //       description: auction.description,
-    //       country: auction.country,
-    //       categoriesId: auction.categoriesId,
-    //       categoryNames: auction.catNameArray,
-    //       buyPrice: auction.buyPrice,
-    //       id: auction._id,
-    //       image: auction.image,
-    //       highestBid: auction.highestBid,
-    //       startDate: auction.startDate,
-    //       endDate: auction.endDate,
-    //       latitude: parseFloat(auction.latitude),
-    //       longitude: parseFloat(auction.longitude),
-    //       address: auction.address,
-    //       sellerRating: auction.sellerRating
-    //     };
-    //   })};
-    // }))
-    // .subscribe((transformedAuctionData) => {
-    //   this.auctions = transformedAuctionData.auctions;
-    //   this.recommendationsUpdated.next({ auctions: [...this.recommendations] });
-    // });
+    this.http.get<{message: string, recommendations: any}>(
+      'http://localhost:3000/auctions/' + userId
+    )
+    .pipe(
+      map(auctionData => {
+      return { recommendations: auctionData.recommendations.map(recom => {
+        return {
+          name: recom.name,
+          description: recom.description,
+          country: recom.country,
+          categoriesId: recom.categoriesId,
+          categoryNames: recom.catNameArray,
+          buyPrice: recom.buyPrice,
+          id: recom._id,
+          image: recom.image,
+          highestBid: recom.highestBid,
+          startDate: recom.startDate,
+          endDate: recom.endDate,
+          latitude: parseFloat(recom.latitude),
+          longitude: parseFloat(recom.longitude),
+          address: recom.address,
+          sellerRating: recom.sellerRating
+        };
+      })};
+    }))
+    .subscribe((transformedRecommendationData) => {
+      this.recommendations = transformedRecommendationData.recommendations;
+      console.log(this.recommendations, 'EXW NA KANE TOSA ALLA ');
+      this.recommendationsUpdated.next({ recommendations: [...this.recommendations] });
+    });
   }
 
   getPathUpdateListener() {
@@ -92,6 +93,10 @@ export class AuctionsService {
 
   getAuctionUpdateListener() {
     return this.auctionsUpdated.asObservable();
+  }
+
+  getRecommendationUpdateListener() {
+    return this.recommendationsUpdated.asObservable();
   }
 
   getAuctionSearchUpdateListener() {

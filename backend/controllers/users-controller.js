@@ -91,22 +91,41 @@ exports.newUser =  (req, res, next) => {
     });
 }
 
+stopwords = ['amount','bid','Paypal','seller','information','contact','ebay','Ebay','i','me','my','myself','we','our','ours','ourselves','you','your','yours','yourself','yourselves','he','him','his','himself','she','her','hers','herself','it','its','itself','they','them','their','theirs','themselves','what','which','who','whom','this','that','these','those','am','is','are','was','were','be','been','being','have','has','had','having','do','does','did','doing','a','an','the','and','but','if','or','because','as','until','while','of','at','by','for','with','about','against','between','into','through','during','before','after','above','below','to','from','up','down','in','out','on','off','over','under','again','further','then','once','here','there','when','where','why','how','all','any','both','each','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','s','t','can','will','just','don','should','now']
+function remove_stopwords(str) {
+  res = []
+  words = str.split(' ')
+  for(i=0;i<words.length;i++) {
+      if(!stopwords.includes(words[i])) {
+          res.push(words[i])
+      }
+  }
+  return(res.join(' '))
+}
+
+
 exports.userVisited = (req, res, next) => {
   console.log(req.body);
   const userId = req.params.userId;
   let textToAdd = req.body.textToAdd;
+  let auctionId = req.body.auctionId;
   Users.findOne({_id: userId})
     .then(user => {
       if(user) {
         let userVisited = user.lastVisited;
-        if(userVisited.length > 10000) {
+        let userVisitedIds = user.lastVisitedIds;
+        if(userVisited.length > 100000) {
           let cutAt = userVisited.indexOf('^e^');
           userVisited = userVisited.slice(cutAt + 3);
+          cutAt = userVisitedIds.indexOf('>');
+          userVisitedIds = userVisitedIds.slice(cutAt +1);
           console.log('ekopsa erapsa')
         }
         textToAdd = userVisited + textToAdd;
+        textToAdd = remove_stopwords(textToAdd);
         console.log(textToAdd);
-        Users.findOneAndUpdate({_id: userId}, {lastVisited: textToAdd})
+        userVisitedIds = userVisitedIds+'>'+auctionId;
+        Users.findOneAndUpdate({_id: userId}, {lastVisited: textToAdd, lastVisitedIds: userVisitedIds})
           .then(result => {
             // console.log(result);
             res.status(200).json({

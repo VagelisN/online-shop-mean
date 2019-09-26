@@ -41,16 +41,14 @@
             <a
             mat-button color="primary"
             [routerLink]="['/auction/', auction.id]">
-          <div class="grid">
               <div class="auction-image-all">
-                  <img [title]="auction.name"[src]="auction.image" [alt]="auction.name">
+                  <img mat-card-image [title]="auction.name"[src]="auction.image" [alt]="auction.name">
                   <div class="auction-description">
                     <h4>{{auction.name}}</h4>
                     <p>{{auction.buyPrice}} $</p>
                   </div>
               </div>
-          </div>
-        </a>
+          </a>
         </mat-card>
 
       </div>
