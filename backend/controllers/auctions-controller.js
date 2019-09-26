@@ -292,7 +292,8 @@ exports.getRecommendations = (req, res, next) => {
       bucketSize: 6
     }
     if(user.lastVisited !== '') {
-      const result = lsh.query(q)
+      if(lsh) {
+        const result = lsh.query(q)
 
       // this will print out documents which are candidates to be similar to the one we are looking for
       recommendations = [];
@@ -304,12 +305,12 @@ exports.getRecommendations = (req, res, next) => {
           s++;
         }
       }
-     return res.status(200).json({
-        message: 'got recommendations',
-        recommendations: recommendations
-      });
+      return res.status(200).json({
+          message: 'got recommendations',
+          recommendations: recommendations
+        });
+      }
     }
-
     res.status(200).json({
       message: 'no recomendations'
     })
