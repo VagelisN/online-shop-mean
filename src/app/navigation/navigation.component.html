@@ -1,28 +1,9 @@
 <mat-toolbar fxLayout="row warp" color="primary">
   <mat-toolbar-row fxFlex="100" fxLayout="row" fxLayoutAlign="space-around center">
     <a fxFlex="20" routerLink = "/">online-shop</a>
-    <div fxFlex="50">
+    <div fxFlex="20">
       <!-- Search will be here  -->
-      <input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
-      <button mat-stroked-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.searchCategoryName}}</button>
-      <mat-menu #firstLevelCategories="matMenu">
-      <button
-        mat-menu-item
-        *ngFor="let category of categories"
-        (click)="onSearchCategoryChosen(category._id, category.name)">
-        <span style="font-size: 17px;">
-          {{category.name}}
-        </span>
-        </button>
-      </mat-menu>
-      <button mat-button (click)="onPriceRangeClick()">
-        Price range <i class="material-icons">arrow_downward</i>
-      </button>
-      <button mat-raised-button (click)="onSearchSubmit()" style="margin-left: 5px;">
-        <i class="material-icons">
-          search
-        </i>
-      </button>
+      <a  mat-button routerLink="/" style="margin: 0 auto;">Search</a>
     </div>
     <div fxFlex="30" fxLayout="row">
       <a fxFlex="50" mat-button *ngIf="!userAuthenticated" routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>

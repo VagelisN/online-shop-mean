@@ -24,17 +24,10 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   recommendations: Auctions[] = [];
   isLoading = false;
   bidValue = null;
+  searchValue = '';
   bidErrorMessage = null;
   categoryNames = null;
-  username = '';
 
-  // Search query variables
-  searchValue = null;
-  minPrice = null;
-  maxPrice = null;
-  catId = null;
-
-  parentCategoryId = null;
   categoryChosen = null;
   categoryChosenName = null;
   categories: Categories[] = [];
@@ -72,10 +65,10 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      console.log(paramMap);
       // If we have an id on the url, we'll show just one auction
       if (paramMap.has('auctionId')) {
         console.log('auction-list has id on url.');
-        console.log('-------------------------');
         this.mode = 'single';
         this.auctionId = paramMap.get('auctionId');
         this.auctionsService.getSingleAuction(this.auctionId)
@@ -107,8 +100,8 @@ export class AuctionListComponent implements OnInit, OnDestroy {
               this.categoryNames += ' -> ';
             }
           }
+          console.log(this.auction);
           const userId = this.authenticationService.getLoggedUserId();
-          this.username = this.authenticationService.getUsername();
           if (userId) {
             this.authenticationService.addToVisited(userId, this.auction);
           }
@@ -116,65 +109,33 @@ export class AuctionListComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         });
       } else {
-        // Subscribe to query parameters and check them
-          this.route.queryParams.subscribe(params => {
-            if (params.searchValue !== undefined || params.catId !== undefined ||
-                params.minPrice !== undefined || params.maxPrice !== undefined) {
-              // We have a search case.
-              console.log(params.searchValue, params.catId, params.minPrice, params.maxPrice);
-              this.searchValue = params.searchValue;
-              if (params.catId != null) {
-                this.catId = params.catId;
-              }
-              this.minPrice = params.minPrice;
-              this.maxPrice = params.maxPrice;
-              // Update the categories shown in the left
-              this.auctionsService.getCategories(this.catId)
-              .subscribe( res => {
-                console.log('getCategories just returned. 2.0');
-                this.categories = res.categories;
-              });
-              // Fetch the results from the auctionService
-              console.log('About to subscribe to auctionSearch');
-              this.auctions = this.auctionsService.getSearchAuctions();
-              this.totalAuctions = this.auctionsService.getSearchAuctionsCount();
-              this.isLoading = false;
-
-              /*this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
-              .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
-                console.log('In subscribe');
-                this.auctions = auctionData.auctions;
-                this.totalAuctions = auctionData.auctionCount;
-
-              });*/
-            } else {
-              // If there is not an id in the url we will list all auctions
-              // getAuctions() params are from the paginator ( requesting page 1 )
-              this.auctionsService.getCategories(this.parentCategoryId)
-                .subscribe( res => {
-                  this.categories = res.categories;
-                  // console.log(this.categories);
-                });
-              this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
-              this.auctionsSub = this.auctionsService.getAuctionUpdateListener()
-                .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
-                  this.isLoading = false;
-                  this.auctions = auctionData.auctions;
-                  this.totalAuctions = auctionData.auctionCount;
-                });
-              const userId = this.authenticationService.getLoggedUserId();
-              if (userId) {
-                  this.auctionsService.getRecommendations(userId);
-                  this.recommendationsSub = this.auctionsService.getRecommendationUpdateListener()
-                    .subscribe((recom: {recommendations: Auctions[]}) => {
-                      if ( recom.recommendations) {
-                        this.recommendations = recom.recommendations;
-                      }
-                    });
-                }
-              }
+        // If there is not an id in the url we will list all auctions
+        // getAuctions() params are from the paginator ( requesting page 1 )
+          console.log('About to call getCategories.');
+          this.auctionsService.getCategories(null)
+          .subscribe( res => {
+            console.log('getCategories just returned.');
+            this.categories = res.categories;
+            console.log(this.categories);
           });
-      }
+          this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
+          this.auctionsSub = this.auctionsService.getAuctionUpdateListener()
+          .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
+            this.isLoading = false;
+            this.auctions = auctionData.auctions;
+            this.totalAuctions = auctionData.auctionCount;
+          });
+          const userId = this.authenticationService.getLoggedUserId();
+          if (userId) {
+            console.log('egineeeeeeee');
+            this.auctionsService.getRecommendations(userId);
+            this.recommendationsSub = this.auctionsService.getRecommendationUpdateListener()
+              .subscribe((recom: {recommendations: Auctions[]}) => {
+                this.recommendations = recom.recommendations;
+                console.log(this.recommendations, 'GAMHSE MAS RE ');
+              });
+          }
+        }
     });
   }
 
@@ -190,12 +151,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.mode === 'all') {
-      if (this.searchValue == null && this.minPrice == null &&
-          this.maxPrice == null && this.catId == null) {
-            this.auctionsSub.unsubscribe();
-      } else {
-        this.auctionSearchSub.unsubscribe();
-      }
+      this.auctionsSub.unsubscribe();
     }
   }
 
@@ -219,7 +175,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   }
 
   onChangePage(pageData: PageEvent) {
-    // We need to check if there is a search going on
     console.log(pageData);
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
@@ -249,7 +204,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
         const userId = this.authenticationService.getLoggedUserId();
         this.bidErrorMessage = null;
         this.auctionsService.submitBid(this.auction.id, userId, this.bidValue);
-        this.authenticationService.addToBidded(userId, this.auction);
       } else {
         this.bidValue = null;
         this.bidErrorMessage = null;
@@ -268,6 +222,29 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   checkPrice(auction) {
     return (auction.buyPrice !== null);
+  }
+
+  onSearchSubmit() {
+    // Call searchAuctions() from auction.service.ts
+    console.log('onSearchSubmit in auction-list.component');
+    console.log(this.categoryChosen);
+    this.isLoading = true;
+    let ceiling = this.sliderMaxValue;
+    let floor = this.sliderMinValue;
+    if (ceiling === this.sliderOptions.ceil) {
+      ceiling = null;
+    }
+    if (floor === this.sliderOptions.floor) {
+      floor = null;
+    }
+    this.auctionsService.searchAuctions(floor, ceiling, this.searchValue,
+                                        this.currentPage, this.auctionsPerPage, this.categoryChosen);
+    this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
+    .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
+      this.auctions = auctionData.auctions;
+      this.totalAuctions = auctionData.auctionCount;
+      this.isLoading = false;
+    });
   }
 
   onExtract(type: string, auctionId: string) {
@@ -291,10 +268,17 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     console.log(this.categoryChosenName);
     console.log('--------------------');
     // When the user presses one category call the search
-    this.auctionsService.searchAuctions(this.minPrice, this.maxPrice, this.searchValue, this.currentPage,
+    let ceiling = this.sliderMaxValue;
+    let floor = this.sliderMinValue;
+    if (ceiling === this.sliderOptions.ceil) {
+      ceiling = null;
+    }
+    if (floor === this.sliderOptions.floor) {
+      floor = null;
+    }
+    this.auctionsService.searchAuctions(floor, ceiling, '', this.currentPage,
                                         this.auctionsPerPage, this.categoryChosen);
     console.log('Passed searchAuctions()');
-    /*
     this.auctionsService.getCategories(this.categoryChosen)
           .subscribe( res => {
             console.log('getCategories just returned. 2.0');
@@ -309,7 +293,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       // Update the categories shown in the left
     });
-    */
   }
 
   onSearchCategoryChosen(id: string, name: string) {
