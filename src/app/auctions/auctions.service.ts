@@ -268,15 +268,16 @@ export class AuctionsService {
                                     auctionCount: transformedAuctionData.auctionCount});
         const url = '/' + searchParams;
         console.log(url);
-        const navigationExtras: NavigationExtras = {
-          queryParams: { searchValue : tsearchValue,
+        const queryParams = { searchValue : tsearchValue,
                          minPrice: tminPrice,
                          maxPrice: tmaxPrice,
                          catId,
                          currentPage,
-                         pageSize }
-        };
-        this.router.navigate(['/'], navigationExtras);
+                         pageSize };
+        this.router.navigate(['/'], { queryParams })
+        .then(() => {
+          window.location.reload();
+        });
       });
   }
 
