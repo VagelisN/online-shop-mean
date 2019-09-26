@@ -66,6 +66,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       console.log(paramMap);
+      console.log(paramMap.get('searchValue'));
       // If we have an id on the url, we'll show just one auction
       if (paramMap.has('auctionId')) {
         console.log('auction-list has id on url.');

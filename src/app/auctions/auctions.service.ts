@@ -270,8 +270,7 @@ export class AuctionsService {
                          maxPrice: tmaxPrice,
                          catId,
                          currentPage,
-                         pageSize },
-          fragment: 'anchor'
+                         pageSize }
         };
         this.router.navigate(['/'], navigationExtras);
       });
