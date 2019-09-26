@@ -1,5 +1,9 @@
-.sidenav-container {
-  height: 100%;
+ng5-slider {
+  height: 2px;
+  width: 50%;
+  margin: auto;
+  font-size: 5px;
+  color: white;
 }
 
 .sidenav {

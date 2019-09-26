@@ -4,27 +4,6 @@
 
 
   <div fxLayout="row warp" fxLayoutAlign="center stretch">
-    <div class="search-bar" *ngIf="!isLoading && getMode()" fxFlex="100" style="padding-bottom: 1rem;">
-        <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
-        <input mat-input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
-        <button mat-stroked-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.searchCategoryName}}</button>
-        <mat-menu #firstLevelCategories="matMenu">
-        <button
-          mat-menu-item
-          *ngFor="let category of categories"
-          (click)="onSearchCategoryChosen(category._id, category.name)">
-          <span style="font-size: 17px;">
-            {{category.name}}
-          </span>
-          </button>
-        </mat-menu>
-        <button mat-raised-button (click)="onSearchSubmit()" style="margin-left: 5px;">
-          <i class="material-icons">
-            search
-          </i>
-        </button>
-    </div>
-
     <div fxFlex="20" *ngIf="!isLoading" style="border-right: 1px solid black; border-bottom: 1px solid black">
         <button
           mat-menu-item

@@ -1,52 +1,44 @@
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer
-  class="sidenav"
-  [ngClass]="{hidden: !(isHandset$ | async) === true}"
-  fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>Menu</mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item href="#">Link 1</a>
-      <a mat-list-item href="#">Link 2</a>
-      <a mat-list-item href="#">Link 3</a>
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <mat-toolbar-row>
+<mat-toolbar fxLayout="row warp" color="primary">
+  <mat-toolbar-row fxFlex="100" fxLayout="row" fxLayoutAlign="space-around center">
+    <a fxFlex="20" routerLink = "/">online-shop</a>
+    <div fxFlex="50">
+      <!-- Search will be here  -->
+      <input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
+      <button mat-stroked-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.searchCategoryName}}</button>
+      <mat-menu #firstLevelCategories="matMenu">
       <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        mat-menu-item
+        *ngFor="let category of categories"
+        (click)="onSearchCategoryChosen(category._id, category.name)">
+        <span style="font-size: 17px;">
+          {{category.name}}
+        </span>
+        </button>
+      </mat-menu>
+      <button mat-button (click)="onPriceRangeClick()">
+        Price range <i class="material-icons">arrow_downward</i>
       </button>
-      <span><a routerLink = "/">online-shop</a></span>
-      <span class ="spacer"></span>
-      <a  mat-button routerLink="/">Search</a>
-
-      <span class="spacer"></span>
-      <a mat-button *ngIf="!userAuthenticated" routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>
-      <a mat-button *ngIf="!userAuthenticated" routerLink = "/login" routerLinkActive= "mat-accent ">Login</a>
+      <button mat-raised-button (click)="onSearchSubmit()" style="margin-left: 5px;">
+        <i class="material-icons">
+          search
+        </i>
+      </button>
+    </div>
+    <div fxFlex="30" fxLayout="row">
+      <a fxFlex="50" mat-button *ngIf="!userAuthenticated" routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>
+      <a fxFlex="50" mat-button *ngIf="!userAuthenticated" routerLink = "/login" routerLinkActive= "mat-accent ">Login</a>
       <div>
         <a mat-button *ngIf="userAuthenticated" routerLink = "/auction/create">Create an auction</a>
-       <a mat-button *ngIf="userAuthenticated" routerLink = "/user/messages">
-        <mat-icon *ngIf="numOfUnreadMessages > 0" matBadge={{numOfUnreadMessages}} matBadgeColor="warn">message</mat-icon>
-        <mat-icon *ngIf="numOfUnreadMessages == 0" >message</mat-icon>
-      </a>
+        <a mat-button *ngIf="userAuthenticated" routerLink = "/user/messages">
+          <mat-icon *ngIf="numOfUnreadMessages > 0" matBadge={{numOfUnreadMessages}} matBadgeColor="warn">message</mat-icon>
+          <mat-icon *ngIf="numOfUnreadMessages == 0" >message</mat-icon>
+        </a>
       </div>
       <button mat-button *ngIf="userAuthenticated" (click)="onLogout()">Logout</button>
       <button mat-button *ngIf="userAuthenticated" >{{username}}</button>
-    </mat-toolbar-row>
-
-    </mat-toolbar>
-
-        <!-- Add Content Here -->
-    <ng-content>
-    </ng-content>
-
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    </div>
+  </mat-toolbar-row>
+  <mat-toolbar-row fxFlex="100" *ngIf="this.showSlider">
+      <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
+  </mat-toolbar-row>
+</mat-toolbar>

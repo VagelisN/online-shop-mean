@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Injectable({providedIn: 'root'})
 export class AuctionsService {
@@ -218,7 +218,7 @@ export class AuctionsService {
     this.http.patch<{message: string}>('http://localhost:3000/auctions/bid/' + auctionId, bid)
     .subscribe((res) => {
       console.log(res.message);
-      this.router.navigate(['/auction/' + auctionId]);
+      this.router.navigate(['/']);
     });
   }
 
@@ -262,7 +262,18 @@ export class AuctionsService {
         console.log('Updated: ', this.auctions.length);
         this.auctionSearchUpdated.next({ auctions: [...this.auctions],
                                     auctionCount: transformedAuctionData.auctionCount});
-        this.router.navigate(['/search']);
+        const url = '/' + searchParams;
+        console.log(url);
+        const navigationExtras: NavigationExtras = {
+          queryParams: { searchValue : tsearchValue,
+                         minPrice: tminPrice,
+                         maxPrice: tmaxPrice,
+                         catId,
+                         currentPage,
+                         pageSize },
+          fragment: 'anchor'
+        };
+        this.router.navigate(['/'], navigationExtras);
       });
   }
 

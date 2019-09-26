@@ -69,6 +69,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       // If we have an id on the url, we'll show just one auction
       if (paramMap.has('auctionId')) {
         console.log('auction-list has id on url.');
+        console.log('-------------------------');
         this.mode = 'single';
         this.auctionId = paramMap.get('auctionId');
         this.auctionsService.getSingleAuction(this.auctionId)
@@ -107,25 +108,34 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
           this.isLoading = false;
         });
+      } else if (paramMap.has('searchValue')) {
+        console.log('nai nai nai poytaneeees');
+        console.log('----------------------------');
+        console.log('----------------------------');
+        console.log('----------------------------');
+        console.log('----------------------------');
+        console.log('----------------------------');
+        console.log('----------------------------');
       } else {
+        console.log(paramMap.has('searchValue'));
         // If there is not an id in the url we will list all auctions
         // getAuctions() params are from the paginator ( requesting page 1 )
-          console.log('About to call getCategories.');
-          this.auctionsService.getCategories(null)
+        console.log('About to call getCategories.');
+        this.auctionsService.getCategories(null)
           .subscribe( res => {
             console.log('getCategories just returned.');
             this.categories = res.categories;
             console.log(this.categories);
           });
-          this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
-          this.auctionsSub = this.auctionsService.getAuctionUpdateListener()
+        this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
+        this.auctionsSub = this.auctionsService.getAuctionUpdateListener()
           .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
             this.isLoading = false;
             this.auctions = auctionData.auctions;
             this.totalAuctions = auctionData.auctionCount;
           });
-          const userId = this.authenticationService.getLoggedUserId();
-          if (userId) {
+        const userId = this.authenticationService.getLoggedUserId();
+        if (userId) {
             this.auctionsService.getRecommendations(userId);
             this.recommendationsSub = this.auctionsService.getRecommendationUpdateListener()
               .subscribe((recom: {recommendations: Auctions[]}) => {
