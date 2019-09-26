@@ -108,6 +108,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
             }
           }
           const userId = this.authenticationService.getLoggedUserId();
+          this.username = this.authenticationService.getUsername();
           if (userId) {
             this.authenticationService.addToVisited(userId, this.auction);
           }

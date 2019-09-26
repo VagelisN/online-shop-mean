@@ -17,19 +17,20 @@ export class MessagesComponent implements OnInit {
   defaultElevation = 2;
   raisedElevation = 8;
 
-  inbox: Message[] = [
-    {
-      _id: '12343dfdf234',
-      title: "a",
-    content: "kerdis",
-    from: 'chrom',
-    fromId: '5d7cd68787919120ff20a62d',
-    to: "samus",
-    toId: '5d7d08ff73f0be4094648f21',
-    isRead: true,
-    rating: null
-  }
-  ];
+  // inbox: Message[] = [
+  //   {
+  //     _id: '12343dfdf234',
+  //     title: "a",
+  //   content: "kerdis",
+  //   from: 'chrom',
+  //   fromId: '5d7cd68787919120ff20a62d',
+  //   to: "samus",
+  //   toId: '5d7d08ff73f0be4094648f21',
+  //   isRead: true,
+  //   rating: null
+  // }
+  // ];
+  inbox: Message[] = [];
   sent: Message[] = [];
   username = '';
   userId = '';

@@ -62,6 +62,10 @@
 
   <!-- If we need to show just one auction. -->
   <div fxLayout="row warp" *ngIf="!getMode() && !isLoading">
+    <div *ngIf="username === 'admin'" style="margin-top: 16px;"fxFlex="100" fxLayout="row" fxLayoutAlign ="center center " fxLayoutGap="0.5%">
+      <button mat-raised-button color="accent" (click)="onExtract('XML', auction.id)"> Extract as XML</button>
+      <button mat-raised-button color="accent" (click)="onExtract('JSON', auction.id)"> Extract as JSON</button>
+    </div>
       <h2 style="text-align: center;"fxFlex="100">{{ auction.name }}</h2>
       <div fxFlex="35">
           <img [src]="this.auction.image" [alt]="this.auction.name">
@@ -119,8 +123,6 @@
               <button mat-button color="warn" (click)="onDelete(this.auction.id)">Delete auction</button>
             </div>
           </div>
-          <button mat-button (click)="onExtract('XML', auction.id)">Extract as XML</button>
-          <button mat-button (click)="onExtract('JSON', auction.id)">Extract as JSON</button>
       </div>
   </div>
 
