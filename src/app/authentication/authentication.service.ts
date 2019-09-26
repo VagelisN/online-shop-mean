@@ -29,7 +29,7 @@ export class AuthenticationService {
     const newUser: UserModel = { username, email, password, firstname, lastname, phone, afm, latitude, longitude, address };
     console.log(newUser);
     this.http
-      .post('http://localhost:3000/users/signup', newUser)
+      .post('https://localhost:3000/users/signup', newUser)
       .subscribe( () => {
         this.router.navigate(['/signup/pending']);
       });
@@ -45,7 +45,7 @@ export class AuthenticationService {
 
   loginUser(username: string, password: string) {
     this.http
-      .post<{token: string, userId: string, username: string}>('http://localhost:3000/users/login', {username, password})
+      .post<{token: string, userId: string, username: string}>('https://localhost:3000/users/login', {username, password})
       .subscribe( (response) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('userId', response.userId);
@@ -98,7 +98,7 @@ export class AuthenticationService {
       }
     }
     console.log(textToAdd);
-    this.http.post('http://localhost:3000/users/visited/' + userId, {textToAdd, auctionId: auction.id})
+    this.http.post('https://localhost:3000/users/visited/' + userId, {textToAdd, auctionId: auction.id})
         .subscribe(res => {
           console.log(res);
         });
@@ -114,7 +114,7 @@ export class AuthenticationService {
         textToAdd += auction.categoryNames[i] + ' ^e^';
       }
     }
-    this.http.post('http://localhost:3000/users/bidded/' + userId, {textToAdd, auctionId: auction.id})
+    this.http.post('https://localhost:3000/users/bidded/' + userId, {textToAdd, auctionId: auction.id})
         .subscribe(res => {
           console.log(res);
         });

@@ -25,7 +25,8 @@ export class SignupComponent implements OnInit, OnDestroy {
   zoom: number;
 
   constructor(private authenticationService: AuthenticationService,
-              private mapsAPILoader: MapsAPILoader) {}
+              private mapsAPILoader: MapsAPILoader
+              ) {}
 
   ngOnInit() {
     // Load the map.
@@ -37,8 +38,8 @@ export class SignupComponent implements OnInit, OnDestroy {
 
     this.errorTextSub = this.authenticationService.getErrorTextSub().subscribe(error => {
       this.buttonText = 'Signup';
-      document.querySelector('mat-sidenav-content').scrollTop = 0;
       this.errorText = error;
+      window.scroll(0 , 0);
     });
 
   }

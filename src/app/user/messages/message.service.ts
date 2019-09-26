@@ -20,7 +20,7 @@ export class MessageService {
   getMessages(username: string) {
     if (username) {
       return this.http.get<{messages: any}>(
-        'http://localhost:3000/messages/inbox/' + username
+        'https://localhost:3000/messages/inbox/' + username
       );
     }
   }
@@ -28,26 +28,26 @@ export class MessageService {
   getSentMessages(username: string) {
     if (username) {
       return this.http.get<{messages: any}>(
-        'http://localhost:3000/messages/sent/' + username
+        'https://localhost:3000/messages/sent/' + username
       );
     }
   }
 
   sendMessage(message: Message) {
-    this.http.post('http://localhost:3000/messages/send', message)
+    this.http.post('https://localhost:3000/messages/send', message)
       .subscribe(res => {
       });
   }
 
   messageRead(message: Message) {
-    this.http.patch('http://localhost:3000/messages/read/' + message._id, message)
+    this.http.patch('https://localhost:3000/messages/read/' + message._id, message)
       .subscribe( res => {
         this.getUnreadCount(message.to);
       });
   }
 
   getUnreadCount(username: string) {
-    this.http.get<{message: string, count: number}>('http://localhost:3000/messages/count/' + username)
+    this.http.get<{message: string, count: number}>('https://localhost:3000/messages/count/' + username)
     .subscribe( res => {
       this.unreadCount = res.count;
       this.unreadCountSub.next(this.unreadCount);
@@ -55,7 +55,7 @@ export class MessageService {
   }
 
   deleteMessage(messageId: string, username: string) {
-    this.http.patch('http://localhost:3000/messages', {messageId, username})
+    this.http.patch('https://localhost:3000/messages', {messageId, username})
       .subscribe( res => {
         console.log(res);
       });
