@@ -282,9 +282,6 @@ export class AuctionsService {
                                       currentPage,
                                       pageSize };
         this.router.navigate(['/'], { queryParams });
-        /*.then(() => {
-          window.location.reload();
-        });*/
       });
   }
 

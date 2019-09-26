@@ -3,10 +3,10 @@
 
 
   <div fxLayout="row warp" fxLayoutAlign="center stretch">
-    <div class="search-bar" *ngIf="!isLoading && getMode()" fxFlex="100" style="padding-bottom: 1rem;">
-        <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
-        <input mat-input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
-        <button mat-stroked-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.searchCategoryName}}</button>
+    <div *ngIf="!isLoading && (getAllMode() || getSearchMode())" fxFlex="100"
+     style="padding-bottom: 1rem;" fxLayout="row warp" fxLayoutAlign="space-around">
+        <input fxFlex="30" matΙnput type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
+        <button fxFlex="20" mat-stroked-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.searchCategoryName}}</button>
         <mat-menu #firstLevelCategories="matMenu">
         <button
           mat-menu-item
@@ -17,11 +17,15 @@
           </span>
           </button>
         </mat-menu>
-        <button mat-raised-button (click)="onSearchSubmit()" style="margin-left: 5px;">
+        <button fxFlex="10" mat-raised-button (click)="onSearchSubmit()" style="margin-left: 5px;">
           <i class="material-icons">
             search
           </i>
         </button>
+        <button mat-button (click)="onPriceRangeClick()">Price range<i class="material-icons">arrow_downward</i></button>
+        <div fxFlex="100" *ngIf="priceRange" style="margin-top: 1rem;">
+          <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
+        </div>
     </div>
 
     <div fxFlex="20" *ngIf="!isLoading" style="border-right: 1px solid black; border-bottom: 1px solid black">
@@ -35,7 +39,7 @@
         </button>
     </div>
     <!-- List all auctions. -->
-    <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="center" *ngIf="getMode() && !isLoading && recommendations.length > 0">
+    <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="center" *ngIf="getAllMode() && !isLoading && recommendations.length > 0">
         <mat-card *ngFor="let auction of recommendations" fxFlex="20">
             <a
             mat-button color="primary"
@@ -51,7 +55,7 @@
         </mat-card>
 
       </div>
-    <div *ngIf="getMode() && !isLoading && auctions.length > 0" fxFlex="80">
+    <div *ngIf="(getAllMode() || getSearchMode()) && !isLoading && auctions.length > 0" fxFlex="80">
       <mat-grid-list cols="4" rowHeight="1:1" >
         <mat-grid-tile *ngFor="let auction of auctions">
             <a
@@ -75,7 +79,7 @@
                      (page)="onChangePage($event)">
       </mat-paginator>
     </div>
-    <p fxFlex="80" class="info-text mat-body-1" *ngIf="getMode() && auctions.length <= 0 && !isLoading">No auctions found!</p>
+    <p fxFlex="80" class="info-text mat-body-1" *ngIf="(getAllMode() || getSearchMode() ) && auctions.length <= 0 && !isLoading">No auctions found!</p>
 
   </div>
 
@@ -84,7 +88,7 @@
 
 
   <!-- If we need to show just one auction. -->
-  <div fxLayout="row warp" *ngIf="!getMode() && !isLoading">
+  <div fxLayout="row warp" *ngIf="getSingleMode() && !isLoading">
       <h2 style="text-align: center;"fxFlex="100">{{ auction.name }}</h2>
       <div fxFlex="35">
           <img [src]="this.auction.image" [alt]="this.auction.name">
