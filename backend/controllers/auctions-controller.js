@@ -118,7 +118,7 @@ cron.schedule("* * * * *", () => {
 })
 */
 
-stopwords = ['amount','bid','Paypal','seller','information','contact','ebay','Ebay','i','me','my','myself','we','our','ours','ourselves','you','your','yours','yourself','yourselves','he','him','his','himself','she','her','hers','herself','it','its','itself','they','them','their','theirs','themselves','what','which','who','whom','this','that','these','those','am','is','are','was','were','be','been','being','have','has','had','having','do','does','did','doing','a','an','the','and','but','if','or','because','as','until','while','of','at','by','for','with','about','against','between','into','through','during','before','after','above','below','to','from','up','down','in','out','on','off','over','under','again','further','then','once','here','there','when','where','why','how','all','any','both','each','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','s','t','can','will','just','don','should','now']
+stopwords = ['information','INFORMATION','contact','CONTACT','PAYPAL','paypal','winner','WINNER','bidder','BIDDER','PAID','EBAY','amount','bid','Paypal','seller','information','contact','ebay','Ebay','i','me','my','myself','we','our','ours','ourselves','you','your','yours','yourself','yourselves','he','him','his','himself','she','her','hers','herself','it','its','itself','they','them','their','theirs','themselves','what','which','who','whom','this','that','these','those','am','is','are','was','were','be','been','being','have','has','had','having','do','does','did','doing','a','an','the','and','but','if','or','because','as','until','while','of','at','by','for','with','about','against','between','into','through','during','before','after','above','below','to','from','up','down','in','out','on','off','over','under','again','further','then','once','here','there','when','where','why','how','all','any','both','each','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','s','t','can','will','just','don','should','now']
 function remove_stopwords(str) {
   res = []
   words = str.split(' ')
@@ -134,11 +134,11 @@ function remove_stopwords(str) {
 let lsh;
 documents= [];
 auctions = [];
-cron.schedule("23 * * * *", () => {
-  console.log("Geia sou")
+cron.schedule("015 * * * *", () => {
+  console.log("Re training LSH model")
 
   Auction.find().then(results => {
-    for ( let i = 0; i < results.length/3; i++) {
+    for ( let i = 0; i < results.length; i++) {
       auctions.push(results[i]);
       text = '';
       text += results[i].name + ' '+ results[i].description + ' ';
@@ -152,11 +152,11 @@ cron.schedule("23 * * * *", () => {
     const config = {
       storage: 'memory',
       shingleSize: 7,
-      numberOfHashFunctions: 30
+      numberOfHashFunctions: 50
     }
     lsh = Lsh.getInstance(config)
 
-    const numberOfDocuments = results.length/3;
+    const numberOfDocuments = results.length;
 
     for (let i = 0; i < numberOfDocuments; i += 1) {
       lsh.addDocument(i, documents[i])
@@ -280,16 +280,17 @@ exports.getAuctions = (req, res, next) => {
 }
 
 exports.getRecommendations = (req, res, next) => {
-  console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   const userId = req.params.userId;
-  console.log(userId,' ti egine edw re');
   Users.findOne({_id: userId}). then( user => {
+    let textToCheck;
+    let ids = [];
+    if(user.lastBiddedIds != '') {textToCheck = user.lastBidded; ids = user.lastBiddedIds}
+    else {textToCheck = user.lastVisited; ids = user.lastVisitedIds}
     const q = {
       //id: 1,
-      text: user.lastVisited,
+      text: textToCheck,
       bucketSize: 6
     }
-    console.log(user);
     if(user.lastVisited !== '') {
       const result = lsh.query(q)
 
@@ -298,12 +299,11 @@ exports.getRecommendations = (req, res, next) => {
       let s = 0;
       for( let i = 0; i < result.length; i++) {
         if (s == 4) {break;}
-        if(!user.lastVisitedIds.includes(auctions[result[i]]._id)) {
+        if(!ids.includes(auctions[result[i]]._id)) {
           recommendations.push(auctions[result[i]]);
           s++;
         }
       }
-      console.log('eeeegw gamhthika gia sena');
      return res.status(200).json({
         message: 'got recommendations',
         recommendations: recommendations

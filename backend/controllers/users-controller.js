@@ -91,7 +91,7 @@ exports.newUser =  (req, res, next) => {
     });
 }
 
-stopwords = ['amount','bid','Paypal','seller','information','contact','ebay','Ebay','i','me','my','myself','we','our','ours','ourselves','you','your','yours','yourself','yourselves','he','him','his','himself','she','her','hers','herself','it','its','itself','they','them','their','theirs','themselves','what','which','who','whom','this','that','these','those','am','is','are','was','were','be','been','being','have','has','had','having','do','does','did','doing','a','an','the','and','but','if','or','because','as','until','while','of','at','by','for','with','about','against','between','into','through','during','before','after','above','below','to','from','up','down','in','out','on','off','over','under','again','further','then','once','here','there','when','where','why','how','all','any','both','each','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','s','t','can','will','just','don','should','now']
+stopwords = ['information','INFORMATION','contact','CONTACT','PAYPAL','paypal','winner','WINNER','bidder','BIDDER','PAID','EBAY','amount','bid','Paypal','seller','information','contact','ebay','Ebay','i','me','my','myself','we','our','ours','ourselves','you','your','yours','yourself','yourselves','he','him','his','himself','she','her','hers','herself','it','its','itself','they','them','their','theirs','themselves','what','which','who','whom','this','that','these','those','am','is','are','was','were','be','been','being','have','has','had','having','do','does','did','doing','a','an','the','and','but','if','or','because','as','until','while','of','at','by','for','with','about','against','between','into','through','during','before','after','above','below','to','from','up','down','in','out','on','off','over','under','again','further','then','once','here','there','when','where','why','how','all','any','both','each','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','s','t','can','will','just','don','should','now']
 function remove_stopwords(str) {
   res = []
   words = str.split(' ')
@@ -105,7 +105,7 @@ function remove_stopwords(str) {
 
 
 exports.userVisited = (req, res, next) => {
-  console.log(req.body);
+  //console.log(req.body);
   const userId = req.params.userId;
   let textToAdd = req.body.textToAdd;
   let auctionId = req.body.auctionId;
@@ -119,17 +119,47 @@ exports.userVisited = (req, res, next) => {
           userVisited = userVisited.slice(cutAt + 3);
           cutAt = userVisitedIds.indexOf('>');
           userVisitedIds = userVisitedIds.slice(cutAt +1);
-          console.log('ekopsa erapsa')
         }
         textToAdd = userVisited + textToAdd;
         textToAdd = remove_stopwords(textToAdd);
-        console.log(textToAdd);
+        //console.log(textToAdd);
         userVisitedIds = userVisitedIds+'>'+auctionId;
         Users.findOneAndUpdate({_id: userId}, {lastVisited: textToAdd, lastVisitedIds: userVisitedIds})
           .then(result => {
             // console.log(result);
             res.status(200).json({
               message: 'updated userVisited: ' + textToAdd
+            });
+          })
+      }
+    })
+}
+
+exports.userBidded = (req, res, next) => {
+  //console.log(req.body);
+  const userId = req.params.userId;
+  let textToAdd = req.body.textToAdd;
+  let auctionId = req.body.auctionId;
+  Users.findOne({_id: userId})
+    .then(user => {
+      if(user) {
+        let userBidded = user.lastBidded;
+        let userBiddedIds = user.lastBiddedIds;
+        if(userBidded.length > 100000) {
+          let cutAt = userBidded.indexOf('^e^');
+          userBidded = userBidded.slice(cutAt + 3);
+          cutAt = userBiddedIds.indexOf('>');
+          userBiddedIds = userBiddedIds.slice(cutAt +1);
+        }
+        textToAdd = userBidded + textToAdd;
+        textToAdd = remove_stopwords(textToAdd);
+        //console.log(textToAdd);
+        userBiddedIds = userBiddedIds+'>'+auctionId;
+        Users.findOneAndUpdate({_id: userId}, {lastBidded: textToAdd, lastBiddedIds: userBiddedIds})
+          .then(result => {
+            // console.log(result);
+            res.status(200).json({
+              message: 'updated userBidded: ' + textToAdd
             });
           })
       }

@@ -21,7 +21,9 @@ const userSchema = mongoose.Schema({
   buyerRatingVotes: {type: Number, default: 0},
   verified: {type: Boolean, required: true},
   lastVisitedIds: {type: String, default: ''},
-  lastVisited: {type: String, default: ''}
+  lastVisited: {type: String, default: ''},
+  lastBiddedIds: {type: String, default: ''},
+  lastBidded: {type: String, default: ''}
 });
 
 userSchema.plugin(uniqueValidator);

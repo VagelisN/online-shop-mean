@@ -104,6 +104,22 @@ export class AuthenticationService {
         });
   }
 
+  addToBidded(userId: string, auction: Auctions) {
+    let textToAdd = '';
+    textToAdd += auction.name + ' ' + auction.description + ' ';
+    for (let i = 0; i < auction.categoryNames.length; i ++) {
+      if ( i < auction.categoryNames.length - 1) {
+        textToAdd += auction.categoryNames[i] + ' ';
+      } else {
+        textToAdd += auction.categoryNames[i] + ' ^e^';
+      }
+    }
+    this.http.post('http://localhost:3000/users/bidded/' + userId, {textToAdd, auctionId: auction.id})
+        .subscribe(res => {
+          console.log(res);
+        });
+  }
+
   handleError(error) {
     this.errorTextSub.next(error);
     if (

@@ -100,7 +100,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
               this.categoryNames += ' -> ';
             }
           }
-          console.log(this.auction);
           const userId = this.authenticationService.getLoggedUserId();
           if (userId) {
             this.authenticationService.addToVisited(userId, this.auction);
@@ -127,12 +126,12 @@ export class AuctionListComponent implements OnInit, OnDestroy {
           });
           const userId = this.authenticationService.getLoggedUserId();
           if (userId) {
-            console.log('egineeeeeeee');
             this.auctionsService.getRecommendations(userId);
             this.recommendationsSub = this.auctionsService.getRecommendationUpdateListener()
               .subscribe((recom: {recommendations: Auctions[]}) => {
-                this.recommendations = recom.recommendations;
-                console.log(this.recommendations, 'GAMHSE MAS RE ');
+                if ( recom.recommendations) {
+                  this.recommendations = recom.recommendations;
+                }
               });
           }
         }
@@ -204,6 +203,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
         const userId = this.authenticationService.getLoggedUserId();
         this.bidErrorMessage = null;
         this.auctionsService.submitBid(this.auction.id, userId, this.bidValue);
+        this.authenticationService.addToBidded(userId, this.auction);
       } else {
         this.bidValue = null;
         this.bidErrorMessage = null;

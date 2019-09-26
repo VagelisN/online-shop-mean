@@ -10,4 +10,6 @@ router.post('/login', controller.loginUser);
 
 router.post('/visited/:userId', controller.userVisited);
 
+router.post('/bidded/:userId', controller.userBidded);
+
 module.exports = router;
