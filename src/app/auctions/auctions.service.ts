@@ -22,7 +22,7 @@ export class AuctionsService {
     const queryParams = `?pageSize=${pageSize}&currentPage=${currentPage}`;
     // console.log('in getAuctions() pagesize and currentpage: ', pageSize, currentPage);
     this.http.get<{message: string, auctions: any, maxAuctions: number}>(
-      'http://localhost:3000/auctions' + queryParams
+      'https://localhost:3000/auctions' + queryParams
     )
     .pipe(
       map(auctionData => {
@@ -57,7 +57,7 @@ export class AuctionsService {
 
   getRecommendations(userId: string) {
     this.http.get<{message: string, recommendations: any}>(
-      'http://localhost:3000/auctions/rec/' + userId
+      'https://localhost:3000/auctions/rec/' + userId
     )
     .pipe(
       map(recommendationData => {
@@ -144,7 +144,7 @@ export class AuctionsService {
         location: string,
         country: string
       }]
-    }>('http://localhost:3000/auctions/get/' + id);
+    }>('https://localhost:3000/auctions/get/' + id);
   }
 
   addAuction(tname: string, tdescription: string, tcountry: string,
@@ -172,7 +172,7 @@ export class AuctionsService {
                      auctionId: string,
                      imagePath: string,
                      sellerRating: string}>
-                     ('http://localhost:3000/auctions/create', auctionData )
+                     ('https://localhost:3000/auctions/create', auctionData )
      .subscribe( (responseData) => {
         this.router.navigate(['/']);
      });
@@ -200,20 +200,20 @@ export class AuctionsService {
       sellerRating: '',
       bids: null
     };
-    this.http.put('http://localhost:3000/auctions/' + tid, auction)
+    this.http.put('https://localhost:3000/auctions/' + tid, auction)
     .subscribe(response => {
       this.router.navigate(['/']);
     });
   }
 
   deleteAuction(auctionId: string) {
-    this.http.delete('http://localhost:3000/auctions/' + auctionId).subscribe( res => {
+    this.http.delete('https://localhost:3000/auctions/' + auctionId).subscribe( res => {
       this.router.navigate(['/']);
     });
   }
 
   startAuction(auctionId: string) {
-    this.http.patch<{message: string}>('http://localhost:3000/auctions/start/' + auctionId, '')
+    this.http.patch<{message: string}>('https://localhost:3000/auctions/start/' + auctionId, '')
     .subscribe((res) => {
       console.log(res.message);
       this.router.navigate(['/auction/' + auctionId])
@@ -228,7 +228,7 @@ export class AuctionsService {
       id: userId,
       bid: tbid
     };
-    this.http.patch<{message: string}>('http://localhost:3000/auctions/bid/' + auctionId, bid)
+    this.http.patch<{message: string}>('https://localhost:3000/auctions/bid/' + auctionId, bid)
     .subscribe((res) => {
       console.log(res.message);
       this.router.navigate(['/']);
@@ -243,7 +243,7 @@ export class AuctionsService {
     console.log(tminPrice, tmaxPrice, tsearchValue, currentPage, pageSize, catId);
     console.log('Sending the request to the backend');
     this.http.get<{message: string, auctions: any, auctionCount: number}>
-      ('http://localhost:3000/auctions/search' + searchParams)
+      ('https://localhost:3000/auctions/search' + searchParams)
       .pipe(
         map(auctionData => {
           return { auctions: auctionData.auctions.map(auction => {
@@ -290,13 +290,13 @@ export class AuctionsService {
 
   getCategories(parentId: string) {
     return this.http.get<{message: string, categories: any}>(
-      'http://localhost:3000/auctions/categories/' + parentId
+      'https://localhost:3000/auctions/categories/' + parentId
     );
   }
 
   findPath(id: string) {
     this.http.get<{message: string, path: [{id: string, name: string}]}>(
-      'http://localhost:3000/auctions/categories/path/' + id
+      'https://localhost:3000/auctions/categories/path/' + id
     ).subscribe( res => {
       const path = res.path;
       this.pathSub.next(path);
@@ -306,7 +306,7 @@ export class AuctionsService {
   // These functions are used for the path /user/auctions so a user can manage his auctions.
   getUserAuctions(userId) {
     this.http.get<{message: string, auctions: any}>(
-      'http://localhost:3000/auctions/user/' + userId
+      'https://localhost:3000/auctions/user/' + userId
     )
     .pipe(
       map(auctionData => {
@@ -343,7 +343,7 @@ export class AuctionsService {
   }
 
   rateUser(trating, ttype, userId) {
-    this.http.patch<{message: string}>('http://localhost:3000/auctions/rate/' + userId,
+    this.http.patch<{message: string}>('https://localhost:3000/auctions/rate/' + userId,
      {rating: trating,
       type: ttype})
     .subscribe((res) => {

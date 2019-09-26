@@ -22,7 +22,7 @@ export class AdministrationService {
     this.pendingUsers = [];
     // console.log('In getAuctions() !');
     this.http.get<{message: string, users: any}>(
-      'http://localhost:3000/admin'
+      'https://localhost:3000/admin'
     )
     .subscribe((res) => {
       let i = 0;
@@ -54,11 +54,11 @@ export class AdministrationService {
     return this.http.get<{
       message: string,
       user: UserModel
-    }>('http://localhost:3000/admin/' + username);
+    }>('https://localhost:3000/admin/' + username);
   }
 
   verifyUser(tusername: string) {
-    this.http.post<{message: string}>('http://localhost:3000/admin/', {username: tusername})
+    this.http.post<{message: string}>('https://localhost:3000/admin/', {username: tusername})
       .subscribe(res => {
         this.router.navigate(['/admin']);
       });
@@ -66,7 +66,7 @@ export class AdministrationService {
 
 
   extractAuction(type: string, auctionId: string ) {
-    this.http.post<{message: string, extractedAuction: string}>('http://localhost:3000/admin/extract', {type, auctionId})
+    this.http.post<{message: string, extractedAuction: string}>('https://localhost:3000/admin/extract', {type, auctionId})
       .subscribe(res => {
         console.log(res);
         const blob = new Blob([res.extractedAuction], { type: 'text/plain' });
@@ -79,7 +79,7 @@ export class AdministrationService {
   }
 
   extractAllAuctions(username: string, type: string) {
-    this.http.post<{message: string, extractedAuctions: string}>('http://localhost:3000/admin/extract-all', {type, username})
+    this.http.post<{message: string, extractedAuctions: string}>('https://localhost:3000/admin/extract-all', {type, username})
       .subscribe(res => {
         console.log(res);
         const blob = new Blob([res.extractedAuctions], { type: 'text/plain' });
