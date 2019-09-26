@@ -358,10 +358,10 @@ exports.searchAuctions = (req, res, next) => {
   console.log('Category id: ', catId);
   console.log('Slider values:', minValue, maxValue);
   let auctionQuery = Auction.find();
-  if (isNaN(minValue) && isNaN(maxValue)) {
+  if ((isNaN(minValue) && isNaN(maxValue)) || (minValue == null && maxValue == null)) {
     // Case where price range is max
-    if (searchValue === '') {
-      if (catId === 'null') {
+    if (searchValue === '' || searchValue == null) {
+      if (catId === 'null' || catId == null) {
         // Create a query with only price check
         auctionQuery = Auction.find();
       } else {
@@ -372,7 +372,7 @@ exports.searchAuctions = (req, res, next) => {
         });
       }
     } else {
-      if (catId === 'null') {
+      if (catId === 'null' || catId == null) {
         // Create a query with searchValue and price check
         console.log('Kalispera sas.');
         console.log(searchValue);
@@ -387,7 +387,7 @@ exports.searchAuctions = (req, res, next) => {
         });
       }
     }
-  } else if (isNaN(minValue)) {
+  } else if (isNaN(minValue) || minValue == null) {
     // Case where the minValue is 0
     if (searchValue === '') {
       if (catId === 'null') {
@@ -403,7 +403,7 @@ exports.searchAuctions = (req, res, next) => {
         });
       }
     } else {
-      if (catId === 'null') {
+      if (catId === 'null' || catId == null) {
         // Create a query with searchValue and price check
         auctionQuery = Auction.find({
           $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}],
@@ -420,8 +420,8 @@ exports.searchAuctions = (req, res, next) => {
     }
   } else {
     // Case where maxValue is max
-    if (searchValue === '') {
-      if (catId === 'null') {
+    if (searchValue === '' || searchValue == null) {
+      if (catId === 'null' || catId == null) {
         // Create a query with only price check
         auctionQuery = Auction.find({
           $or: [{buyPrice: { $gt: minValue }}, {buyPrice: null}]
@@ -434,7 +434,7 @@ exports.searchAuctions = (req, res, next) => {
         });
       }
     } else {
-      if (catId === 'null') {
+      if (catId === 'null' || catId == null) {
         // Create a query with searchValue and price check
         auctionQuery = Auction.find({
           $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}],
