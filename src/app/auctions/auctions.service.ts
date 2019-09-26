@@ -59,31 +59,35 @@ export class AuctionsService {
       'http://localhost:3000/auctions/rec/' + userId
     )
     .pipe(
-      map(auctionData => {
-      return { recommendations: auctionData.recommendations.map(recom => {
-        return {
-          name: recom.name,
-          description: recom.description,
-          country: recom.country,
-          categoriesId: recom.categoriesId,
-          categoryNames: recom.catNameArray,
-          buyPrice: recom.buyPrice,
-          id: recom._id,
-          image: recom.image,
-          highestBid: recom.highestBid,
-          startDate: recom.startDate,
-          endDate: recom.endDate,
-          latitude: parseFloat(recom.latitude),
-          longitude: parseFloat(recom.longitude),
-          address: recom.address,
-          sellerRating: recom.sellerRating
-        };
-      })};
+      map(recommendationData => {
+        if (!recommendationData.recommendations) {
+          return;
+        }
+        return { recommendations: recommendationData.recommendations.map(recom => {
+          return {
+            name: recom.name,
+            description: recom.description,
+            country: recom.country,
+            categoriesId: recom.categoriesId,
+            categoryNames: recom.catNameArray,
+            buyPrice: recom.buyPrice,
+            id: recom._id,
+            image: recom.image,
+            highestBid: recom.highestBid,
+            startDate: recom.startDate,
+            endDate: recom.endDate,
+            latitude: parseFloat(recom.latitude),
+            longitude: parseFloat(recom.longitude),
+            address: recom.address,
+            sellerRating: recom.sellerRating
+          };
+        })};
     }))
     .subscribe((transformedRecommendationData) => {
-      this.recommendations = transformedRecommendationData.recommendations;
-      console.log(this.recommendations, 'EXW NA KANE TOSA ALLA ');
-      this.recommendationsUpdated.next({ recommendations: [...this.recommendations] });
+      if (transformedRecommendationData) {
+        this.recommendations = transformedRecommendationData.recommendations;
+        this.recommendationsUpdated.next({ recommendations: [...this.recommendations] });
+      }
     });
   }
 
