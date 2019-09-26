@@ -1,6 +1,29 @@
-
 <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+
+
   <div fxLayout="row warp" fxLayoutAlign="center stretch">
+    <div class="search-bar" *ngIf="!isLoading && getMode()" fxFlex="100" style="padding-bottom: 1rem;">
+        <ng5-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" [options]="sliderOptions"></ng5-slider>
+        <input mat-input type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
+        <button mat-stroked-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.searchCategoryName}}</button>
+        <mat-menu #firstLevelCategories="matMenu">
+        <button
+          mat-menu-item
+          *ngFor="let category of categories"
+          (click)="onSearchCategoryChosen(category._id, category.name)">
+          <span style="font-size: 17px;">
+            {{category.name}}
+          </span>
+          </button>
+        </mat-menu>
+        <button mat-raised-button (click)="onSearchSubmit()" style="margin-left: 5px;">
+          <i class="material-icons">
+            search
+          </i>
+        </button>
+    </div>
+
     <div fxFlex="20" *ngIf="!isLoading" style="border-right: 1px solid black; border-bottom: 1px solid black">
         <button
           mat-menu-item
@@ -62,10 +85,6 @@
 
   <!-- If we need to show just one auction. -->
   <div fxLayout="row warp" *ngIf="!getMode() && !isLoading">
-    <div *ngIf="username === 'admin'" style="margin-top: 16px;"fxFlex="100" fxLayout="row" fxLayoutAlign ="center center " fxLayoutGap="0.5%">
-      <button mat-raised-button color="accent" (click)="onExtract('XML', auction.id)"> Extract as XML</button>
-      <button mat-raised-button color="accent" (click)="onExtract('JSON', auction.id)"> Extract as JSON</button>
-    </div>
       <h2 style="text-align: center;"fxFlex="100">{{ auction.name }}</h2>
       <div fxFlex="35">
           <img [src]="this.auction.image" [alt]="this.auction.name">
@@ -123,7 +142,7 @@
               <button mat-button color="warn" (click)="onDelete(this.auction.id)">Delete auction</button>
             </div>
           </div>
+          <button mat-button (click)="onExtract('XML', auction.id)">Extract as XML</button>
+          <button mat-button (click)="onExtract('JSON', auction.id)">Extract as JSON</button>
       </div>
   </div>
-
-
