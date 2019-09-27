@@ -97,10 +97,10 @@ export class AuthenticationService {
         textToAdd += auction.categoryNames[i] + ' ^e^';
       }
     }
-    console.log(textToAdd);
+    // console.log(textToAdd);
     this.http.post('https://localhost:3000/users/visited/' + userId, {textToAdd, auctionId: auction.id})
         .subscribe(res => {
-          console.log(res);
+          // console.log(res);
         });
   }
 

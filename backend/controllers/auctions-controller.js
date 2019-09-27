@@ -134,7 +134,7 @@ function remove_stopwords(str) {
 let lsh;
 documents= [];
 auctions = [];
-cron.schedule("015 * * * *", () => {
+cron.schedule("09 * * * *", () => {
   console.log("Re training LSH model")
 
   Auction.find().then(results => {

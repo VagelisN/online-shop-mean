@@ -87,6 +87,7 @@ export class AuctionsService {
     .subscribe((transformedRecommendationData) => {
       if (transformedRecommendationData) {
         this.recommendations = transformedRecommendationData.recommendations;
+        console.log('ela m,po ueiansid ', this.recommendations);
         this.recommendationsUpdated.next({ recommendations: [...this.recommendations] });
       }
     });

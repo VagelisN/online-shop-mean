@@ -21,9 +21,9 @@
                 {{user.username}}
               </div>
               <div fxFlex="85"fxLayout="row" fxLayoutAlign = "space-around center">
-                  <a fxFlex="10" mat-raised-button color="accent" [routerLink] = "['/userinfo',user.username]">See details</a>
-                  <button fxFlex="20" type="button" mat-raised-button color="accent" (click)="onExtractAll(user.username, 'XML')">Exctract Auctions as XML</button>
-                  <button fxFlex="20" type="button" mat-raised-button color="accent" (click)="onExtractAll(user.username, 'JSON')">Exctract Auctions as JSON</button>
+                  <div fxFlex="10"><a  mat-raised-button color="accent" [routerLink] = "['/userinfo',user.username]">See details</a> </div>
+                  <div fxFlex="20"><button  type="button" mat-raised-button color="accent" (click)="onExtractAll(user.username, 'XML')">Exctract Auctions as XML</button></div>
+                  <div fxFlex="20"><button  type="button" mat-raised-button color="accent" (click)="onExtractAll(user.username, 'JSON')">Exctract Auctions as JSON</button> </div>
               </div>
 
             </mat-card>

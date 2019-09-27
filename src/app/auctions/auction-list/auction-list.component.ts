@@ -27,6 +27,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   searchValue = '';
   bidErrorMessage = null;
   categoryNames = null;
+  username = '';
 
   categoryChosen = null;
   categoryChosenName = null;
@@ -102,6 +103,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
           }
           console.log(this.auction);
           const userId = this.authenticationService.getLoggedUserId();
+          this.username = this.authenticationService.getUsername();
           if (userId) {
             this.authenticationService.addToVisited(userId, this.auction);
           }
@@ -131,6 +133,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
             this.auctionsService.getRecommendations(userId);
             this.recommendationsSub = this.auctionsService.getRecommendationUpdateListener()
               .subscribe((recom: {recommendations: Auctions[]}) => {
+                console.log('peh0');
                 this.recommendations = recom.recommendations;
                 console.log(this.recommendations, 'GAMHSE MAS RE ');
               });
