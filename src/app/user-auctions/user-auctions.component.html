@@ -1,8 +1,13 @@
 <mat-spinner *ngIf="this.isLoading"></mat-spinner>
 
+<div fxLayout="row" fxLayoutAlign="center start">
+  <button mat-raised-button fxFlex="25" (click)="onActiveAuctions()">Active auctions</button>
+  <button mat-raised-button fxFlex="25" (click)="onFinishedAuctions()">Finished auctions</button>
+</div>
+
 <!-- If the button active bids is pressed -->
 <mat-accordion *ngIf="!this.isLoading">
-  <h3>Your auctions:</h3>
+  <h3>Your {{this.mode}} auctions:</h3>
   <mat-expansion-panel *ngFor="let auction of auctions">
     <mat-expansion-panel-header>
       <h4>{{auction.name}}</h4>

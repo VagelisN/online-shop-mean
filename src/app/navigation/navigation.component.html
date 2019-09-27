@@ -9,6 +9,7 @@
       <a fxFlex="50" mat-button *ngIf="!userAuthenticated" routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>
       <a fxFlex="50" mat-button *ngIf="!userAuthenticated" routerLink = "/login" routerLinkActive= "mat-accent ">Login</a>
       <div>
+        <a mat-button *ngIf="userAuthenticated && username !== 'admin'" [routerLink]="'/user/auctions'">Your auctions</a>
         <a mat-button *ngIf="userAuthenticated && username !== 'admin'" routerLink = "/auction/create">Create an auction</a>
         <a mat-button *ngIf="userAuthenticated && username === 'admin'" routerLink = "/admin">User List</a>
         <a mat-button *ngIf="userAuthenticated && username !== 'admin'" routerLink = "/user/messages">

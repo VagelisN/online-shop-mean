@@ -10,6 +10,7 @@ import { AuctionsService } from '../auctions/auctions.service';
   styleUrls: ['./user-auctions.component.css']
 })
 export class UserAuctionsComponent implements OnInit {
+  mode = 'active';
   isLoading = false;
   auctions: Auctions[] = [];
   userId = this.authenticationService.getLoggedUserId();
@@ -19,11 +20,12 @@ export class UserAuctionsComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    this.auctionsService.getUserAuctions(this.userId);
+    this.mode = 'active';
+    this.auctionsService.getUserActiveAuctions(this.userId);
     this.auctionsSub = this.auctionsService.getUserAuctionsUpdateListener()
       .subscribe((fetchedAuctions: Auctions[]) => {
-        this.isLoading = false;
         this.auctions = fetchedAuctions;
+        this.isLoading = false;
       });
   }
 
@@ -34,7 +36,8 @@ export class UserAuctionsComponent implements OnInit {
   onDelete(auctionId: string) {
     this.isLoading = true;
     this.auctionsService.deleteAuction(auctionId);
-    this.auctionsService.getUserAuctions(this.userId);
+    this.mode = 'active';
+    this.auctionsService.getUserActiveAuctions(this.userId);
   }
 
   onStart(auctionId: string) {
@@ -43,6 +46,28 @@ export class UserAuctionsComponent implements OnInit {
 
   toNumber(str: string) {
     return parseFloat(str);
+  }
+
+  onFinishedAuctions() {
+    this.isLoading = true;
+    this.mode = 'finished';
+    this.auctionsService.getUserFinishedAuctions(this.userId);
+    this.auctionsSub = this.auctionsService.getUserAuctionsUpdateListener()
+      .subscribe((fetchedAuctions: Auctions[]) => {
+        this.auctions = fetchedAuctions;
+        this.isLoading = false;
+      });
+  }
+
+  onActiveAuctions() {
+    this.isLoading = true;
+    this.mode = 'active';
+    this.auctionsService.getUserActiveAuctions(this.userId);
+    this.auctionsSub = this.auctionsService.getUserAuctionsUpdateListener()
+      .subscribe((fetchedAuctions: Auctions[]) => {
+        this.auctions = fetchedAuctions;
+        this.isLoading = false;
+      });
   }
 
 }
