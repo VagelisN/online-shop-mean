@@ -93,7 +93,12 @@ cron.schedule("00 00 01 * *", () => {
   Auction.find().then(documents => {
     for (let index = 0; index < documents.length; index++) {
       const auction = documents[index];
-      checkIfEnded(auction);
+      if (checkIfEnded(auction)) {
+        auction.isFinished = true;
+        auction.save().then(() => {
+          console.log('Auction marked as finished succesfully.')
+        })
+      }
     }
   });
 })
@@ -235,11 +240,11 @@ exports.createAuction =  (req, res, next) => {
   })
 };
 
-
+// Returns only active auctions
 exports.getUserAuctions = (req, res, next) => {
   const userId = req.params.id;
   // Search the auctions collection with sellerId = userId
-  Auction.find({sellerId: userId})
+  Auction.find({sellerId: userId, isFinished: false})
   .then(documents => {
     res.status(200).json({
       message: 'Auctions fetched succesfully.',
@@ -254,7 +259,7 @@ exports.getAuctions = (req, res, next) => {
   const pageSize = +req.query.pageSize;
   const currentPage = +req.query.currentPage;
   let fetchedAuctions;
-  const auctionQuery = Auction.find();
+  const auctionQuery = Auction.find({isFinished: false});
   if (pageSize && currentPage) {
     auctionQuery
     .skip(pageSize * (currentPage - 1))
@@ -318,33 +323,6 @@ exports.getRecommendations = (req, res, next) => {
     })
 }
 
-function checkCategory(auction, catId) {
-  if (catId !== 'null') {
-    if (auction.categoriesId.includes(catId)) {
-      console.log('----------------');
-      console.log('Auction category: ', auction.categoriesId);
-      console.log('catId: ', catId);
-      console.log('---------------');
-      return true;
-    }
-    console.log('Returning false');
-    return false;
-  } else {
-    return true;
-  }
-}
-
-function checkPrice(auction, sliderMinValue, sliderMaxValue, catId) {
-  if (auction.buyPrice !== null) {
-    if (parseFloat(auction.buyPrice) > sliderMinValue
-        && parseFloat(auction.buyPrice) < sliderMaxValue) {
-      //console.log('Passed price check' );
-      return checkCategory(auction, catId);
-    }
-    } else {
-      return checkCategory(auction, catId);
-    }
-}
 
 exports.searchAuctions = (req, res, next) => {
   const pageSize = +req.query.pageSize;
@@ -363,11 +341,12 @@ exports.searchAuctions = (req, res, next) => {
     if (searchValue === '' || searchValue == null) {
       if (catId === 'null' || catId == null) {
         // Create a query with only price check
-        auctionQuery = Auction.find();
+        auctionQuery = Auction.find({isFinished: false});
       } else {
         // Create a create with price check and category check
         console.log('Category only check');
         auctionQuery = Auction.find({
+          isFinished: false,
           categoriesId: {$regex: catId },
         });
       }
@@ -377,11 +356,13 @@ exports.searchAuctions = (req, res, next) => {
         console.log('Kalispera sas.');
         console.log(searchValue);
         auctionQuery = Auction.find({
+          isFinished: false,
           $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}]
         });
       } else {
         // Create a query with all checks
         auctionQuery = Auction.find({
+          isFinished: false,
           categoriesId: {$regex: catId },
           $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}]
         });
@@ -393,11 +374,13 @@ exports.searchAuctions = (req, res, next) => {
       if (catId === 'null' || catId == null) {
         // Create a query with only price check
         auctionQuery = Auction.find({
+          isFinished: false,
           $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
         });
       } else {
         // Create a create with price check and category check
         auctionQuery = Auction.find({
+          isFinished: false,
           categoriesId: {$regex: catId },
           $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
         });
@@ -406,12 +389,14 @@ exports.searchAuctions = (req, res, next) => {
       if (catId === 'null' || catId == null) {
         // Create a query with searchValue and price check
         auctionQuery = Auction.find({
+          isFinished: false,
           $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}],
           $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
         });
       } else {
         // Create a query with all checks
         auctionQuery = Auction.find({
+          isFinished: false,
           categoriesId: {$regex: catId },
           $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}],
           $or: [{ buyPrice: { $lt: maxValue }}, {buyPrice: null}]
@@ -424,11 +409,13 @@ exports.searchAuctions = (req, res, next) => {
       if (catId === 'null' || catId == null) {
         // Create a query with only price check
         auctionQuery = Auction.find({
+          isFinished: false,
           $or: [{buyPrice: { $gt: minValue }}, {buyPrice: null}]
         });
       } else {
         // Create a create with price check and category check
         auctionQuery = Auction.find({
+          isFinished: false,
           categoriesId: {$regex: catId },
           $or: [{buyPrice: { $gt: minValue }}, {buyPrice: null}]
         });
@@ -437,12 +424,14 @@ exports.searchAuctions = (req, res, next) => {
       if (catId === 'null' || catId == null) {
         // Create a query with searchValue and price check
         auctionQuery = Auction.find({
+          isFinished: false,
           $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}],
           $or: [{ buyPrice: { $gt: minValue }}, {buyPrice: null}]
         });
       } else {
         // Create a query with all checks
         auctionQuery = Auction.find({
+          isFinished: false,
           categoriesId: {$regex: catId },
           $or: [{ name: {$regex: searchValue, $options: 'i'}} , {description: {$regex: searchValue, $options: 'i'}}, {address: {$regex: searchValue, $options: 'i'}}],
           $or: [{ buyPrice: { $gt: minValue }}, {buyPrice: null}]
@@ -508,29 +497,27 @@ exports.startAuction = (req, res, next) => {
   console.log("in router.patch!");
   Auction.findById(req.params.id).then(auction => {
     if (auction.startDate === null) {
-
       // Check whether the endDate has passed
-      const endDate = new Date(auction.endDate);
-      var today = new Date();
-      if (today < endDate) {
-        auction.startDate = today;
+      if (checkIfEnded(auction)) {
+        auction.isFinished = true;
+        auction.save().then(() => {
+          console.log("endDate has passed. Cannot start auction now.");
+          res.status(500).json({
+            message: "Auction cannot be started now. endDate has passed."
+          });
+        })
+      } else {
+        auction.startDate = new Date();
         auction.save().then(() => {
           res.status(201).json({
             message: "Auction started succesfully."
           });
         })
-      } else {
-        console.log("endDate has passed. Cannot start auction now.");
-        // I should delete the auction now.
-        res.status(500).json({
-          message: "Auction cannot be started now. endDate has passed."
-        });
       }
-
     } else {
       console.log("StartDate is not null.");
       // If the auction has already started return a corresponding message
-      res.starus(404).json({
+      res.starus(200).json({
         message: "Auction has already been started."
       });
     }
@@ -553,8 +540,11 @@ exports.bidAuction = (req, res, next) => {
     // Check if the auction has ended.
     if (checkIfEnded(auction)) {
       // checkIfEnded returns true if the auction has ended.
-      res.status(500).json({
-        message: 'Cannot bid, because the auction has ended.'
+      auction.isFinished = true;
+      auction.save().then(() => {
+        res.status(500).json({
+          message: 'Cannot bid, because the auction has ended.'
+        });
       });
     }
     // Create a bid schema and add it
@@ -590,10 +580,13 @@ exports.bidAuction = (req, res, next) => {
           // Check if the bid is higher than the buyPrice
           if (auction.buyPrice) {
             if (parseFloat(req.body.bid) >= parseFloat(auction.buyPrice)) {
+              auction.isFinished = true;
               sendAuctionMessages(auction, req.body.id);
-              res.status(200).json({
-                message: 'Your bid has been submitted succesfully. It\'s higher than the buyPrice so you win!'
-              })
+              auction.save().then(() => {
+                res.status(200).json({
+                  message: 'Your bid has been submitted succesfully. It\'s higher than the buyPrice so you win!'
+                });
+              });
             }
           }
         } else {
@@ -701,4 +694,14 @@ exports.rateUser = (req, res, next) => {
       message: 'User was not found'
     })
   })
+}
+
+exports.getUserFinishedAuctions = (req, res, next) => {
+  const userId = req.params.id;
+  Auction.find({sellerId: userId, isFinished: true}).then(auctions => {
+    res.status(200).json({
+      message: 'Finished auctions fetched succesfully',
+      auctions
+    });
+  });
 }

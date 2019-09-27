@@ -283,9 +283,6 @@ export class AuctionsService {
                                       currentPage,
                                       pageSize };
         this.router.navigate(['/'], { queryParams });
-        /*.then(() => {
-          window.location.reload();
-        });*/
       });
   }
 
@@ -305,9 +302,43 @@ export class AuctionsService {
   }
 
   // These functions are used for the path /user/auctions so a user can manage his auctions.
-  getUserAuctions(userId) {
+  getUserActiveAuctions(userId) {
     this.http.get<{message: string, auctions: any}>(
       'https://localhost:3000/auctions/user/' + userId
+    )
+    .pipe(
+      map(auctionData => {
+      return { auctions: auctionData.auctions.map(auction => {
+        return {
+          name: auction.name,
+          description: auction.description,
+          country: auction.country,
+          category: auction.category,
+          buyPrice: auction.buyPrice,
+          id: auction._id,
+          image: auction.image,
+          highestBid: auction.highestBid,
+          startDate: auction.startDate,
+          endDate: auction.endDate,
+          latitude: parseFloat(auction.latitude),
+          longitude: parseFloat(auction.longitude),
+          address: auction.address,
+          sellerRating: auction.sellerRating,
+          bids: auction.bids,
+          sellerId: auction.sellerId
+        };
+      })
+    };
+  }))
+    .subscribe((transformedAuctionData) => {
+      this.auctions = transformedAuctionData.auctions;
+      this.userAuctionsUpdated.next([...this.auctions]);
+    });
+  }
+
+  getUserFinishedAuctions(userId) {
+    this.http.get<{message: string, auctions: any}>(
+      'https://localhost:3000/auctions/user/finished/' + userId
     )
     .pipe(
       map(auctionData => {

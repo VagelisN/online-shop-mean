@@ -30,7 +30,8 @@ const auctionSchema = mongoose.Schema({
   sellerId: {type: String},
   sellerUsername: {type: String},
   sellerRating: {type: Number},
-  address: {type: String}
+  address: {type: String},
+  isFinished: {type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('Auction', auctionSchema);

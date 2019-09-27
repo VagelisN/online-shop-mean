@@ -53,5 +53,7 @@ router.get('/categories/path/:id', controller.getPath);
 
 router.patch('/rate/:id', controller.rateUser);
 
+router.get('/user/finished/:id', controller.getUserFinishedAuctions);
+
 
 module.exports = router;
