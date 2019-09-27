@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Auctions } from '../auction.model';
 import { Subscription } from 'rxjs';
-import { Options } from 'ng5-slider';
+import { Options, LabelType } from 'ng5-slider';
 import { AuctionsService } from '../auctions.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthenticationService } from './../../authentication/authentication.service';
@@ -56,7 +56,17 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   sliderOptions: Options = {
     floor: 0,
     ceil: 2500,
-    step: 25
+    step: 25,
+    translate: (value: number, label: LabelType): string => {
+      switch (label) {
+        case LabelType.Low:
+          return '<b>Min price:</b> $' + value;
+        case LabelType.High:
+          return '<b>Max price:</b> $' + value;
+        default:
+          return '$' + value;
+      }
+    }
   };
 
   private auctionId = null;
@@ -306,18 +316,9 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     console.log(this.categoryChosen);
     console.log(this.categoryChosenName);
     console.log('--------------------');
-    // When the user presses one category call the search
-    let ceiling = this.sliderMaxValue;
-    let floor = this.sliderMinValue;
-    if (ceiling === this.sliderOptions.ceil) {
-      ceiling = null;
-    }
-    if (floor === this.sliderOptions.floor) {
-      floor = null;
-    }
     // If new search query is on then current page = 1
     this.currentPage = 1;
-    this.auctionsService.searchAuctions(floor, ceiling, '', this.currentPage,
+    this.auctionsService.searchAuctions(null, null, '', this.currentPage,
                                         this.auctionsPerPage, this.categoryChosen);
     console.log('Passed searchAuctions()');
     // Update the categories shown in the left
@@ -334,6 +335,10 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       this.totalAuctions = auctionData.auctionCount;
       this.isLoading = false;
     });
+  }
+
+  onBackToTop() {
+    window.scroll(0 , 0);
   }
 
   onSearchCategoryChosen(id: string, name: string) {

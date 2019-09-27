@@ -1,35 +1,7 @@
-ng5-slider {
-  width: 50%;
-  margin: 1rem auto;
-}
+
 
 mat-spinner {
   margin: 2rem auto;
-}
-
-img {
-  width: 100%;
-  height: 100%;
-}
-
-mat-grid-list {
-  margin: 1rem 1rem;
-}
-
-mat-grid-tile {
-  background-color: rgb(182, 220, 255);
-  border-style: ridge;
-}
-
-mat-grid-tile a {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-}
-
-.grid {
-  width: 100%;
-  height: 100%;
 }
 
 .auction-image-all {
@@ -67,43 +39,8 @@ mat-grid-tile a {
   display: inline-block;
 }
 
-.grid-info {
-  width: 100%;
-  height: 100%;
-  margin: 1rem 1rem;
-  background-color: rgb(173, 173, 173);
-  text-align: left;
-}
-
-.grid h3 {
-  text-align: center;
-  font-size: 2rem;
-}
-
-.grid a {
-  width: 30%;
-  height: 2rem;
-  margin: 2rem 5rem;
-  display: block;
-  text-align: center;
-  background-color: rgb(90, 162, 255);
-}
-
-.grid p {
-  margin-left: 1rem;
-}
-
 agm-map {
   height: 300px;
-}
-
-.single-auction {
-  width: 80%;
-  margin: auto;
-}
-
-.single-auction h2 {
-  text-align: center;
 }
 
 .auction-image-single {
