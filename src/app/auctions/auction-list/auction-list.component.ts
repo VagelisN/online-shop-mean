@@ -66,7 +66,24 @@ export class AuctionListComponent implements OnInit, OnDestroy {
         default:
           return '$' + value;
       }
+    },
+    getSelectionBarColor: (value: number): string => {
+      if (value >= 0) {
+        return '#3F51B5';
+      }
+    },
+    getPointerColor: (value: number): string => {
+      if (value >= 0) {
+        return 'grey';
+      }
     }
+  };
+
+  // Slicer variables
+  sliceOptions = {
+    start: 0,
+    end: 400,
+    default: 400
   };
 
   private auctionId = null;
@@ -84,15 +101,12 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      console.log(paramMap);
       // If we have an id on the url, we'll show just one auction
       if (paramMap.has('auctionId')) {
-        console.log('auction-list has id on url.');
         this.mode = 'single';
         this.auctionId = paramMap.get('auctionId');
         this.auctionsService.getSingleAuction(this.auctionId)
         .subscribe(auctionData => {
-          console.log(auctionData);
           this.auction = {
             id: auctionData._id,
             name: auctionData.name,
@@ -119,7 +133,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
               this.categoryNames += ' -> ';
             }
           }
-          console.log(this.auction);
           const userId = this.authenticationService.getLoggedUserId();
           this.username = this.authenticationService.getUsername();
           if (userId) {
@@ -131,12 +144,9 @@ export class AuctionListComponent implements OnInit, OnDestroy {
       } else {
         // If there is not an id in the url we will list all auctions
         // getAuctions() params are from the paginator ( requesting page 1 )
-          console.log('About to call getCategories.');
           this.auctionsService.getCategories(null)
           .subscribe( res => {
-            console.log('getCategories just returned.');
             this.categories = res.categories;
-            console.log(this.categories);
           });
           this.auctionsService.getAuctions(this.auctionsPerPage, this.currentPage);
           this.auctionsSub = this.auctionsService.getAuctionUpdateListener()
@@ -264,8 +274,6 @@ export class AuctionListComponent implements OnInit, OnDestroy {
 
   onSearchSubmit() {
     // Call searchAuctions() from auction.service.ts
-    console.log('onSearchSubmit in auction-list.component');
-    console.log(this.categoryChosen);
     this.isLoading = true;
     this.mode = 'search';
     this.maxPrice = this.sliderMaxValue;
@@ -283,9 +291,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     // Update the categories shown in the left
     this.auctionsService.getCategories(this.searchCategoryChosen)
     .subscribe( res => {
-      console.log('getCategories just returned. 2.0');
       this.categories = res.categories;
-      console.log(this.categories);
     });
     this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
     .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
@@ -307,30 +313,21 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   }
 
   onCategoryChosen(id: string, name: string) {
-    console.log('onCategoryChosen()');
     this.isLoading = true;
     this.mode = 'search';
     this.categoryChosen = id;
     this.categoryChosenName = name;
-    console.log('About to search with these attributes.');
-    console.log(this.categoryChosen);
-    console.log(this.categoryChosenName);
-    console.log('--------------------');
     // If new search query is on then current page = 1
     this.currentPage = 1;
     this.auctionsService.searchAuctions(null, null, '', this.currentPage,
                                         this.auctionsPerPage, this.categoryChosen);
-    console.log('Passed searchAuctions()');
     // Update the categories shown in the left
     this.auctionsService.getCategories(this.categoryChosen)
           .subscribe( res => {
-            console.log('getCategories just returned. 2.0');
             this.categories = res.categories;
-            console.log(this.categories);
           });
     this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
     .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
-      console.log('In subscribe');
       this.auctions = auctionData.auctions;
       this.totalAuctions = auctionData.auctionCount;
       this.isLoading = false;
@@ -344,6 +341,10 @@ export class AuctionListComponent implements OnInit, OnDestroy {
   onSearchCategoryChosen(id: string, name: string) {
     this.searchCategoryChosen = id;
     this.searchCategoryName = name;
+  }
+
+  onExpandText(evt: any): void {
+    this.sliceOptions.end = this.sliceOptions.end ? undefined : this.sliceOptions.default;
   }
 
 }

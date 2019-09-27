@@ -20,7 +20,6 @@ export class AuctionsService {
 
   getAuctions(pageSize, currentPage) {
     const queryParams = `?pageSize=${pageSize}&currentPage=${currentPage}`;
-    // console.log('in getAuctions() pagesize and currentpage: ', pageSize, currentPage);
     this.http.get<{message: string, auctions: any, maxAuctions: number}>(
       'https://localhost:3000/auctions' + queryParams
     )
@@ -87,7 +86,6 @@ export class AuctionsService {
     .subscribe((transformedRecommendationData) => {
       if (transformedRecommendationData) {
         this.recommendations = transformedRecommendationData.recommendations;
-        console.log('ela m,po ueiansid ', this.recommendations);
         this.recommendationsUpdated.next({ recommendations: [...this.recommendations] });
       }
     });
@@ -118,7 +116,6 @@ export class AuctionsService {
   }
 
   getSingleAuction(id: string) {
-    console.log('In getSingleAuction in auctions.service.ts');
     return this.http.get<{
       _id: string,
       name: string,
@@ -165,9 +162,6 @@ export class AuctionsService {
     auctionData.append('address', taddress);
     auctionData.append('sellerId', tsellerId);
 
-    console.log('------------------------');
-    console.log('SellerId in auctionsService: ', auctionData.get('sellerId'));
-    console.log('------------------------');
 
     this.http.post<{ message: string,
                      auctionId: string,
@@ -179,33 +173,33 @@ export class AuctionsService {
      });
   }
 
-  updateAuction(tid: string, tname: string, tdescription: string,
-                tcountry: string, tcategoriesId: string, tcatNameArray: string, tbuyPrice: string,
-                tlat: string, tlong: string, timage: string, tends: string, taddress: string, tsellerId: string) {
-    const auction: Auctions = {
-      id: tid,
-      name: tname,
-      description: tdescription,
-      country: tcountry,
-      buyPrice: tbuyPrice,
-      categoriesId: tcategoriesId,
-      categoryNames: [tcatNameArray],
-      endDate: tends,
-      latitude: tlat,
-      longitude: tlong,
-      image: timage,
-      highestBid: '0',
-      address: taddress,
-      startDate: '',
-      sellerId: tsellerId,
-      sellerRating: '',
-      bids: null
-    };
-    this.http.put('https://localhost:3000/auctions/' + tid, auction)
-    .subscribe(response => {
-      this.router.navigate(['/']);
+  updateAuction(auctionId: string, tname: string, tdescription: string, tcountry: string,
+                tcategoriesId: string, tcatNameArray: string, tbuyPrice: string, tlat: string,
+                tlong: string, image: File, tends: string, taddress: string, tsellerId: string) {
+    const auctionData =   new FormData();
+    auctionData.append('name', tname);
+    auctionData.append('description', tdescription);
+    auctionData.append('country', tcountry);
+    auctionData.append('buyPrice', tbuyPrice);
+    auctionData.append('categoriesId', tcategoriesId);
+    auctionData.append('categoryNames', tcatNameArray);
+    auctionData.append('latitude', tlat);
+    auctionData.append('longitude', tlong);
+    auctionData.append('image', image, tname);
+    auctionData.append('endDate', tends);
+    auctionData.append('address', taddress);
+    auctionData.append('sellerId', tsellerId);
+
+
+    this.http.post<{ message: string,
+                auctionId: string,
+                imagePath: string,
+                sellerRating: string}>
+                ('https://localhost:3000/auctions/edit/' + auctionId, auctionData )
+    .subscribe( (responseData) => {
+    this.router.navigate(['/']);
     });
-  }
+}
 
   deleteAuction(auctionId: string) {
     this.http.delete('https://localhost:3000/auctions/' + auctionId).subscribe( res => {
@@ -216,7 +210,6 @@ export class AuctionsService {
   startAuction(auctionId: string) {
     this.http.patch<{message: string}>('https://localhost:3000/auctions/start/' + auctionId, '')
     .subscribe((res) => {
-      console.log(res.message);
       this.router.navigate(['/auction/' + auctionId])
       .then(() => {
         window.location.reload();
@@ -231,7 +224,6 @@ export class AuctionsService {
     };
     this.http.patch<{message: string}>('https://localhost:3000/auctions/bid/' + auctionId, bid)
     .subscribe((res) => {
-      console.log(res.message);
       this.router.navigate(['/']);
     });
   }
@@ -241,8 +233,6 @@ export class AuctionsService {
     const searchParams =
     // tslint:disable-next-line: max-line-length
     `?minPrice=${tminPrice}&maxPrice=${tmaxPrice}&searchValue=${tsearchValue}&currentPage=${currentPage}&pageSize=${pageSize}&catId=${catId}`;
-    console.log(tminPrice, tmaxPrice, tsearchValue, currentPage, pageSize, catId);
-    console.log('Sending the request to the backend');
     this.http.get<{message: string, auctions: any, auctionCount: number}>
       ('https://localhost:3000/auctions/search' + searchParams)
       .pipe(
@@ -270,9 +260,7 @@ export class AuctionsService {
         };
       }))
       .subscribe((transformedAuctionData) => {
-        console.log('About to update this.auctions. ', this.auctions.length);
         this.auctions = transformedAuctionData.auctions;
-        console.log('Updated: ', this.auctions.length);
         this.searchCount = transformedAuctionData.auctionCount;
         this.auctionSearchUpdated.next({ auctions: [...this.auctions],
                                     auctionCount: transformedAuctionData.auctionCount});
@@ -379,7 +367,7 @@ export class AuctionsService {
      {rating: trating,
       type: ttype})
     .subscribe((res) => {
-      this.router.navigate(['/user/auctions']);
+      this.router.navigate(['/user/messages']);
     });
   }
 }

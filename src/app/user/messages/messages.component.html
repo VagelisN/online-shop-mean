@@ -68,7 +68,7 @@
             <div fxFlex="100">
               <p>It would be really helpful to Rate the seller. Use the bar below to rate your communication experience with a scale from 0 to 5</p>
               <star-rating value="5" checkedcolor="red" uncheckedcolor="gray" size="20px" readonly="false"
-                 (rate)="onRateUser($event, openMessage.rating , openMessage.fromId)" *ngIf="openMessage.rating"></star-rating>
+                 (rate)="onRateUser($event, openMessage.rating , openMessage.fromId, openMessage._id)" *ngIf="openMessage.rating && remRat === false"></star-rating>
             </div>
             <div fxFlex="100" *ngIf="whichFolder==='inbox'" style="text-align: center; margin-top: 15px;">
               <button (click)="openReply = true" mat-raised-button color="accent">Reply</button>

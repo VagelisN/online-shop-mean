@@ -57,7 +57,12 @@ export class MessageService {
   deleteMessage(messageId: string, username: string) {
     this.http.patch('https://localhost:3000/messages', {messageId, username})
       .subscribe( res => {
-        console.log(res);
+      });
+  }
+
+  removeRatingBar(messageId: string) {
+    this.http. patch('https://localhost:3000/messages/removerating/' + messageId, '')
+      .subscribe( res => {
       });
   }
 }

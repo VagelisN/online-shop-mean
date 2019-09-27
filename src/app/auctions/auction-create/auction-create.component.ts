@@ -80,7 +80,6 @@ export class AuctionCreateComponent implements OnInit {
         this.auctionId = paramMap.get('auctionId');
         this.isLoading = true;
         this.auctionsService.getSingleAuction(this.auctionId).subscribe(auctionData => {
-          // console.log('Already subbed.');
           this.auction = {
             id: auctionData._id,
             name: auctionData.name,
@@ -132,7 +131,6 @@ export class AuctionCreateComponent implements OnInit {
   }
 
   markerDragEnd($event: MouseEvent) {
-    console.log($event);
     this.latitude = $event.coords.lat;
     this.longitude = $event.coords.lng;
     this.getAddress(this.latitude, this.longitude);
@@ -140,8 +138,6 @@ export class AuctionCreateComponent implements OnInit {
 
   getAddress(latitude, longitude) {
     this.geoCoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
-      console.log(results);
-      console.log(status);
       if (status === 'OK') {
         if (results[0]) {
           this.zoom = 12;
@@ -169,16 +165,13 @@ export class AuctionCreateComponent implements OnInit {
   }
 
   onSaveAuction() {
-    console.log('On save auction.');
     if (this.form.invalid) {
-      console.log('form is invalid');
       return;
     }
     this.isLoading = true;
 
     // Get the userId so we can insert it in the seller field.
     const sellerId = this.authenticationService.getLoggedUserId();
-    console.log('SellerId: ', sellerId);
     let idPath = '';
     let catNameArray = '';
     for (let index = 0; index < this.categoryPath.length; index++) {
@@ -189,9 +182,6 @@ export class AuctionCreateComponent implements OnInit {
         catNameArray += '>';
       }
     }
-    console.log('idPath: ', idPath);
-    console.log('namePath: ', catNameArray);
-    console.log('catNameArray: ', catNameArray);
     if (this.mode === 'create') {
       this.auctionsService.addAuction(this.form.value.name,
                                 this.form.value.description,

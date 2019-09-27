@@ -6,8 +6,8 @@
 </div>
 
 <!-- If the button active bids is pressed -->
-<mat-accordion *ngIf="!this.isLoading">
-  <h3>Your {{this.mode}} auctions:</h3>
+<mat-accordion *ngIf="!this.isLoading && this.auctions.length >= 0">
+  <h3 style="margin-top: 2rem;">Your {{this.mode}} auctions:</h3>
   <mat-expansion-panel *ngFor="let auction of auctions">
     <mat-expansion-panel-header>
       <h4>{{auction.name}}</h4>
@@ -22,6 +22,7 @@
     <p>Address: {{auction.address}}</p>
     <p>Highest bid: {{auction.highestBid}}</p>
     <p>Description: {{auction.description}}</p>
+    <button mat-button *ngIf="this.auction.bids" (click)="onBidList(this.auction)">Show detailed bid information...</button>
     <agm-map [latitude]="toNumber(this.auction.latitude)" [longitude]="toNumber(this.auction.longitude)">
       <agm-marker
         [latitude]="this.auction.latitude"
@@ -44,3 +45,5 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
+
+<p style="margin-top: 2rem;text-align: center;" *ngIf="!isLoading && this.auctions.length<=0">No auctions to show</p>

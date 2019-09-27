@@ -33,9 +33,9 @@ router.post('/create', verifyToken, multer({storage: storage}).single('image'), 
 
 router.get('', controller.getAuctions);
 
-router.get('/rec/:userId', controller.getRecommendations);
+router.get('/rec/:userId', verifyToken,  controller.getRecommendations);
 
-router.get('/user/:id', controller.getUserAuctions);
+router.get('/user/:id' , verifyToken, controller.getUserAuctions);
 
 router.get('/get/:id', controller.getSingleAuction);
 
@@ -45,15 +45,17 @@ router.delete('/:id', verifyToken, controller.deleteAuction);
 
 router.patch('/start/:id', verifyToken, controller.startAuction);
 
-router.patch('/bid/:id', controller.bidAuction);
+router.patch('/bid/:id', verifyToken, controller.bidAuction);
 
 router.get('/categories/:parentId', controller.getCategories);
 
 router.get('/categories/path/:id', controller.getPath);
 
-router.patch('/rate/:id', controller.rateUser);
+router.patch('/rate/:id', verifyToken, controller.rateUser);
 
-router.get('/user/finished/:id', controller.getUserFinishedAuctions);
+router.get('/user/finished/:id', verifyToken, controller.getUserFinishedAuctions);
+
+router.post('/edit/:id', verifyToken, multer({storage: storage}).single('image'), controller.updateAuction);
 
 
 module.exports = router;

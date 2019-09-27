@@ -4,9 +4,11 @@
 
   <div style="margin-top: 5px;" fxLayout="row warp" fxLayoutAlign="center center">
     <div *ngIf="!isLoading && (getAllMode() || getSearchMode())" fxFlex="100"
-     style="padding-bottom: 1rem;" fxLayout="row warp" fxLayoutAlign="center">
-        <input fxFlex="30" matΙnput type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
-        <button fxFlex="20" mat-stroked-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.searchCategoryName}}</button>
+     style="padding-bottom: 1rem;" fxLayout="row warp" fxLayoutAlign="center center">
+        <mat-form-field fxFlex="20">
+          <input matNativeControl type="text" placeholder="Search auctions..." [(ngModel)]="searchValue">
+        </mat-form-field>
+        <button fxFlex="15" mat-stroked-button (click)="onPickCategory()" [matMenuTriggerFor]="firstLevelCategories">{{this.searchCategoryName}}</button>
         <mat-menu #firstLevelCategories="matMenu">
         <button
           mat-menu-item
@@ -18,7 +20,7 @@
           </button>
         </mat-menu>
         <button mat-button (click)="onPriceRangeClick()">Price range<i class="material-icons">arrow_downward</i></button>
-        <button fxFlex="10" mat-raised-button (click)="onSearchSubmit()" style="margin-left: 5px;">
+        <button fxFlex="5" mat-raised-button color="primary" (click)="onSearchSubmit()" style="margin-left: 5px;">
           <i class="material-icons">
             search
           </i>
@@ -49,15 +51,15 @@
                         mat-button color="primary"
                         [routerLink]="['/auction/', auction.id]">
                         <img  mat-card-image [title]="auction.name"[src]="auction.image" [alt]="auction.name">
-                        <mat-card-footer>
-                                    <h4>{{auction.name}}</h4>
+                        <mat-card-footer fxLayout="row">
+                              <h4 fxFlex="100">{{auction.name}}</h4>
                               </mat-card-footer>
                           </a>
                         </mat-card>
                 </div>
               </div>
             <div fxFlex="100" fxLayout="row warp"fxLayoutAlign="space-evenly" *ngIf="(getAllMode() || getSearchMode()) && !isLoading && auctions.length > 0">
-              <div fxFlex="100" style="text-align: center"><h2 >More Items</h2></div>
+              <div fxFlex="100" style="text-align: center"><h2 >All Items</h2></div>
               <mat-paginator fxFlex="100" [length]="totalAuctions"
               [pageSize]="auctionsPerPage"
               [pageSizeOptions]="pageSizeOptions"
@@ -69,8 +71,8 @@
                       mat-button color="primary"
                       [routerLink]="['/auction/', auction.id]">
                       <img  mat-card-image [title]="auction.name"[src]="auction.image" [alt]="auction.name">
-                      <mat-card-footer>
-                                  <h4>{{auction.name}}</h4>
+                      <mat-card-footer fxLayout="row">
+                                  <h4 fxFlex="100">{{auction.name}}</h4>
                             </mat-card-footer>
                         </a>
                       </mat-card>
@@ -90,16 +92,16 @@
 
 
   <!-- If we need to show just one auction. -->
-  <div fxLayout="row warp" *ngIf="getSingleMode() && !isLoading">
-    <div fxFlex="100" fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="center center" style="margin-top: 16px;" >
+  <div fxLayout="row warp" *ngIf="getSingleMode() && !isLoading" fxLayoutAlign="space-evenly">
+    <div fxFlex="100" *ngIf="username === 'admin'" fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="center center" style="margin-top: 16px;" >
         <button mat-raised-button color="accent" (click)="onExtract('XML', auction.id)">Extract as XML</button>
         <button mat-raised-button color="accent" (click)="onExtract('JSON', auction.id)">Extract as JSON</button>
     </div>
       <h2 style="text-align: center;"fxFlex="100">{{ auction.name }}</h2>
-      <div fxFlex="35">
-          <img [src]="this.auction.image" [alt]="this.auction.name">
+      <div fxFlex="25">
+          <img style="width: 100%;" [src]="this.auction.image" [alt]="this.auction.name">
       </div>
-      <div fxFlex="65" style="text-align: center; ">
+      <div fxFlex="60" style="text-align: center; ">
           <h3>Item's information</h3>
           <p *ngIf="checkBuyPrice(this.auction.buyPrice)">
             Instant buy price: {{ this.auction.buyPrice }}
@@ -109,13 +111,16 @@
           <p>Country: {{this.auction.country}}</p>
           <p>Address: {{this.auction.address}}</p>
           <p>Highest bid: {{this.auction.highestBid}}</p>
-          <p>Description: {{this.auction.description}}</p>
+          <div>Description: {{this.auction.description | slice:sliceOptions.start:sliceOptions.end}}</div>
+          <div *ngIf="this.auction.description.length >= sliceOptions.default">
+            <button mat-button (click)="onExpandText($event)">Show more..</button>
+          </div>
           <p>Seller's rating:
             <star-rating value="{{this.auction.sellerRating}}" checkedcolor="red" uncheckedcolor="gray" size="20px" readonly="true"></star-rating>
           </p>
       </div>
-      <div fxFlex="100" fxLayout="row warp" fxLayoutAlign="center center" style="text-align: center;">
-        <div fxFlex="40">
+      <div fxFlex="100" fxLayout="row warp" fxLayoutAlign="space-evenly center" style="text-align: center;">
+        <div fxFlex="25">
             <h4>Item's location</h4>
             <agm-map [latitude]="toNumber(this.auction.latitude)" [longitude]="toNumber(this.auction.longitude)">
                   <agm-marker
@@ -125,17 +130,19 @@
           </agm-map>
         </div>
         <div fxFlex="60">
-            <h4>Bid information</h4>
-            <button mat-button *ngIf="this.auction.bids" (click)="onBidList(this.auction)">Show detailed bid information...</button>
-            <div class="bid" *ngIf="this.auction.startDate !== null && this.authenticationService.getLoggedUserId()">
-                <input type="number" [(ngModel)]="bidValue" placeholder="Bid amount">
-                <button
-                  mat-raised-button
-                  color="warn"
-                  (click)="onBidSubmit()">Submit Bid!
-                </button>
-                <mat-error *ngIf="bidErrorMessage">{{bidErrorMessage}}</mat-error>
-            </div>
+          <div *ngIf="username !== 'admin' && this.auction.startDate !== null && this.authenticationService.getLoggedUserId()">
+              <h4>Bid information</h4>
+              <button mat-button *ngIf="this.auction.bids" (click)="onBidList(this.auction)">Show detailed bid information...</button>
+              <div class="bid">
+                  <input type="number" [(ngModel)]="bidValue" placeholder="Bid amount">
+                  <button
+                    mat-raised-button
+                    color="warn"
+                    (click)="onBidSubmit()">Submit Bid!
+                  </button>
+                  <mat-error *ngIf="bidErrorMessage">{{bidErrorMessage}}</mat-error>
+              </div>
+          </div>
         </div>
       </div>
 

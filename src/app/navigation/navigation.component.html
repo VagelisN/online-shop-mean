@@ -5,9 +5,9 @@
       <!-- Search will be here  -->
       <a  mat-button routerLink="/" style="margin: 0 auto;">Search</a>
     </div>
-    <div fxFlex="30" fxLayout="row">
-      <a fxFlex="50" mat-button *ngIf="!userAuthenticated" routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>
-      <a fxFlex="50" mat-button *ngIf="!userAuthenticated" routerLink = "/login" routerLinkActive= "mat-accent ">Login</a>
+    <div fxFlex="30" fxLayout="row" fxLayoutAlign="end">
+      <a fxFlex="25" mat-button *ngIf="!userAuthenticated" routerLink = "/signup" routerLinkActive= "mat-accent ">Signup</a>
+      <a fxFlex="25" mat-button *ngIf="!userAuthenticated" routerLink = "/login" routerLinkActive= "mat-accent ">Login</a>
       <div>
         <a mat-button *ngIf="userAuthenticated && username !== 'admin'" [routerLink]="'/user/auctions'">Your auctions</a>
         <a mat-button *ngIf="userAuthenticated && username !== 'admin'" routerLink = "/auction/create">Create an auction</a>

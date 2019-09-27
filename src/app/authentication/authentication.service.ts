@@ -27,7 +27,6 @@ export class AuthenticationService {
   sendNewUser(email: string, username: string, password: string, firstname: string,
               lastname: string, phone: string, afm: string, latitude: string, longitude: string, address: string) {
     const newUser: UserModel = { username, email, password, firstname, lastname, phone, afm, latitude, longitude, address };
-    console.log(newUser);
     this.http
       .post('https://localhost:3000/users/signup', newUser)
       .subscribe( () => {
@@ -54,8 +53,6 @@ export class AuthenticationService {
         this.userAuthenticated = true;
         this.username = response.username;
         this.userAuthenticatedSub.next(true);
-        console.log('|' + this.username + '|');
-        console.log('Check if admin result is: ', (this.username === 'admin'));
         if (this.username === 'admin') {
           this.router.navigate(['/admin']);
         } else {
@@ -97,10 +94,8 @@ export class AuthenticationService {
         textToAdd += auction.categoryNames[i] + ' ^e^';
       }
     }
-    // console.log(textToAdd);
     this.http.post('https://localhost:3000/users/visited/' + userId, {textToAdd, auctionId: auction.id})
         .subscribe(res => {
-          // console.log(res);
         });
   }
 
@@ -116,7 +111,6 @@ export class AuthenticationService {
     }
     this.http.post('https://localhost:3000/users/bidded/' + userId, {textToAdd, auctionId: auction.id})
         .subscribe(res => {
-          console.log(res);
         });
   }
 

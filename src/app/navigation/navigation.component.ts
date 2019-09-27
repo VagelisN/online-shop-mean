@@ -76,8 +76,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   onSearchSubmit() {
     // Call searchAuctions() from auction.service.ts
-    console.log('onSearchSubmit in auction-list.component');
-    console.log(this.categoryChosen);
     let ceiling = this.sliderMaxValue;
     let floor = this.sliderMinValue;
     if (ceiling === this.sliderOptions.ceil) {

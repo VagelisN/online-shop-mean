@@ -37,6 +37,7 @@ export class MessagesComponent implements OnInit {
   messageOpen = false;
   openMessage: Message;
   openReply = false;
+  remRat = false;
   whichFolder = 'inbox';
   constructor(private messageService: MessageService, private authenticationService: AuthenticationService,
               private auctionsService: AuctionsService) { }
@@ -95,9 +96,7 @@ export class MessagesComponent implements OnInit {
   messageOpened(message: Message) {
     this.openMessage = message;
     this.messageOpen = true;
-    console.log(message);
     if (message.isRead === false) {
-      console.log('perasa');
       this.messageService.messageRead(message);
       message.isRead = true;
     }
@@ -150,9 +149,11 @@ export class MessagesComponent implements OnInit {
     }
   }
 
-  onRateUser(event, type, userId) {
+  onRateUser(event, type, userId, messageId) {
     const rating = event.newValue;
     this.auctionsService.rateUser(rating, type, userId);
+    this.messageService.removeRatingBar(messageId);
+    this.remRat = true;
   }
 
 }

@@ -75,7 +75,6 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   markerDragEnd($event: MouseEvent) {
-    console.log($event);
     this.latitude = $event.coords.lat;
     this.longitude = $event.coords.lng;
     this.getAddress(this.latitude, this.longitude);
@@ -83,8 +82,6 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   getAddress(latitude, longitude) {
     this.geoCoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
-      console.log(results);
-      console.log(status);
       if (status === 'OK') {
         if (results[0]) {
           this.zoom = 12;

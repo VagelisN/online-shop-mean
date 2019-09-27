@@ -11,7 +11,6 @@ import { Auctions } from '../auctions/auction.model';
 export class BidDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    console.log(data);
    }
 
   ngOnInit() {

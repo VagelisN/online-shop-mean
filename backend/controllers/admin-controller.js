@@ -17,7 +17,6 @@ exports.getUsers =  (req, res, next) => {
 exports.getUserInfo = (req, res, next) => {
   User.findOne({ username: req.params.username })
     .then(user => {
-      console.log(user);
       res.status(200).json({
         message: 'fetched user',
         user: user
@@ -42,7 +41,6 @@ exports.verifyUser = (req, res, next) => {
 exports.extractAuction = (req, res, next) => {
   type = req.body.type;
   auctionId = req.body.auctionId;
-  console.log(auctionId);
   Auction.findOne( { _id: auctionId }, (err,auction) => {
     var xml = builder.create('Items');
         xml.ele('Item').att('ItemID', auctionId)
@@ -80,7 +78,6 @@ exports.extractAuction = (req, res, next) => {
     }
     else {
       jsonAuction = parser.toJson(xml.toString({pretty: true}));
-      console.log(jsonAuction)
       jsonAuction = String(jsonAuction);
       res.status(200).json({message: 'ok', extractedAuction: jsonAuction });
     }

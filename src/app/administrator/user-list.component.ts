@@ -26,7 +26,6 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.verifiedUsers = verifiedUsers;
         this.pendingUsers = pendingUsers;
-        console.log(verifiedUsers);
       });
   }
 

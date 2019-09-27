@@ -16,7 +16,6 @@ export class UserInfoComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('username')) {
-        console.log(paramMap.get('username'));
         this.adminService.getUserInfo(paramMap.get('username'))
           .subscribe(res => {
             this.tempUser = {email: res.user.email, username: res.user.username, password: null,

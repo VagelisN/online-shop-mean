@@ -20,7 +20,6 @@ export class AdministrationService {
   getUsers() {
     this.verifiedUsers = [];
     this.pendingUsers = [];
-    // console.log('In getAuctions() !');
     this.http.get<{message: string, users: any}>(
       'https://localhost:3000/admin'
     )
@@ -68,7 +67,6 @@ export class AdministrationService {
   extractAuction(type: string, auctionId: string ) {
     this.http.post<{message: string, extractedAuction: string}>('https://localhost:3000/admin/extract', {type, auctionId})
       .subscribe(res => {
-        console.log(res);
         const blob = new Blob([res.extractedAuction], { type: 'text/plain' });
         if ( type === 'XML') {
           saveAs(blob, auctionId + '.xml');
@@ -81,7 +79,6 @@ export class AdministrationService {
   extractAllAuctions(username: string, type: string) {
     this.http.post<{message: string, extractedAuctions: string}>('https://localhost:3000/admin/extract-all', {type, username})
       .subscribe(res => {
-        console.log(res);
         const blob = new Blob([res.extractedAuctions], { type: 'text/plain' });
         if ( type === 'XML') {
           saveAs(blob, username + '_auctions.xml');

@@ -3,6 +3,8 @@ import { Auctions } from './../auctions/auction.model';
 import { AuthenticationService } from './../authentication/authentication.service';
 import { Subscription } from 'rxjs';
 import { AuctionsService } from '../auctions/auctions.service';
+import { BidDialogComponent } from '../bid-dialog/bid-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-user-auctions',
@@ -16,7 +18,8 @@ export class UserAuctionsComponent implements OnInit {
   userId = this.authenticationService.getLoggedUserId();
   private auctionsSub: Subscription;
   constructor(public auctionsService: AuctionsService,
-              public authenticationService: AuthenticationService) { }
+              public authenticationService: AuthenticationService,
+              public dialog: MatDialog) { }
 
   ngOnInit() {
     this.isLoading = true;
@@ -68,6 +71,14 @@ export class UserAuctionsComponent implements OnInit {
         this.auctions = fetchedAuctions;
         this.isLoading = false;
       });
+  }
+
+  onBidList(auction) {
+    let tempBids = auction.bids;
+    if (tempBids.length > 8) {
+      tempBids = tempBids.splice(-8);
+    }
+    this.dialog.open( BidDialogComponent, {data: {bids: tempBids, name: auction.name}});
   }
 
 }

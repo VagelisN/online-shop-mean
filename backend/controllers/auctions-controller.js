@@ -209,15 +209,15 @@ exports.createAuction =  (req, res, next) => {
   });
   Users.findById(req.body.sellerId).then(user => {
     auction.sellerRating = user.sellerRating;
-  });
-  auction.save().then( createdAuction => {
-    res.status(201).json({
-      message: 'Auction added succesfully',
-      auctionId: createdAuction._id,
-      imagePath: createdAuction.imagePath,
-      sellerRating: createdAuction.sellerRating
+    auction.save().then( createdAuction => {
+      res.status(201).json({
+        message: 'Auction added succesfully',
+        auctionId: createdAuction._id,
+        imagePath: createdAuction.imagePath,
+        sellerRating: createdAuction.sellerRating
+      });
     });
-  })
+  });
 };
 
 // Returns only active auctions
@@ -333,7 +333,6 @@ exports.searchAuctions = (req, res, next) => {
     } else {
       if (catId === 'null' || catId == null) {
         // Create a query with searchValue and price check
-        console.log('Kalispera sas.');
         console.log(searchValue);
         auctionQuery = Auction.find({
           isFinished: false,
@@ -442,7 +441,6 @@ exports.searchAuctions = (req, res, next) => {
 
 
 exports.getSingleAuction = (req, res, next) => {
-  console.log("In edit method. reached the right backend function. req.params.id: ",req.params.id);
   Auction.findById(req.params.id).then(auction => {
     if (auction) {
       // Update the sellerRating from the user's database
@@ -684,4 +682,43 @@ exports.getUserFinishedAuctions = (req, res, next) => {
       auctions
     });
   });
+}
+
+exports.updateAuction = (req, res, next) => {
+  console.log('In updateAuction-------------------------------');
+  console.log(req.params);
+  console.log(req.body);
+  let names = req.body.categoryNames;
+  const url = req.protocol + '://' + req.get('host');
+  console.log('Names before split: ', names);
+  names = names.split('>');
+  console.log('Names after split: ', names);
+  const auctionId = req.params.id;
+  Auction.findById(auctionId).then(auction => {
+      auction.name = req.body.name,
+      auction.description = req.body.description,
+      auction.country = req.body.country,
+      auction.categoriesId = req.body.categoriesId,
+      auction.categoryNames = names,
+      auction.latitude = req.body.latitude,
+      auction.longitude = req.body.longitude,
+      auction.buyPrice = req.body.buyPrice,
+      auction.highestBid = 0,
+      auction.firstBid = null,
+      auction.numberOfBids = 0,
+      auction.bids = null,
+      auction.image = url + '/images/' + req.file.filename,
+      auction.startDate = null,
+      auction.endDate = req.body.endDate,
+      auction.address = req.body.address,
+      auction.sellerId = req.body.sellerId
+    Users.findById(req.body.sellerId).then(user => {
+      auction.sellerRating = user.sellerRating;
+      auction.save().then(() => {
+        res.status(200).json({
+          message: 'Auction was updated succesfully.'
+        })
+      })
+    });
+  })
 }

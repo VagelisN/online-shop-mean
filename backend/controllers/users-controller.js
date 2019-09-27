@@ -6,7 +6,6 @@ const Users = require('../models/users');
 exports.newUser =  (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
-      console.log('Longitude: ', req.body.longitude);
       const user = new Users({
         username: req.body.username,
         email: req.body.email,
@@ -101,7 +100,6 @@ function remove_stopwords(str) {
 
 
 exports.userVisited = (req, res, next) => {
-  //console.log(req.body);
   const userId = req.params.userId;
   let textToAdd = req.body.textToAdd;
   let auctionId = req.body.auctionId;
@@ -118,11 +116,9 @@ exports.userVisited = (req, res, next) => {
         }
         textToAdd = userVisited + textToAdd;
         textToAdd = remove_stopwords(textToAdd);
-        //console.log(textToAdd);
         userVisitedIds = userVisitedIds+'>'+auctionId;
         Users.findOneAndUpdate({_id: userId}, {lastVisited: textToAdd, lastVisitedIds: userVisitedIds})
           .then(result => {
-            // console.log(result);
             res.status(200).json({
               message: 'updated userVisited: ' + textToAdd
             });
@@ -132,7 +128,6 @@ exports.userVisited = (req, res, next) => {
 }
 
 exports.userBidded = (req, res, next) => {
-  //console.log(req.body);
   const userId = req.params.userId;
   let textToAdd = req.body.textToAdd;
   let auctionId = req.body.auctionId;
@@ -149,11 +144,9 @@ exports.userBidded = (req, res, next) => {
         }
         textToAdd = userBidded + textToAdd;
         textToAdd = remove_stopwords(textToAdd);
-        //console.log(textToAdd);
         userBiddedIds = userBiddedIds+'>'+auctionId;
         Users.findOneAndUpdate({_id: userId}, {lastBidded: textToAdd, lastBiddedIds: userBiddedIds})
           .then(result => {
-            // console.log(result);
             res.status(200).json({
               message: 'updated userBidded: ' + textToAdd
             });

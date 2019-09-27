@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'auction/:auctionId', component: AuctionListComponent},
   { path: 'signup/pending', component: PendingScreenComponent},
   { path: 'user/messages', component: MessagesComponent, canActivate: [AuthenticationGuard]},
-  { path: 'user/auctions', component: UserAuctionsComponent}
+  { path: 'user/auctions', component: UserAuctionsComponent , canActivate: [AuthenticationGuard]}
 ];
 
 @NgModule({
