@@ -21,9 +21,9 @@
           placeholder="Country">
           <mat-error *ngIf="form.get('country').invalid">Please enter a country of origin.</mat-error>
       </mat-form-field>
-      <div fxLayout="row warp" fxLayoutAlign="start center">
+      <div fxLayout="row warp" fxLayoutAlign="start center" style="margin: 12px 0;">
         <app-cat-picker fxFlex="100"></app-cat-picker>
-        <p  fxFlex="100" *ngIf="categoryPath">{{categoryPath}}</p>
+        <p  fxFlex="100" *ngIf="categoryPath">{{categoryNames}}</p>
       </div>
       <mat-form-field>
         <input

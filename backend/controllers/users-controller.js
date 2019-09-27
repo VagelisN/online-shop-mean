@@ -18,10 +18,6 @@ exports.newUser =  (req, res, next) => {
         longitude: req.body.longitude,
         address: req.body.address,
         afm: req.body.afm,
-        sellerRating: '4.5',
-        sellerRatingVotes: 1,
-        buyerRating: 0,
-        buyerRatingVotes: 0,
         verified: false
       });
       user.save()

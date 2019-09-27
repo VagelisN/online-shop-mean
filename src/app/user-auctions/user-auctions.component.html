@@ -1,6 +1,6 @@
-<mat-spinner *ngIf="this.isLoading"></mat-spinner>
+<mat-spinner *ngIf="this.isLoading" style="margin: 1rem auto;"></mat-spinner>
 
-<div fxLayout="row" fxLayoutAlign="center start">
+<div fxLayout="row" fxLayoutAlign="center start" *ngIf="!isLoading">
   <button mat-raised-button fxFlex="25" (click)="onActiveAuctions()">Active auctions</button>
   <button mat-raised-button fxFlex="25" (click)="onFinishedAuctions()">Finished auctions</button>
 </div>

@@ -57,10 +57,10 @@ function parseFile(name) {
       jsonItems = JSON.parse(json);
       startsDate = new Date('2019-09-23');
       endsDate = new Date('2019-12-25');
-      sellerId = '5d8a1d06fa6bd62e320f87fe'
+      sellerId = '5d8e00e03cb3480fe75d9705'
       sellerUsername = 'lefor'
       sellerRating = 4.5;
-      address = 'Θυμάτων Πολέμου 15, Βύρωνας 162 33, Ελλάδα'
+      address = 'Leof. Al. Panagouli 101, Ilioupoli 163 43, Greece'
       latitude = '37.94505939398392'
       longitude = '23.768195215869127'
       country =' Greece'
@@ -95,7 +95,7 @@ function parseFile(name) {
             bids: null,
             latitude: latitude,
             longitude: longitude,
-            image:null,
+            image: 'https://localhost:3000/images/default-image.jpg',
             startDate: startsDate,
             endDate: endsDate,
             sellerId: sellerId,

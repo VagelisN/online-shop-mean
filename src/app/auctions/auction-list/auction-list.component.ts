@@ -137,13 +137,10 @@ export class AuctionListComponent implements OnInit, OnDestroy {
           });
           const userId = this.authenticationService.getLoggedUserId();
           if (userId) {
-            console.log('egineeeeeeee');
             this.auctionsService.getRecommendations(userId);
             this.recommendationsSub = this.auctionsService.getRecommendationUpdateListener()
               .subscribe((recom: {recommendations: Auctions[]}) => {
-                console.log('peh0');
                 this.recommendations = recom.recommendations;
-                console.log(this.recommendations, 'GAMHSE MAS RE ');
               });
           }
         }

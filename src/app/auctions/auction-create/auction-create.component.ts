@@ -21,6 +21,7 @@ export class AuctionCreateComponent implements OnInit {
   form: FormGroup;
   imagePreview: string;
   categoryPath: [{id: string, name: string}];
+  categoryNames = '';
 
   // Date related variables
   minDate = new Date();
@@ -51,6 +52,12 @@ export class AuctionCreateComponent implements OnInit {
       .subscribe(path => {
         this.categoryPath = path;
         // Maybe split them here
+        for (let index = 0; index < this.categoryPath.length; index++) {
+          this.categoryNames += this.categoryPath[index].name;
+          if (index < this.categoryPath.length - 1) {
+            this.categoryNames += ' -> ';
+          }
+        }
       });
 
 
