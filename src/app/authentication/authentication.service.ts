@@ -70,7 +70,9 @@ export class AuthenticationService {
     this.username = null;
     this.userAuthenticated = false;
     this.userAuthenticatedSub.next(false);
-    this.router.navigate(['/']);
+    this.router.navigate(['/']).then(() => {
+      window.location.reload();
+    });
   }
 
   setUserData() {

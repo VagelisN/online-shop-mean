@@ -10,7 +10,7 @@ router.get('/inbox/:username', verifyToken,controller.getMessages);
 
 router.get('/sent/:username', verifyToken,controller.getSentMessages);
 
-router.get('/count/:username', verifyToken,controller.countUnread);
+router.get('/count/:username',controller.countUnread);
 
 router.post('/send',controller.sendMessage);
 

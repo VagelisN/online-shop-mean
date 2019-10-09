@@ -287,7 +287,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     // When we call search, current page is set to 1
     this.currentPage = 1;
     this.auctionsService.searchAuctions(this.minPrice, this.maxPrice, this.searchValue,
-                                        this.currentPage, this.auctionsPerPage, this.categoryChosen);
+                                        this.currentPage, this.auctionsPerPage, this.searchCategoryChosen);
     // Update the categories shown in the left
     this.auctionsService.getCategories(this.searchCategoryChosen)
     .subscribe( res => {
@@ -295,6 +295,7 @@ export class AuctionListComponent implements OnInit, OnDestroy {
     });
     this.auctionSearchSub = this.auctionsService.getAuctionSearchUpdateListener()
     .subscribe((auctionData: {auctions: Auctions[], auctionCount: number}) => {
+      console.log('Gyrise kanonika.');
       this.auctions = auctionData.auctions;
       this.totalAuctions = auctionData.auctionCount;
       this.isLoading = false;

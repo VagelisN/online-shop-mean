@@ -66,13 +66,13 @@
               (page)="onChangePage($event)">
               </mat-paginator>
               <div style="margin-top: 10px;" fxFlex="23"  *ngFor="let auction of auctions" fxLayout="row">
-                  <mat-card fxFlex="100" >
+                  <mat-card fxFlex="100">
                       <a fxFlex="100" fxLayout="column"
                       mat-button color="primary"
                       [routerLink]="['/auction/', auction.id]">
                       <img  mat-card-image [title]="auction.name"[src]="auction.image" [alt]="auction.name">
                       <mat-card-footer fxLayout="row">
-                                  <h4 fxFlex="100">{{auction.name}}</h4>
+                                  <div style="word-wrap: break-word;" fxFlex="100"><p style="font-size:12px;">{{auction.name}}</p></div>
                             </mat-card-footer>
                         </a>
                       </mat-card>

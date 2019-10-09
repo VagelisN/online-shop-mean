@@ -1,8 +1,8 @@
 var parser = require('xml2json');
 fs = require('fs');
 const mongoose = require('mongoose');
-Αuction = require('./auctions');
-Category = require('./categories');
+Αuction = require('./../backend/models/auctions');
+Category = require('./../backend/models/categories');
 
 function connectToDb () {
   return new Promise(resolve => {
@@ -57,12 +57,12 @@ function parseFile(name) {
       jsonItems = JSON.parse(json);
       startsDate = new Date('2019-09-23');
       endsDate = new Date('2019-12-25');
-      sellerId = '5d8e00e03cb3480fe75d9705'
-      sellerUsername = 'lefor'
-      sellerRating = 4.5;
-      address = 'Leof. Al. Panagouli 101, Ilioupoli 163 43, Greece'
-      latitude = '37.94505939398392'
-      longitude = '23.768195215869127'
+      sellerId = '5d9dcf27fc79ea25a4d42e18'
+      sellerUsername = 'test'
+      sellerRating = 0;
+      address = 'Leof. Al. Panagouli 60, Ilioupoli 163 43, Greece'
+      latitude = '37.9365268'
+      longitude = '23.7614008'
       country =' Greece'
       categoryNames = [];
       categoryIds = '';
@@ -117,7 +117,7 @@ async function run() {
   await connectToDb();
   for(let m =0 ; m< 40; m++) {
     console.log(m);
-    name = './ebay-data/items-'+m+'.xml';
+    name = './items-'+m+'.xml';
 
     await parseFile(name);
   }
